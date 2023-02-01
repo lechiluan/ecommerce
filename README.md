@@ -55,3 +55,5 @@ Use multi-step authentication for secure payments
  - Delivery management → Search
  - Statistics revenue → interact BI → Profit and loss, original price, cost delivery → Profit = revenue - cost. → Data analyze → Forecast revenue → **Data Analysis**
  - Total Sale, Total sessions.
+
+ 
