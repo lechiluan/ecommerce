@@ -7,11 +7,11 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'main/base.html')
 
-def login(request):
-    return render(request, 'auth/login.html')
-
-def logout(request):
-    pass
+# def login(request):
+#     # return render(request, 'registration/login.html')
+#
+# def logout(request):
+#     pass
 # def register(request):
 #     return render(request, 'auth/register.html')
 
@@ -23,4 +23,4 @@ def register(response):
             return redirect("/login")
     else:
         form = RegisterForm()
-    return render(response, "auth/register.html", {"form": form})
+    return render(response, "registration/register.html", {"form": form})
