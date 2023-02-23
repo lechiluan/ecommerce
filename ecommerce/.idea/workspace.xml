@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/ECommerce/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/asgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/wsgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style-prefix.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/banner-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/banner-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/banner-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/blog-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/blog-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/blog-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/blog-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/cta-banner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/electronics-banner-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/electronics-banner-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/bag.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/coat.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/cosmetics.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/dress.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/glasses.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/hat.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/jacket.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/jewelry.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/perfume.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/quotes.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/shoes.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/shorts.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/tee.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/icons/watch.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/logo/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/logo/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/mens-banner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/newsletter.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/payment.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/belt.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/clothes-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/clothes-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/clothes-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/clothes-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jacket-6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jewellery-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jewellery-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/jewellery-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/party-wear-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/party-wear-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/perfume.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shampoo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shirt-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shirt-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-1_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-2_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shoe-5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shorts-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/shorts-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/sports-6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/watch-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/watch-2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/watch-3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/products/watch-4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/testimonial-1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/womens-banner.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/script.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/authentication/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/main/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/main/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/main/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ecommerce.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ecommerce.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysite/views.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Freeze Requirements File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2M8IDKTYcUCVUUJFNkOjr2ENMRF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ecommerce" type="Python.DjangoServer" factoryName="Django server">
+      <module name="ecommerce" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="ecommerce.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="" />
+      <created>1677142662306</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677142662306</updated>
+      <workItem from="1677142700689" duration="1297000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
