@@ -1,46 +1,224 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">{% load static %}<img src="{% static 'images/main/logolclshop.png' %}" alt="LCL SHOP" title="LCL SHOP" width="60px" height="60px"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+{% block style %}
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+{% endblock %}
+{% block content %}
+    <div class="dashboard-container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-apple" aria-hidden="true"></i></span>
+                        <span class="title name-shop"><h2>LCL SHOP</h2></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-home" aria-hidden="true"></i></span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-comment" aria-hidden="true"></i></span>
+                        <span class="title">Message</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-question-circle" aria-hidden="true"></i></span>
+                        <span class="title">Help</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-cog" aria-hidden="true"></i></span>
+                        <span class="title">Setting</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-unlock-alt" aria-hidden="true"></i></span>
+                        <span class="title">Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
+                        <span class="title">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <div class="topBar">
+                <div class="toggle" onclick="toggleMenu();"></div>
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search...">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </label>
                 </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </ul>
-        <ul class="navbar-nav ml-0">
-            <li class="nav-item">
-                <a class="nav-link" href="/auth/login/">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/auth/register/">Register</a>
-            </li>
-        </ul>
+                <div class="user">
+                    {% load static %}<img src="{% static 'images/dashboard/user.jpg' %} " alt="user">
+                </div>
+            </div>
+            <div class="cardBox">
+                <div class="mycard">
+                    <div>
+                        <div class="numbers">1.042</div>
+                        <div class="cardName">Daily Views</div>
+                    </div>
+                    <div class="iconBox">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="mycard">
+                    <div>
+                        <div class="numbers">80</div>
+                        <div class="cardName">Sales</div>
+                    </div>
+                    <div class="iconBox">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="mycard">
+                    <div>
+                        <div class="numbers">203</div>
+                        <div class="cardName">Comments</div>
+                    </div>
+                    <div class="iconBox">
+                        <i class="fa fa-comment" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="mycard">
+                    <div>
+                        <div class="numbers">$6,324</div>
+                        <div class="cardName">Earning</div>
+                    </div>
+                    <div class="iconBox">
+                        <i class="fa fa-usd" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
 
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Recent Orders</h2>
+                        <a href="#" class="btnView">View All</a>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Price</td>
+                            <td>Payment</td>
+                            <td>Status</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Due</td>
+                            <td><span class="status return">Return</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status inprogress">In Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Due</td>
+                            <td><span class="status return">Return</span></td>
+                        </tr>
+                        <tr>
+                            <td>Start Refigerator</td>
+                            <td>$1,000</td>
+                            <td>Paid</td>
+                            <td><span class="status inprogress">In Progress</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="recentCustomers">
+                    <div class="cardHeader">
+                        <h2>Recent Customers</h2>
+                    </div>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        <tr>
+                            <td style="width:60px;"><div class="imgBx">{% load static %}<img src="{% static 'images/dashboard/user.jpg' %}"></div></td>
+                            <td><h4>David <br><span>Italy</span></h4></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
