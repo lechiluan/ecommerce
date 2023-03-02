@@ -5,41 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/dashboard/logolclshop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/dashboard/user.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/js/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_body.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_footer.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/static/main/images/main/logolclshop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/static/main/js/script.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password_reset.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/main/base/404.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/change_password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/change_password_done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_complete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_email.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ECommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ECommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/css/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/css/styles_admin.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/images/dashboard/logolclshop.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/images/dashboard/user.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/images/main/logolclshop.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/js/script.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/js/script_admin.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/dashboard/base/ad_base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/dashboard/base/ad_body.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/dashboard/base/ad_footer.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/dashboard/base/ad_header.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/static/main/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/change_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/404.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/change_password.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/change_password_done.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/registration/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/update_profile.html" afterDir="false" />
@@ -108,11 +89,11 @@
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\dashboard" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\main" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\password" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\main\base" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\dashboard" />
     </key>
   </component>
   <component name="RunManager">
@@ -155,7 +136,7 @@
       <workItem from="1677209787656" duration="186000" />
       <workItem from="1677210000374" duration="10322000" />
       <workItem from="1677254042837" duration="9335000" />
-      <workItem from="1677308342591" duration="86978000" />
+      <workItem from="1677308342591" duration="101905000" />
     </task>
     <servers />
   </component>

@@ -14,7 +14,7 @@
 {% load crispy_forms_filters %}
 {% block content %}
     <div class="form-main">
-        <h1>Register</h1>
+        <h2 class="font-weight-bold mt-3">Register</h2>
         <form method="post" class="form-group">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>

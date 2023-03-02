@@ -24,6 +24,8 @@
     justify-content: center;
     text-align: center;
     margin: 20px auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-input {
@@ -51,6 +53,14 @@
     padding-top: 10px;
 }
 
+.text-form{
+    padding-top: 10px;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+}
 /* Scroll View */
 .button-scroll {
     display: none;

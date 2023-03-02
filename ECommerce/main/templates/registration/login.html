@@ -13,13 +13,15 @@
 
 {% block content %}
     <div class="form-main">
-        <h1>Login</h1>
+        <h2 class="font-weight-bold mt-3">Login</h2>
         <form method="post" class="form-group">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>
             <p>Don't have an account? Create one <a href="/register">Here</a></p>
             <p><a href="/password_reset">Forgot Password?</a></p>
-            <div class="btn-form"><button type="submit" class="btn btn-default form-button">Login</button></div>
+            <div class="btn-form">
+                <button type="submit" class="btn btn-default form-button">Login</button>
+            </div>
         </form>
     </div>
 {% endblock %}
