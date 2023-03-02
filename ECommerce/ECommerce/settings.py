@@ -56,7 +56,8 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'main/templates'],  # for templates folder
+        'DIRS': [(BASE_DIR / 'main/templates'),
+                 (BASE_DIR / 'dashboard/templates')],  # for templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,7 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'main/static']  # use to find static files
+STATICFILES_DIRS = [(BASE_DIR / 'main/static'), (BASE_DIR / 'dashboard/static')]  # use to find static files
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
 
 # Connect to bootstrap4 for crispy forms
@@ -131,3 +132,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"

@@ -7,13 +7,74 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Footer CSS*/
+/* My color*/
+/*#081c6e blue */
+/*#343a40 black */
+/*#28a745 green */
+/*#ffffff white */
+
+/* Navbar CSS */
+.form-main {
+    width: 40%;
+    min-width: 400px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.form-input {
+    width: 90%;
+    margin: auto;
+    text-align: left;
+    justify-content: center;
+    align-content: center;
+}
+
+.form-button {
+    width: 90%;
+    border-radius: 10px;
+    background-color: #081c6e;
+    color: #fff;
+    font-size: 20px;
+}
+
+.form-button:hover {
+    transition: 0.5s;
+    background-color: #4CAF50;
+}
+
+.btn-form {
+    padding-top: 10px;
+}
+
+/* Scroll View */
+.button-scroll {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+    padding: 7px 10px;
+    border-radius: 15px;
+    font-size: 30px;
+}
+
+/* Footer CSS */
 .site-footer {
-    background-color: #26272b;
+    background-color: #343a40;
     padding: 45px 0 20px;
     font-size: 15px;
     line-height: 24px;
-    color: #737373;
+    color: #dcc9c9;
 }
 
 .site-footer hr {
@@ -34,7 +95,7 @@
 }
 
 .site-footer a {
-    color: #737373;
+    color: #dcc9c9;
 }
 
 .site-footer a:hover {
@@ -52,7 +113,7 @@
 }
 
 .footer-links a {
-    color: #737373
+    color: #dcc9c9
 }
 
 .footer-links a:active, .footer-links a:focus, .footer-links a:hover {

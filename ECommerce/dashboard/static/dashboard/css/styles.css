@@ -20,7 +20,7 @@
     position: fixed;
     width: 300px;
     height: 100%;
-    background: #003147;
+    background: #343a40;
     transition: 0.5s;
     overflow: hidden;
 }
@@ -46,7 +46,7 @@
 }
 
 .navigation ul li:hover {
-    background: #03a9f4;
+    background: #081c6e;
 }
 
 .navigation ul li:nth-child(1) {
@@ -94,6 +94,10 @@
     padding-top: 10px;
 }
 
+.navigation ul li a span img {
+    width: 40px;
+    height: 40px;
+}
 .main {
     position: absolute;
     width: calc(100% - 300px); /* 100% - 300px  300px is width of left navigation*/
@@ -216,7 +220,7 @@
 
 .cardBox .mycard .iconBox {
     font-size: 2.5em;
-    color: #03a9f4;
+    color: #081c6e;
 }
 
 .details {
@@ -250,12 +254,15 @@
 .btnView {
     position: relative;
     padding: 5px 10px;
-    background-color: #03a9f4;
+    background-color: #081c6e;
     color: #fff;
     text-decoration: none;
     border-radius: 6px;
 }
-
+.btnView:hover {
+    background-color: #007bb6;
+    color: #ffffff;
+}
 .details table {
     width: 100%;
     border-collapse: collapse;
@@ -275,7 +282,7 @@
 }
 
 .details .recentOrders table tbody tr:hover {
-    background-color: #03a9f4;
+    background-color: #081c6e;
     color: #fff;
 }
 
@@ -359,7 +366,7 @@
 
 .details .recentCustomers table tr:hover td span,
 .details .recentCustomers table tr:hover {
-    background: #03a9f4;
+    background: #081c6e;
     color: #fff;
 }
 

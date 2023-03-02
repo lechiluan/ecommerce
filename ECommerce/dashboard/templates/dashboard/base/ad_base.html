@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Title -->
-    {% load static %} <link rel="icon" type="image/x-icon" href="{% static "images/dashboard/logolclshop.png" %}">
+    {% load static %} <link rel="icon" type="image/x-icon" href="{% static "dashboard/images/dashboard/logolclshop.png" %}">
     <title>{% block title %}Dashboard - LCL Shop{% endblock %}</title>
 
     <!-- CSRF Token -->
@@ -23,7 +23,7 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"  type='text/css'>
 
     <!-- Custom CSS -->
-    {% load static %} <link rel="stylesheet" type="text/css" href="{% static 'css/styles_admin.css' %}">
+    {% load static %} <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/styles.css' %}">
     {% block style %}
         <!-- Custom CSS Here-->
     {% endblock %}
@@ -42,12 +42,13 @@
 
 {% include "dashboard/base/ad_footer.html" %}
 
+<!-- JavaScript Code-->
 <!-- Custom Javascript -->
 {% block javascript %}
     <!-- Custom Javascript Here-->
 {% endblock %}
 
-{% load static %} <script src="{% static 'js/script_admin.js' %}"></script>
+{% load static %} <script src="{% static 'dashboard/js/script.js' %}"></script>
 
 <!-- Javascript in bootstrap -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

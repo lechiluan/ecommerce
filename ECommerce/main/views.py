@@ -2,21 +2,11 @@ from django.contrib.auth import authenticate, login as auth_login, update_sessio
 # from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required
 
 # from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 
 
-def is_admin(user):
-    return user.is_authenticated and user.username == 'admin'
-
-
-@user_passes_test(is_admin)
-def admin_home(request):
-    return render(request, 'dashboard/base/ad_base.html')
-
-
-# Create your views here.
 def home(request):
     return render(request, 'main/base/base.html')
 
@@ -54,13 +44,14 @@ def login(response):
 
 @login_required
 def update_profile(request):
+    user = request.user
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=request.user)
+        form = UpdateProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('/profile')
     else:
-        form = UpdateProfileForm(instance=request.user)
+        form = UpdateProfileForm(instance=user)
     return render(request, 'registration/update_profile.html', {'form': form})
 
 
@@ -91,3 +82,4 @@ def change_password_done(request):
 def logout(request):
     auth_logout(request)
     return redirect('/')
+
