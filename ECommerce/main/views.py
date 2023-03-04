@@ -13,7 +13,8 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.contrib import messages
+
+
 
 
 def home(request):
@@ -46,6 +47,11 @@ def login(response):
                     return redirect("/dashboard/home")
                 else:
                     return redirect("/")
+            else:
+                # clean input username
+                form.cleaned_data['username'] = ''
+                form.cleaned_data['password'] = ''
+                form.add_error('username', 'Username or password is incorrect')
     else:
         form = LoginForm()
     return render(response, "registration/login.html", {"form": form})
@@ -102,7 +108,7 @@ def password_reset_request(request):
             if associated_users.exists():
                 for user in associated_users:
                     subject = "Password Reset Requested"
-                    email_template_name = "registration/password/password_reset_email.txt"
+                    email_template_name = "registration/password/password_reset_email.html"
                     c = {
                         "email": user.email,
                         'domain': '127.0.0.1:8000',
@@ -113,15 +119,18 @@ def password_reset_request(request):
                         'protocol': 'http',
                     }
                     email = render_to_string(email_template_name, c)
+                    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+                    # sender_email = settings.EMAIL_HOST_USER
                     try:
-                        send_mail(subject, email, 'lclshop.dev@gmail.com', [user.email], fail_silently=False)
+                        send_mail(subject, email, form_email, [user.email], fail_silently=False, html_message=email)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
-                    return redirect("/password_reset/done/")
+                return redirect("/password_reset/done/")
             else:
-                messages.error(request, 'The email address entered does not exist in our database.')
-                # return HttpResponse('<script>alert("Email not valid");window.history.back();</script>')
-    password_reset_form = PasswordResetForm()
+                password_reset_form.add_error('email', 'The email address entered does not exist in our database.')
+                return render(request=request, template_name="registration/password/password_reset.html",
+                              context={"password_reset_form": password_reset_form})
+    else:
+        password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password/password_reset.html",
                   context={"password_reset_form": password_reset_form})
-

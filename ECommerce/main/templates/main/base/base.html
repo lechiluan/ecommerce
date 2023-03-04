@@ -30,13 +30,6 @@
 </head>
 
 <body>
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
 
 {% include "main/base/headers.html" %}
 {% include "main/base/header.html" %}
@@ -47,8 +40,7 @@
     {% endblock %}
 </div>
 
-{% include "main/base/footer.html" %}
-<button onclick="test()" class="btn btn-primary">Click Me</button>
+{% include "main/base/footer.html" %}s
 <!-- Custom Javascript -->
 {% block javascript %}
     <!-- Custom Javascript Here-->

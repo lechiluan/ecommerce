@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import email_confirmation, activate
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -20,4 +21,6 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='registration/password/password_reset_complete.html'),
          name='password_reset_complete'),
+    path('email-confirmation/', email_confirmation, name='email_confirmation'),
+    path('activate/<uidb64>/<token>/', activate, name='activate'),
 ]
