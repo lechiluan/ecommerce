@@ -5,24 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/activation_invalid.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/email_confirmation.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/email_confirmation_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/email_sent.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_email.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ECommerce/emails.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_email.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_invalid.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_sent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/tokens.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ECommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ECommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/main/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/404.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/404.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_email.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/change_password.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/change_password_done.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_email.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/register.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/update_profile.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,11 +99,11 @@
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\register" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\password" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\main\base" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\dashboard" />
     </key>
   </component>
   <component name="RunManager">
@@ -142,7 +149,7 @@
       <workItem from="1677308342591" duration="105359000" />
       <workItem from="1677758718104" duration="9167000" />
       <workItem from="1677830995514" duration="11299000" />
-      <workItem from="1677897922333" duration="4298000" />
+      <workItem from="1677897922333" duration="33271000" />
     </task>
     <servers />
   </component>

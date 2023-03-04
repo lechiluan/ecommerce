@@ -1,0 +1,25 @@
+{% extends "main/base/base.html" %}
+{% block title %}Email Verify{% endblock %}
+
+{% block style %}
+    <style>
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="form-main">
+        <h2 class="font-weight-bold mt-3">Activation link sent</h2>
+        <div class="text-form"><p>We have sent an email to your email address.
+            Please click on the link in that email to activate your account.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

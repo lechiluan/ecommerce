@@ -19,6 +19,7 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+    rememberMe = forms.BooleanField(required=False, label='Remember me', initial=False)
 
     class Meta:
         model = User
@@ -45,3 +46,6 @@ class ChangePasswordForm(PasswordChangeForm):
     class Meta:
         fields = ['old_password', 'new_password1', 'new_password2']
 
+
+class VerificationForm(forms.Form):
+    code = forms.CharField(max_length=10)
