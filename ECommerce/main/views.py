@@ -100,8 +100,8 @@ def login(request, *args, **kwargs):
                 user = User.objects.filter(username=username).first()
                 if user is not None and user.is_active is False:
                     send_email_activate_account(request, user)
-                    messages.success(request, 'Your account is not active. Please check your email to '
-                                              'activate your account.')
+                    messages.success(request, 'Your account is not active. Please check your email {} to '
+                                              'activate your account.'.format(user.email))
                     return render(request, "registration/login.html", {"form": form})
                 form.add_error('username', 'Username or password is incorrect')
                 return render(request, "registration/login.html", {"form": form})
@@ -153,7 +153,10 @@ def change_email(request):
             if user is not None:
                 # check if new email is already exist
                 new_email = form.cleaned_data['new_email']
-                if User.objects.filter(email=new_email).exists():
+                if new_email == request.user.email:
+                    form.add_error('new_email', 'New email is same as current email.')
+                    return render(request, "registration/profile/change_email.html", {"form": form})
+                elif User.objects.filter(email=new_email).exists():
                     form.add_error('new_email', 'Email is already exist. Please enter another email.')
                     return render(request, "registration/profile/change_email.html", {"form": form})
                 else:
@@ -163,7 +166,7 @@ def change_email(request):
                     send_verify_new_email(request, user)
                     return render(request, 'registration/profile/verify_new_email_sent.html')
             else:
-                form.add_error('password', 'Password is incorrect')
+                form.add_error('current_password', 'Password is incorrect')
                 return render(request, "registration/profile/change_email.html", {"form": form})
     else:
         form = ChangeEmailForm(instance=request.user)
@@ -210,6 +213,7 @@ def change_password_done(request):
 
 def logout(request):
     auth_logout(request)
+    messages.success(request, "You have logged out. See you again!")
     return redirect('/')
 
 
@@ -243,7 +247,7 @@ def password_reset_request(request):
 
                 return redirect("/password_reset/done/")
             else:
-                password_reset_form.add_error('email', 'The email address entered does not exist in our database.')
+                password_reset_form.add_error('email', 'The email address entered does not exist. Please try again')
                 return render(request=request, template_name="registration/password/password_reset.html",
                               context={"password_reset_form": password_reset_form})
     else:

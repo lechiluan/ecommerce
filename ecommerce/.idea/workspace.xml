@@ -5,27 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_sent.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/static/main/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_complete.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_complete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_confirm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/account_activation_invalid.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_invalid.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/account_activation_sent.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_sent.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/tokens.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/tokens.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +128,7 @@
       <workItem from="1677758718104" duration="9167000" />
       <workItem from="1677830995514" duration="11299000" />
       <workItem from="1677897922333" duration="33300000" />
-      <workItem from="1677938215367" duration="21556000" />
+      <workItem from="1677938215367" duration="31242000" />
     </task>
     <servers />
   </component>
