@@ -1,0 +1,33 @@
+{% autoescape off %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify your email</title>
+</head>
+<body>
+<h3>Dear, {{ user.username }} - {{user.email }}!</h3>
+<p>
+    Thank you for buy product at LCL Shop. To update new email in your account, please click on the link below:
+</p>
+<p>
+    <a href="{{ protocol }}://{{ domain }}{% url 'activate_email' uidb64=uid token=token %}"
+       style="background-color: #4CAF50; color: white; padding: 10px 15px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;">
+        VERIFY NEW EMAIL</a>
+</p>
+<p>
+    This link can only be used once. If you need to reset your password again, please
+    visit {{ protocol }}://{{ domain }} and request another reset.
+</p>
+<p>
+    If you did not request this registration, please ignore this email.
+</p>
+<p>
+    Sincerely, <br>
+    LCL Shop
+</p>
+</body>
+</html>
+{% endautoescape %}

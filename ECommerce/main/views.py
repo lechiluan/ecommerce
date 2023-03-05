@@ -2,51 +2,26 @@ from django.contrib.auth import authenticate, login as auth_login, update_sessio
 from django.contrib.sites.shortcuts import get_current_site
 
 # from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, VerificationForm
+from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 # Password Reset Imports
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
-from django.contrib.auth.tokens import default_token_generator
+# from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from .tokens import account_activation_token
+from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
-from .tokens import account_activation_token
 
 
+# Create your views here.
 def home(request):
     return render(request, 'main/base/base.html')
-
-#
-# def register(response):
-#     if response.method == "POST":
-#         form = RegisterForm(response.POST)
-#         if form.is_valid():
-#             # check email is already exist
-#             if User.objects.filter(email=form.cleaned_data['email']).exists():
-#                 form.add_error('email', 'Email is already exist. Please use another email.')
-#                 return render(response, "registration/register.html", {"form": form})
-#             # check username is already exist
-#             elif User.objects.filter(username=form.cleaned_data['username']).exists():
-#                 form.add_error('username', 'Username is already exist')
-#                 return render(response, "registration/register.html", {"form": form})
-#             else:
-#                 # user active status is false
-#                 user = form.save(commit=False)
-#                 user.is_active = False
-#                 user.save()
-#                 # form.save()
-#                 return redirect("/login")
-#     else:
-#         form = RegisterForm()
-#     return render(response, "registration/register.html", {"form": form})
 
 
 def register(request):
@@ -64,41 +39,11 @@ def register(request):
                 user = form.save(commit=False)
                 user.is_active = False
                 user.save()
-                current_site = get_current_site(request)
-                mail_subject = 'Activate your account.'
-                message = render_to_string('registration/register/account_activation_email.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': account_activation_token.make_token(user),
-                    'protocol': 'http',
-                })
-                to_email = form.cleaned_data.get('email')
-                form_email = 'LCL Shop <lclshop.dev@gmail.com>'
-                email = EmailMessage(mail_subject, message, form_email, [to_email])
-                email.content_subtype = "html"
-                email.send()
+                send_email_activate_account(request, user)
                 return render(request, 'registration/register/account_activation_sent.html')
     else:
         form = RegisterForm()
     return render(request, 'registration/register/register.html', {'form': form})
-
-
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        auth_login(request, user)
-        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
-        return redirect('/')
-    else:
-        return render(request, 'registration/register/account_activation_invalid.html')
 
 
 def send_email_activate_account(request, user):
@@ -116,6 +61,23 @@ def send_email_activate_account(request, user):
     email = EmailMessage(mail_subject, message, form_email, to_email)
     email.content_subtype = "html"
     email.send()
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        auth_login(request, user)
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('/')
+    else:
+        return render(request, 'registration/register/account_activation_invalid.html')
 
 
 def login(request, *args, **kwargs):
@@ -148,6 +110,66 @@ def login(request, *args, **kwargs):
     return render(request, "registration/login.html", {"form": form})
 
 
+def send_verify_new_email(request, user):
+    current_site = get_current_site(request)
+    mail_subject = 'Update your account.'
+    message = render_to_string('registration/profile/verify_new_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': update_email_token.make_token(user),
+        'protocol': 'http',
+    })
+    to_email = [user.email]
+    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    email = EmailMessage(mail_subject, message, form_email, to_email)
+    email.content_subtype = "html"
+    email.send()
+
+
+def activate_new_email(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and update_email_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        auth_login(request, user)
+        messages.success(request, 'Your email has been updated. Now you can login your account.')
+        return redirect('/profile/')
+    else:
+        return render(request, 'registration/register/account_activation_invalid.html')
+
+
+@login_required
+def change_email(request):
+    if request.method == 'POST':
+        form = ChangeEmailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = authenticate(username=request.user.username, password=form.cleaned_data['current_password'])
+            if user is not None:
+                # check if new email is already exist
+                new_email = form.cleaned_data['new_email']
+                if User.objects.filter(email=new_email).exists():
+                    form.add_error('new_email', 'Email is already exist. Please enter another email.')
+                    return render(request, "registration/profile/change_email.html", {"form": form})
+                else:
+                    user.email = form.cleaned_data['new_email']
+                    user.is_active = False
+                    user.save()
+                    send_verify_new_email(request, user)
+                    return render(request, 'registration/profile/verify_new_email_sent.html')
+            else:
+                form.add_error('password', 'Password is incorrect')
+                return render(request, "registration/profile/change_email.html", {"form": form})
+    else:
+        form = ChangeEmailForm(instance=request.user)
+    return render(request, "registration/profile/change_email.html", {"form": form})
+
+
 @login_required
 def update_profile(request):
     user = request.user
@@ -155,7 +177,8 @@ def update_profile(request):
         form = UpdateProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('/profile')
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('/profile/')
     else:
         form = UpdateProfileForm(instance=user)
     return render(request, 'registration/profile/update_profile.html', {'form': form})
@@ -176,13 +199,13 @@ def change_password(request):
                 form.add_error('old_password', 'Wrong password. Please try again.')
     else:
         form = ChangePasswordForm(user=request.user)
-    return render(request, 'registration/password/templates/registration/profile/change_password.html', {'form': form})
+    return render(request, 'registration/profile/change_password.html', {'form': form})
 
 
 @login_required
 def change_password_done(request):
     auth_logout(request)
-    return render(request, 'registration/password/templates/registration/profile/change_password_done.html')
+    return render(request, 'registration/profile/change_password_done.html')
 
 
 def logout(request):
@@ -207,7 +230,7 @@ def password_reset_request(request):
                         'site_name': 'Website',
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
-                        'token': default_token_generator.make_token(user),
+                        'token': password_reset_token.make_token(user),
                         'protocol': 'http',
                     }
                     email = render_to_string(email_template_name, c)

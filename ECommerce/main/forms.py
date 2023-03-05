@@ -8,12 +8,10 @@ from django.core.validators import RegexValidator # for phone number validation
 class RegisterForm(UserCreationForm):
     phone_regex = RegexValidator(regex=r'^\d{10,11}$', message="Phone number is invalid")
     email = forms.EmailField()
-    phone = forms.CharField(validators=[phone_regex])
-    address = forms.CharField()
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "username", "email", "password1", "password2", "phone", "address"]
+        fields = ["first_name", "last_name", "username", "email", "password1", "password2"]
 
 
 class LoginForm(forms.Form):
@@ -30,13 +28,12 @@ class UpdateProfileForm(forms.ModelForm):
     phone_regex = RegexValidator(regex=r'^\d{10,11}$', message="Phone number is invalid")
     first_name = forms.CharField()
     last_name = forms.CharField()
-    email = forms.EmailField()
-    phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone'}), validators=[phone_regex])
-    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Address'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'phone', 'address']
+        fields = ['first_name', 'last_name', 'username', 'email']
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -47,5 +44,11 @@ class ChangePasswordForm(PasswordChangeForm):
         fields = ['old_password', 'new_password1', 'new_password2']
 
 
-class VerificationForm(forms.Form):
-    code = forms.CharField(max_length=10)
+class ChangeEmailForm(forms.ModelForm):
+    email = forms.EmailField(label='Current Email', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    current_password = forms.CharField(label='Current Password', widget=forms.PasswordInput())
+    new_email = forms.EmailField(label='New Email')
+
+    class Meta:
+        model = User
+        fields = ['email', 'new_email', 'current_password']

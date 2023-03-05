@@ -1,10 +1,11 @@
 {% extends "main/base/base.html" %}
-{% block title %}Login{% endblock %}
 
+{% block title %}Change Email{% endblock %}
 {% block style %}
     <style>
-
-
+        #hint_id_new_password1 ul {
+            padding-left: 15px;
+        }
     </style>
 {% endblock %}
 
@@ -13,21 +14,19 @@
 
 {% block content %}
     <div class="form-main">
-        <h2 class="font-weight-bold mt-3 form-title">Login</h2>
-        <form method="post" class="form-group">
+        <h2 class="font-weight-bold mt-3 form-title">Change Your Email</h2>
+        <p class="form-subtitle">Enter your new email address below.</p>
+        <form method="POST" class="form-group">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>
-            <p>Don't have an account? <a href="/register">Create an account.</a></p>
             <p><a href="/password_reset">Forgot Password?</a></p>
             <div class="btn-form">
-                <button type="submit" class="btn btn-default form-button">Login</button>
+                <button type="submit" class="btn btn-default form-button">Change Email</button>
             </div>
         </form>
     </div>
 {% endblock %}
 
-{% block javascript %}
-    <script type="text/javascript">
+{% block script %}
 
-    </script>
 {% endblock %}
