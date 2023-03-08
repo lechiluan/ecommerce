@@ -5,6 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/add.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/delete.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/detail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/edit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/trash.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_message.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer/add_customer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer/customer_table.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer/update_customer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/emails.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/emails.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECommerce/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_body.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_body.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
@@ -52,29 +80,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/GitHub/E-Commerce-System/ecommerce/dashboard/templates&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/ecommerce",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\icons" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\images\dashboard" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\images\main" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\static\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
@@ -129,6 +157,11 @@
       <workItem from="1677830995514" duration="11299000" />
       <workItem from="1677897922333" duration="33300000" />
       <workItem from="1677938215367" duration="31242000" />
+      <workItem from="1678067525282" duration="6622000" />
+      <workItem from="1678083033399" duration="9348000" />
+      <workItem from="1678111350082" duration="8220000" />
+      <workItem from="1678167134087" duration="11439000" />
+      <workItem from="1678200790020" duration="37015000" />
     </task>
     <servers />
   </component>

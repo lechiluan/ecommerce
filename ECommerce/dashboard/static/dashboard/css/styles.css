@@ -98,6 +98,7 @@
     width: 40px;
     height: 40px;
 }
+
 .main {
     position: absolute;
     width: calc(100% - 300px); /* 100% - 300px  300px is width of left navigation*/
@@ -145,7 +146,7 @@
 
 .search {
     position: relative;
-    width: 400px;
+    width: 800px;
     margin: 0 10px;
 }
 
@@ -259,10 +260,12 @@
     text-decoration: none;
     border-radius: 6px;
 }
+
 .btnView:hover {
     background-color: #007bb6;
     color: #ffffff;
 }
+
 .details table {
     width: 100%;
     border-collapse: collapse;
@@ -451,10 +454,60 @@
     .toggle.active:before {
         color: #fff;
     }
+
     .main,
-    .main.active
-    {
+    .main.active {
         width: 100%;
         left: 0;
     }
+}
+
+/*Custom CSS*/
+.main-content {
+    margin: 10px 20px;
+    padding: 10px;
+}
+
+.message-display {
+    margin: 15px 20px;
+}
+
+.card-header {
+    background-color: #fff;
+}
+
+.card-header .button-delete {
+    margin-right: 10px;
+}
+
+.action img {
+    width: 25px;
+    height: 25px;
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+td.action {
+    white-space: nowrap;
+    align-items: center;
+}
+
+.add-icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}
+
+.search-manage {
+    background-color: #fff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.search-manage-input {
+    background-color: #fff;
+}
+
+.table-style thead tr th {
+    white-space: nowrap;
 }

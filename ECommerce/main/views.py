@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 # from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 # Password Reset Imports
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.http import HttpResponse
@@ -17,11 +17,18 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
+from .models import Customer
 
 
 # Create your views here.
+
+# Display Homepage for all users. Display List of all products, categories, brands, etc.
 def home(request):
     return render(request, 'main/base/base.html')
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser and user.is_staff and user.is_active
 
 
 def register(request):
@@ -31,7 +38,6 @@ def register(request):
             if User.objects.filter(email=form.cleaned_data['email']).exists():
                 form.add_error('email', 'Email is already exist. Please use another email.')
                 return render(request, "registration/register/register.html", {"form": form})
-            # check username is already exist
             elif User.objects.filter(username=form.cleaned_data['username']).exists():
                 form.add_error('username', 'Username is already exist')
                 return render(request, "registration/register/register.html", {"form": form})
@@ -39,6 +45,8 @@ def register(request):
                 user = form.save(commit=False)
                 user.is_active = False
                 user.save()
+                Customer.objects.create(user=user, address=form.cleaned_data['address'],
+                                        mobile=form.cleaned_data['mobile'])
                 send_email_activate_account(request, user)
                 return render(request, 'registration/register/account_activation_sent.html')
     else:
@@ -84,15 +92,13 @@ def login(request, *args, **kwargs):
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            # check username and password is correct and authenticate
-
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user is not None:
                 # authenticate the user and log them in
                 auth_login(request, user)
                 # check if admin redirect to admin page else redirect to user page
                 if form.cleaned_data['username'] == 'admin':
-                    return redirect("/dashboard/home")
+                    return redirect("/dashboard/")
                 else:
                     return redirect("/")
             else:
@@ -100,7 +106,7 @@ def login(request, *args, **kwargs):
                 user = User.objects.filter(username=username).first()
                 if user is not None and user.is_active is False:
                     send_email_activate_account(request, user)
-                    messages.success(request, 'Your account is not active. Please check your email {} to '
+                    messages.warning(request, 'Your account is not active. Please check your email {} to '
                                               'activate your account.'.format(user.email))
                     return render(request, "registration/login.html", {"form": form})
                 form.add_error('username', 'Username or password is incorrect')
@@ -176,14 +182,21 @@ def change_email(request):
 @login_required
 def update_profile(request):
     user = request.user
+    # get customer object
+    customer = Customer.objects.filter(user=user).first()
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=user)
+        form = UpdateProfileForm(request.POST, instance=user, initial={'address': customer.address,
+                                                                       'mobile': customer.mobile})
         if form.is_valid():
             form.save()
+            customer.mobile = form.cleaned_data['mobile']
+            customer.address = form.cleaned_data['address']
+            customer.save()
             messages.success(request, 'Your profile has been updated.')
-            return redirect('/profile/')
+            return redirect('/auth/profile/')
     else:
-        form = UpdateProfileForm(instance=user)
+        form = UpdateProfileForm(instance=user, initial={'address': customer.address,
+                                                         'mobile': customer.mobile})
     return render(request, 'registration/profile/update_profile.html', {'form': form})
 
 
