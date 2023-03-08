@@ -1,0 +1,181 @@
+{% block style %}
+
+{% endblock %}
+{% block content %}
+    <div class="cardBox">
+        <div class="mycard">
+            <div>
+                <div class="numbers">1.042</div>
+                <div class="cardName">Daily Views</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="mycard">
+            <div>
+                <div class="numbers">80</div>
+                <div class="cardName">Sales</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="mycard">
+            <div>
+                <div class="numbers">203</div>
+                <div class="cardName">Comments</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="mycard">
+            <div>
+                <div class="numbers">$6,324</div>
+                <div class="cardName">Earning</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-usd" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="details">
+        <div class="recentOrders">
+            <div class="cardHeader">
+                <h2>Recent Orders</h2>
+                <a href="#" class="btnView">View All</a>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td>Payment</td>
+                    <td>Status</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status delivered">Delivered</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Due</td>
+                    <td><span class="status return">Return</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status inprogress">In Progress</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status delivered">Delivered</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Due</td>
+                    <td><span class="status return">Return</span></td>
+                </tr>
+                <tr>
+                    <td>Start Refigerator</td>
+                    <td>$1,000</td>
+                    <td>Paid</td>
+                    <td><span class="status inprogress">In Progress</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="recentCustomers">
+            <div class="cardHeader">
+                <h2>Recent Customers</h2>
+            </div>
+            <table>
+                <tbody>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                <tr>
+                    <td style="width:60px;">
+                        <div class="imgBx">{% load static %}<img src="{% static 'dashboard/images/dashboard/user.jpg' %}">
+                        </div>
+                    </td>
+                    <td><h4>David <br><span>Italy</span></h4></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+    </script>
+{% endblock %}

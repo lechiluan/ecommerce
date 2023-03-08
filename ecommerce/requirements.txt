@@ -1,0 +1,9 @@
+asgiref==3.6.0
+django-crispy-forms==1.14.0
+Django==4.1.7
+pip==22.3.1
+setuptools==66.1.1
+sqlparse==0.4.3
+tzdata==2022.7
+wheel==0.38.4
+six~=1.16.0

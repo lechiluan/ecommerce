@@ -1,0 +1,103 @@
+{% block style %}
+    <style>
+        .btn {
+            color: #fff;
+        }
+
+        .dropdown-item:hover {
+            background-color: #081c6e;
+            color: #fff;
+        }
+
+        .hi-user:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .btn-outline-success {
+            border: 3px solid #28a745;
+        }
+        .bg-dark{
+               {#background-color: #3352d2 !important;#}
+        }
+        .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">{% load static %}<img src="{% static 'main/images/main/logolclshop.png' %}" alt="LCL SHOP" title="LCL SHOP" width="60px" height="60px"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Category</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Laptop</a>
+                    <a class="dropdown-item" href="#">Smartphone</a>
+                    <a class="dropdown-item" href="#">Smart Watch</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">All products</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">FQA</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Feedback</a>
+            </li>
+            <li class="nav-item">
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search your product"
+                           aria-label="Search" style="width:250px;">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/cart/"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart
+                    (2)</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i> My Account</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <span class="dropdown-item hi-user"><strong>  Hi, {{ user.username }}</strong></span>
+                        <a class="dropdown-item" href="/auth/profile/"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp; Profile</a>
+                        <a class="dropdown-item" href="/auth/change_email/"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;Change Email</a>
+                        <a class="dropdown-item" href="/auth/change_password/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp; &nbsp;Change
+                            Password</a>
+                        <a class="dropdown-item" href="/auth/track_orders/"><i class="fa fa-history" aria-hidden="true"></i>&nbsp;&nbsp;Track Orders</a>
+                        <a class="dropdown-item" href="/admin/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+                        <a class="dropdown-item" href="/dashboard/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/auth/logout/"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Logout</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/register/"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                        Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/login/"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
