@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                 ('price', models.PositiveIntegerField()),
                 ('description', models.CharField(max_length=40)),
                 ('brand', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.brand')),
-                ('category', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.category')),
+                ('category_management', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.category_management')),
             ],
             options={
                 'db_table': 'Product',
@@ -93,7 +93,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('rate', models.PositiveIntegerField()),
                 ('message_review', models.CharField(max_length=500)),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer')),
+                ('customer-management', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer-management')),
                 ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.product')),
             ],
             options={
@@ -110,7 +110,7 @@ class Migration(migrations.Migration):
                 ('payment_method', models.CharField(choices=[('Cash on Delivery', 'Cash on Delivery'), ('Online Payment', 'Online Payment'), ('Bank Transfer', 'Bank Transfer'), ('Momo', 'Momo'), ('Paypal', 'Paypal'), ('Credit Card', 'Credit Card'), ('Debit Card', 'Debit Card')], max_length=50, null=True)),
                 ('payment_date', models.DateField(auto_now_add=True, null=True)),
                 ('payment_status', models.CharField(choices=[('Pending', 'Pending'), ('Paid', 'Paid')], max_length=50, null=True)),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer')),
+                ('customer-management', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer-management')),
                 ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.product')),
             ],
             options={
@@ -127,7 +127,7 @@ class Migration(migrations.Migration):
                 ('order_date', models.DateField(auto_now_add=True, null=True)),
                 ('status', models.CharField(choices=[('Pending', 'Pending'), ('Order Confirmed', 'Order Confirmed'), ('Out for Delivery', 'Out for Delivery'), ('Delivered', 'Delivered')], max_length=50, null=True)),
                 ('coupon', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='main.coupon')),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer')),
+                ('customer-management', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer-management')),
                 ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.product')),
             ],
             options={
@@ -156,7 +156,7 @@ class Migration(migrations.Migration):
                 ('price', models.PositiveIntegerField()),
                 ('amount', models.PositiveIntegerField()),
                 ('coupon', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='main.coupon')),
-                ('customer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer')),
+                ('customer-management', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.customer-management')),
                 ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='main.product')),
             ],
             options={

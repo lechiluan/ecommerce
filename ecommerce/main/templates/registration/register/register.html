@@ -19,14 +19,18 @@
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>
             <div class="form-input">
-                <input type="checkbox" name="terms" required checked> I agree to the <a href="#">Terms and Conditions</a>
+                <input type="checkbox" name="terms" required checked> I agree to the <a href="#">Terms and
+                Conditions.</a>
             </div>
-            <div class="btn-form"><button type="submit" class="btn btn-default form-button">Register</button></div>
+            <div class="btn-form">
+                <button type="submit" class="btn btn-default form-button">Register</button>
+            </div>
+            <p class="register-link-login">Already an account? <a href="/auth/login">Login</a></p>
         </form>
     </div>
 {% endblock %}
 
-{% block javascript %}
+{% block scripts %}
     <script type="text/javascript">
 
     </script>

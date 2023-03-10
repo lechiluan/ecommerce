@@ -13,7 +13,13 @@
 /*#28a745 green */
 /*#ffffff white */
 
-/* Navbar CSS */
+/* Custom CSS*/
+.content {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/* Form CSS */
 .form-main {
     width: 40%;
     min-width: 400px;
@@ -26,20 +32,24 @@
     margin: 20px auto;
     display: flex;
     flex-direction: column;
+    background-color: #fff;
 }
-.form-title{
+
+.form-title {
     padding-bottom: 20px;
 }
+
 .form-input {
-    width: 90%;
-    margin: auto;
+    width: 100%;
+    padding-right: 25px;
+    padding-left: 25px;
     text-align: left;
     justify-content: center;
     align-content: center;
 }
 
 .form-button {
-    width: 90%;
+    width: 100%;
     border-radius: 10px;
     background-color: #081c6e;
     color: #fff;
@@ -52,13 +62,21 @@
 }
 
 .btn-form {
-    padding-top: 10px;
+    with: 100%;
+    padding: 5px 25px;
 }
 
-.text-form{
+.text-form {
     padding-top: 10px;
     width: 90%;
     margin: auto;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.register-link-login {
+    padding-top: 20px;
     text-align: center;
     justify-content: center;
     align-content: center;
@@ -240,10 +258,4 @@
         margin-right: 0;
         font-weight: 600
     }
-}
-
-/* Custom CSS*/
-.content {
-    margin-top: 15px;
-    margin-bottom: 10px;
 }

@@ -98,8 +98,10 @@ def login(request, *args, **kwargs):
                 auth_login(request, user)
                 # check if admin redirect to admin page else redirect to user page
                 if form.cleaned_data['username'] == 'admin':
-                    return redirect("/dashboard/")
+                    messages.success(request, 'Welcome back admin')
+                    return redirect("/customer-management/")
                 else:
+                    messages.success(request, 'Welcome back {}'.format(user.username))
                     return redirect("/")
             else:
                 username = form.cleaned_data['username']
@@ -182,7 +184,7 @@ def change_email(request):
 @login_required
 def update_profile(request):
     user = request.user
-    # get customer object
+    # get customer-management object
     customer = Customer.objects.filter(user=user).first()
     if request.method == 'POST':
         form = UpdateProfileForm(request.POST, instance=user, initial={'address': customer.address,

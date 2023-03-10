@@ -31,16 +31,23 @@
     </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            {#add button delete all user#}
-            <a type="button" class="btn btn-primary btn-md float-right button-add" href="/dashboard/add_customer/"><img
-                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New Customer"
-                    title="Add New "> Add New
-            </a>
-            <button class="btn btn-danger btn-md float-right button-delete" data-toggle="modal"
-                    data-target="#addUserModal"><img
-                    src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon" alt="Add New Customer"
-                    title="Add New Customer"> Delete All
-            </button>
+            <form method="post" action="/dashboard/delete_selected_customer/">
+                {% csrf_token %}
+                {#add button delete all user#}
+                <a type="button" class="btn btn-primary btn-md float-right button-add" href="/dashboard/add_customer/"
+                   title="Add New"><img
+                        src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
+                        title="Add New"> Add New
+                </a>
+                <button type="submit" id="delete-selected" class="btn btn-danger btn-md float-right button-delete"
+                        title="Delete Selected" name="delete_selected"><img
+                        src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon" alt="Delete Selected"
+                        title="Delete Selected">Delete Selected
+                </button>
+                <input type="hidden" name="action" value="delete_selected">
+                <input type="hidden" name="select_across" value="0">
+                <div class="clear"></div>
+            </form>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -54,14 +61,15 @@
                             </div>
                         </th>
                         <th scope="col">No.</th>
-                        <th scope="col">CustomerID</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
                         <th scope="col">Full Name</th>
                         <th scope="col">Mobile</th>
                         <th scope="col">Address</th>
                         <th scope="col">Active</th>
-                        <th scope="col">Role</th>
+                        <th scope="col">Staff</th>
+                        <th scope="col">Admin</th>
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
@@ -71,7 +79,7 @@
                             <td>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="{{ user.id }}"
-                                           id="select-user-{{ user.id }}">
+                                           name="user_ids[]" id="select-user-{{ user.id }}">
                                     <label class="form-check-label" for="select-user-{{ user.id }}"></label>
                                 </div>
                             </td>
@@ -91,23 +99,34 @@
                                 <td></td>
                             {% endfor %}
                             {% if user.is_active %}
-                                <td>Activated</td>
+                                <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"></td>
                             {% else %}
-                                <td>Not Active</td>
+                                <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"></td>
+                            {% endif %}
+                            {% if user.is_staff %}
+                                <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"></td>
+                            {% else %}
+                                <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"></td>
                             {% endif %}
                             {% if user.is_superuser %}
-                                <td>Admin</td>
+                                <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"></td>
                             {% else %}
-                                <td>Customer</td>
+                                <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"></td>
                             {% endif %}
-                            <td class="action"><a href="#"><img src="{% static 'dashboard/images/icons/detail.png' %}"
-                                                                alt="Details" title="Details"></a>
-                                <a href="/dashboard/update_customer/{{ user.id }}"><img src="{% static 'dashboard/images/icons/edit.png' %}" alt="Edit"
-                                                 title="Edit"></a>
+                            <td class="action">
+                                <a href="/dashboard/customer_details/{{ user.id }}"><img
+                                        src="{% static 'dashboard/images/icons/detail.png' %}"
+                                        alt="Details"
+                                        title="Details"></a>
+                                <a href="/dashboard/update_customer/{{ user.id }}"><img
+                                        src="{% static 'dashboard/images/icons/edit.png' %}"
+                                        alt="Edit"
+                                        title="Edit"></a>
                                 <a href="/dashboard/delete_customer/{{ user.id }}?t={{ timestamp }}"
-                                   onclick="return confirm('Are you sure?')">
-                                    <img src="{% static 'dashboard/images/icons/delete.png' %}" alt="Delete"
-                                         title="Delete"></a>
+                                   onclick="return confirm('Are you sure?')"><img
+                                        src="{% static 'dashboard/images/icons/delete.png' %}"
+                                        alt="Delete"
+                                        title="Delete"></a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -118,6 +137,7 @@
     </div>
 {% endblock %}
 
-{% block script %}
-
+{% block scripts %}
+    <script>
+    </script>
 {% endblock %}

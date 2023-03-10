@@ -20,6 +20,13 @@ def admin_home(request):
     return render(request, 'dashboard/base/ad_base.html')
 
 
+def user_customer_table(request):
+    users = User.objects.all()
+    customers = Customer.objects.all()
+    return render(request, 'dashboard/customer-management/customer_table.html',
+                  {'users': users, 'customers': customers})
+
+
 def add_customer(request):
     if request.method == 'POST':
         form = AddCustomerForm(request.POST)
@@ -30,10 +37,17 @@ def add_customer(request):
                                                mobile=form.cleaned_data['mobile'])
             Customer.save(customer)
             messages.success(request, 'Customer added successfully!')
-            return redirect('/dashboard/customer_table/')
+
+            if 'save_and_add' in request.POST:
+                return redirect('/customer-management/add_customer/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/customer-management/update_customer/' + str(customer.user.id))
+            else:
+                return redirect('/customer-management/customer_table/')
+
     else:
         form = AddCustomerForm()
-    return render(request, 'dashboard/customer/add_customer.html', {'form': form})
+    return render(request, 'dashboard/customer-management/add_customer.html', {'form': form})
 
 
 def update_customer(request, user_id):
@@ -49,12 +63,17 @@ def update_customer(request, user_id):
             customer.mobile = form.cleaned_data['mobile']
             customer.save()
             messages.success(request, 'Customer updated successfully!')
-            return redirect('/dashboard/customer_table/')
+            if 'save_and_add' in request.POST:
+                return redirect('/customer-management/add_customer/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/customer-management/update_customer/' + str(customer.user.id))
+            else:
+                return redirect('/customer-management/customer_table/')
     else:
         user = User.objects.get(id=user_id)
         form = UpdateCustomerForm(instance=user, initial={'mobile': customer.mobile,
                                                           'address': customer.address})
-    return render(request, 'dashboard/customer/update_customer.html', {'form': form})
+    return render(request, 'dashboard/customer-management/update_customer.html', {'form': form})
 
 
 def delete_customer(request, user_id):
@@ -62,8 +81,8 @@ def delete_customer(request, user_id):
         user = User.objects.get(id=user_id)
         customer = Customer.objects.get(user=user)
     except ObjectDoesNotExist:
-        messages.warning(request, 'The customer you are trying to delete does not exist!')
-        return redirect('/dashboard/customer_table/')
+        messages.warning(request, 'The customer-management you are trying to delete does not exist!')
+        return redirect('/customer-management/customer_table/')
 
     if user.is_superuser:
         messages.warning(request, 'Admin can not be deleted!')
@@ -71,13 +90,37 @@ def delete_customer(request, user_id):
         user.delete()
         customer.delete()
         messages.success(request, 'Customer deleted successfully!')
+    return redirect('/customer-management/customer_table/')
+
+
+def delete_selected_customer(request):
+    if request.method == 'POST':
+        # Get a list of user IDs to delete
+        user_ids = request.POST.getlist('user_ids')
+        # Delete the users
+        if user_ids:
+            for user_id in user_ids:
+                try:
+                    user = User.objects.get(id=user_id)
+                    if user.is_superuser:
+                        messages.warning(request, 'Admin can not be deleted!')
+                    else:
+                        customer = Customer.objects.get(user=user)
+                        user.delete()
+                        customer.delete()
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The customer-management with ID {user_id} does not exist!')
+            messages.success(request, 'Customer deleted successfully!')
+        else:
+            messages.warning(request, 'Please select at least one customer-management to delete!')
     return redirect('/dashboard/customer_table/')
 
 
-def user_customer_table(request):
-    users = User.objects.all()
-    customers = Customer.objects.all()
-    return render(request, 'dashboard/customer/customer_table.html', {'users': users, 'customers': customers})
+def customer_details(request, user_id):
+    user = User.objects.get(id=user_id)
+    customer = Customer.objects.get(user_id=user_id)
+    return render(request, 'dashboard/customer-management/customer_details.html',
+                  {'user': user, 'customer-management': customer})
 
 
 def search_customer(request):
@@ -85,13 +128,16 @@ def search_customer(request):
         search_query = request.POST.get('search', '')
         customers = Customer.objects.filter(user__username__icontains=search_query) | Customer.objects.filter(
             user__email__icontains=search_query) | Customer.objects.filter(
-            user__first_name__icontains=search_query) | Customer.objects.filter(user__last_name__icontains=search_query)
+            user__first_name__icontains=search_query) | Customer.objects.filter(
+            user__last_name__icontains=search_query) | Customer.objects.filter(
+            mobile__icontains=search_query) | Customer.objects.filter(
+            address__icontains=search_query)
         users = [customer.user for customer in customers]
         if not users:
-            messages.success(request, 'No customer found!')
-            return redirect('/dashboard/customer_table/')
+            messages.success(request, 'No customer-management found!')
+            return redirect('/customer-management/customer_table/')
     else:
         users = User.objects.all()
         customers = Customer.objects.all()
     context = {'users': users, 'customers': customers}
-    return render(request, 'dashboard/customer/customer_table.html', context)
+    return render(request, 'dashboard/customer-management/customer_table.html', context)
