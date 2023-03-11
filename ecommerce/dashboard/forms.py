@@ -21,6 +21,15 @@ class AddCustomerForm(UserCreationForm):
         fields = ["first_name", "last_name", "username", "email", "password1", "password2", "address", "mobile",
                   "is_active", "is_staff", "is_superuser"]
 
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        if User.objects.filter(username=username).exists():
+            self.add_error('username', 'Username already exists')
+        if User.objects.filter(email=email).exists():
+            self.add_error('email', 'Email already exists')
+
 
 class UpdateCustomerForm(forms.ModelForm):
     first_name = forms.CharField(required=True)
@@ -59,3 +68,4 @@ class UpdateCustomerForm(forms.ModelForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
+

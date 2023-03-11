@@ -8,6 +8,6 @@ urlpatterns = [
     path('add_customer/', views.add_customer, name='add_customer'),
     path('update_customer/<int:user_id>', views.update_customer, name='update_customer'),
     path('delete_customer/<int:user_id>/', views.delete_customer, name='delete_customer'),
-    path('delete_selected_customer/', views.delete_selected_customer, name='delete_selected_customer'),
+    path('delete_selected_customer/<str:customer_ids>/', views.delete_selected_customer, name='delete_selected_customer'),
     path('search_customer/', views.search_customer, name='search_customer'),
 ]

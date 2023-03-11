@@ -39,11 +39,11 @@ def add_customer(request):
             messages.success(request, 'Customer added successfully!')
 
             if 'save_and_add' in request.POST:
-                return redirect('/customer-management/add_customer/')
+                return redirect('/dashboard/add_customer/')
             elif 'save_and_update' in request.POST:
-                return redirect('/customer-management/update_customer/' + str(customer.user.id))
+                return redirect('/dashboard/update_customer/' + str(customer.user.id))
             else:
-                return redirect('/customer-management/customer_table/')
+                return redirect('/dashboard/customer_table/')
 
     else:
         form = AddCustomerForm()
@@ -64,11 +64,11 @@ def update_customer(request, user_id):
             customer.save()
             messages.success(request, 'Customer updated successfully!')
             if 'save_and_add' in request.POST:
-                return redirect('/customer-management/add_customer/')
+                return redirect('/dashboard/add_customer/')
             elif 'save_and_update' in request.POST:
-                return redirect('/customer-management/update_customer/' + str(customer.user.id))
+                return redirect('dashboard/update_customer/' + str(customer.user.id))
             else:
-                return redirect('/customer-management/customer_table/')
+                return redirect('/dashboard/customer_table/')
     else:
         user = User.objects.get(id=user_id)
         form = UpdateCustomerForm(instance=user, initial={'mobile': customer.mobile,
@@ -82,7 +82,7 @@ def delete_customer(request, user_id):
         customer = Customer.objects.get(user=user)
     except ObjectDoesNotExist:
         messages.warning(request, 'The customer-management you are trying to delete does not exist!')
-        return redirect('/customer-management/customer_table/')
+        return redirect('/dashboard/customer_table/')
 
     if user.is_superuser:
         messages.warning(request, 'Admin can not be deleted!')
@@ -90,13 +90,13 @@ def delete_customer(request, user_id):
         user.delete()
         customer.delete()
         messages.success(request, 'Customer deleted successfully!')
-    return redirect('/customer-management/customer_table/')
+    return redirect('/dashboard/customer_table/')
 
 
-def delete_selected_customer(request):
+def delete_selected_customer(request, customer_ids):
     if request.method == 'POST':
         # Get a list of user IDs to delete
-        user_ids = request.POST.getlist('user_ids')
+        user_ids = customer_ids.split("+")
         # Delete the users
         if user_ids:
             for user_id in user_ids:
@@ -104,13 +104,15 @@ def delete_selected_customer(request):
                     user = User.objects.get(id=user_id)
                     if user.is_superuser:
                         messages.warning(request, 'Admin can not be deleted!')
+                        return redirect('/dashboard/customer_table/')
                     else:
                         customer = Customer.objects.get(user=user)
-                        user.delete()
                         customer.delete()
+                        user.delete()
+                        messages.success(request, 'Customer deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The customer-management with ID {user_id} does not exist!')
-            messages.success(request, 'Customer deleted successfully!')
+            return redirect('/dashboard/customer_table/')
         else:
             messages.warning(request, 'Please select at least one customer-management to delete!')
     return redirect('/dashboard/customer_table/')
@@ -120,7 +122,7 @@ def customer_details(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
     return render(request, 'dashboard/customer-management/customer_details.html',
-                  {'user': user, 'customer-management': customer})
+                  {'user': user, 'customer': customer})
 
 
 def search_customer(request):
@@ -135,7 +137,7 @@ def search_customer(request):
         users = [customer.user for customer in customers]
         if not users:
             messages.success(request, 'No customer-management found!')
-            return redirect('/customer-management/customer_table/')
+            return redirect('/dashboard/customer_table/')
     else:
         users = User.objects.all()
         customers = Customer.objects.all()
