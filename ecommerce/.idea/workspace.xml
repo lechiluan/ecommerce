@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/export.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/customer-management/customer_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer-management/customer_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +60,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/dashboard/static/dashboard/images/icons",
+    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/dashboard/templates/dashboard/category_management",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -75,11 +71,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\category_management" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\customer-management" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\icons" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\customer" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\category" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
@@ -142,12 +138,24 @@
       <workItem from="1678286225652" duration="53919000" />
       <workItem from="1678443129661" duration="8143000" />
       <workItem from="1678525539822" duration="665000" />
-      <workItem from="1678538787512" duration="5744000" />
+      <workItem from="1678538787512" duration="22800000" />
+      <workItem from="1678600421346" duration="4830000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

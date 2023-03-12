@@ -152,7 +152,7 @@ def activate_new_email(request, uidb64, token):
         return render(request, 'registration/register/account_activation_invalid.html')
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def change_email(request):
     if request.method == 'POST':
         form = ChangeEmailForm(request.POST, instance=request.user)
@@ -181,7 +181,7 @@ def change_email(request):
     return render(request, "registration/profile/change_email.html", {"form": form})
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def update_profile(request):
     user = request.user
     # get customer-management object
@@ -202,7 +202,7 @@ def update_profile(request):
     return render(request, 'registration/profile/update_profile.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(user=request.user, data=request.POST)
@@ -220,7 +220,7 @@ def change_password(request):
     return render(request, 'registration/profile/change_password.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def change_password_done(request):
     auth_logout(request)
     return render(request, 'registration/profile/change_password_done.html')
