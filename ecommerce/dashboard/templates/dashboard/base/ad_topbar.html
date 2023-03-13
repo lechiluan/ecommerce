@@ -1,28 +1,31 @@
 <div class="topBar">
     <div class="toggle" onclick="toggleMenu();"></div>
-    <div class="search">
-        <label>
-            <input type="text" placeholder="Search...">
-            <i class="fa fa-search" aria-hidden="true"></i>
-        </label>
-    </div>
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"
-                                                                            aria-hidden="true"></i> My Account</a>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-        <span class="dropdown-item hi-user"><strong>  Hi, {{ user.username }}</strong></span>
-        <a class="dropdown-item" href="/auth/profile/"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;
-            Profile</a>
-        <a class="dropdown-item" href="/auth/change_email/"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;Change
-            Email</a>
-        <a class="dropdown-item" href="/auth/change_password/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;
-            Change Password</a>
-        <a class="dropdown-item" href="/auth/track_orders/"><i class="fa fa-history" aria-hidden="true"></i>&nbsp;&nbsp;Track
-            Orders</a>
-        <a class="dropdown-item" href="/admin/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
-        <a class="dropdown-item" href="/dashboard/"><i class="fa fa-lock"
-                                                       aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="/auth/logout/"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Logout</a>
+{#    <div class="search">#}
+{#        <label>#}
+{#            <input type="text" placeholder="Search...">#}
+{#            <i class="fa fa-search" aria-hidden="true"></i>#}
+{#        </label>#}
+{#    </div>#}
+    <div class="dropdown-image">
+        <a class="user nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img
+                src="{{ MEDIA_URL }}{{ user.customer.customer_image.url }}" alt="profile pic" class="customer_image">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <span class="dropdown-item hi-user"><strong>  Hi, {{ user.username }}</strong></span>
+            <a class="dropdown-item" href="/auth/profile/"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;
+                Profile</a>
+            <a class="dropdown-item" href="/auth/change_email/"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;&nbsp;Change
+                Email</a>
+            <a class="dropdown-item" href="/auth/change_password/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;
+                Change Password</a>
+            <a class="dropdown-item" href="/auth/track_orders/"><i class="fa fa-history" aria-hidden="true"></i>&nbsp;&nbsp;Track
+                Orders</a>
+            <a class="dropdown-item" href="/admin/"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+            <a class="dropdown-item" href="/dashboard/"><i class="fa fa-lock"
+                                                           aria-hidden="true"></i>&nbsp;&nbsp;Admin</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/auth/logout/"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Logout</a>
+        </div>
     </div>
 </div>

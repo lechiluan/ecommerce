@@ -2,16 +2,28 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from main.models import Category
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
 
 
+def validate_image_size(value):
+    filesize = value.size
+    max_size = 2 * 1024 * 1024
+    if filesize > max_size:
+        raise ValidationError(_('Image size too large. Maximum size allowed is 2 MB.'))
+
+
+# Customer Forms
 class AddCustomerForm(UserCreationForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
+    customer_image = forms.ImageField(required=False, label='Upload avatar')
     is_active = forms.BooleanField(required=False, label='Active', initial=True)
     is_staff = forms.BooleanField(required=False, label='Staff', initial=False)
     is_superuser = forms.BooleanField(required=False, label='Superuser', initial=False)
@@ -19,16 +31,19 @@ class AddCustomerForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username", "email", "password1", "password2", "address", "mobile",
-                  "is_active", "is_staff", "is_superuser"]
+                  "customer_image", "is_active", "is_staff", "is_superuser"]
 
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         email = cleaned_data.get('email')
+        customer_image = cleaned_data.get('customer_image')
         if User.objects.filter(username=username).exists():
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exists():
             self.add_error('email', 'Email already exists')
+        if customer_image:
+            validate_image_size(customer_image)
 
 
 class UpdateCustomerForm(forms.ModelForm):
@@ -38,6 +53,7 @@ class UpdateCustomerForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
+    customer_image = forms.ImageField(required=False, label='Upload avatar')
     is_active = forms.BooleanField(required=False, label='Active', initial=True)
     is_staff = forms.BooleanField(required=False, label='Staff', initial=False)
     is_superuser = forms.BooleanField(required=False, label='Superuser', initial=False)
@@ -64,8 +80,60 @@ class UpdateCustomerForm(forms.ModelForm):
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         email = cleaned_data.get('email')
+        customer_image = cleaned_data.get('customer_image')
         if User.objects.filter(username=username).exclude(id=self.instance.id).exists():
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
+        if customer_image:
+            validate_image_size(customer_image)
 
+
+# Category Forms
+class AddCategoryForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    description = forms.CharField(required=True, max_length=100)
+
+    class Meta:
+        model = Category
+        fields = ['name', 'description']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        if Category.objects.filter(name=name).exists():
+            self.add_error('name', 'Category already exists')
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        description = self.cleaned_data.get('description')
+        category = Category(name=name, description=description)
+        category.save()
+        return category
+
+
+class UpdateCategoryForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    description = forms.CharField(required=True, max_length=100)
+
+    class Meta:
+        model = Category
+        fields = ['name', 'description']
+
+    def __init__(self, *args, **kwargs):
+        self.category = kwargs.pop('category')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        if Category.objects.filter(name=name).exclude(id=self.category.id).exists():
+            self.add_error('name', 'Category already exists')
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        description = self.cleaned_data.get('description')
+        self.category.name = name
+        self.category.description = description
+        self.category.save()
+        return self.category

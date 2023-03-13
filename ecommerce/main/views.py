@@ -33,7 +33,7 @@ def is_admin(user):
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             if User.objects.filter(email=form.cleaned_data['email']).exists():
                 form.add_error('email', 'Email is already exist. Please use another email.')
@@ -45,8 +45,12 @@ def register(request):
                 user = form.save(commit=False)
                 user.is_active = False
                 user.save()
-                Customer.objects.create(user=user, address=form.cleaned_data['address'],
-                                        mobile=form.cleaned_data['mobile'])
+                customer = Customer.objects.create(user=user)
+                customer.address = form.cleaned_data['address']
+                customer.mobile = form.cleaned_data['mobile']
+                customer.customer_image = form.cleaned_data['customer_image']
+                customer.save()
+
                 send_email_activate_account(request, user)
                 return render(request, 'registration/register/account_activation_sent.html')
     else:
@@ -98,8 +102,8 @@ def login(request, *args, **kwargs):
                 auth_login(request, user)
                 # check if admin redirect to admin page else redirect to user page
                 if form.cleaned_data['username'] == 'admin':
-                    messages.success(request, 'Welcome back admin')
-                    return redirect("/customer-management/")
+                    messages.success(request, 'Welcome back administrator!')
+                    return redirect("/dashboard/")
                 else:
                     messages.success(request, 'Welcome back {}'.format(user.username))
                     return redirect("/")
@@ -187,18 +191,23 @@ def update_profile(request):
     # get customer-management object
     customer = Customer.objects.filter(user=user).first()
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=user, initial={'address': customer.address,
-                                                                       'mobile': customer.mobile})
+        form = UpdateProfileForm(request.POST, request.FILES, instance=user,
+                                 initial={'address': customer.address, 'mobile': customer.mobile,
+                                          'customer_image': customer.customer_image})
+
         if form.is_valid():
             form.save()
             customer.mobile = form.cleaned_data['mobile']
             customer.address = form.cleaned_data['address']
+            customer.customer_image = form.cleaned_data['customer_image']
+
             customer.save()
             messages.success(request, 'Your profile has been updated.')
             return redirect('/auth/profile/')
     else:
         form = UpdateProfileForm(instance=user, initial={'address': customer.address,
-                                                         'mobile': customer.mobile})
+                                                         'mobile': customer.mobile,
+                                                         'customer_image': customer.customer_image})
     return render(request, 'registration/profile/update_profile.html', {'form': form})
 
 
@@ -260,7 +269,7 @@ def password_reset_request(request):
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
 
-                return redirect("/password_reset/done/")
+                return redirect("/auth/password_reset/done/")
             else:
                 password_reset_form.add_error('email', 'The email address entered does not exist. Please try again')
                 return render(request=request, template_name="registration/password/password_reset.html",

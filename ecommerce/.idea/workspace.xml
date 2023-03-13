@@ -5,8 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/dashboard/default.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/avatar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/default.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/detail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/lclshop.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/lclshop_nQGYZik.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/user.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/add_customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/add_customer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/customer_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/customer_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/customer_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/customer_table.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/update_customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/customer_management/update_customer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +82,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/dashboard/templates/dashboard/category_management",
+    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/media/customer_image",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -71,18 +93,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\media\customer_image" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\dashboard" />
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\media\profile_image" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\category_management" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\customer-management" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\icons" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\customer" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\category" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\register" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\password" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates" />
     </key>
   </component>
   <component name="RunManager">
@@ -139,7 +161,9 @@
       <workItem from="1678443129661" duration="8143000" />
       <workItem from="1678525539822" duration="665000" />
       <workItem from="1678538787512" duration="22800000" />
-      <workItem from="1678600421346" duration="4830000" />
+      <workItem from="1678600421346" duration="32590000" />
+      <workItem from="1678698515215" duration="8554000" />
+      <workItem from="1678721294549" duration="4084000" />
     </task>
     <servers />
   </component>
@@ -161,6 +185,6 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ecommerce$tests.coverage" NAME="tests Coverage Results" MODIFIED="1677848034174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
+    <SUITE FILE_PATH="coverage/ecommerce$tests.coverage" NAME="tests Coverage Results" MODIFIED="1678615760674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
   </component>
 </project>

@@ -12,9 +12,14 @@
 {% load static %}
 
 {% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/customer_table">Customer Management</a>
+        <span> > </span>
+        <a href="/dashboard/add_customer">Add Management</a>
+    </div>
     <div class="form-main">
         <h2 class="font-weight-bold mt-3 form-title">Add new customer</h2>
-        <form method="post" class="form-group" action="">
+        <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
             {#            <div class="form-input">{{ form|crispy }}</div>#}
             <div class="form-input">{{ form.first_name|as_crispy_field }}</div>
@@ -25,6 +30,7 @@
             <div class="form-input">{{ form.password2|as_crispy_field }}</div>
             <div class="form-input">{{ form.address|as_crispy_field }}</div>
             <div class="form-input">{{ form.mobile|as_crispy_field }}</div>
+            <div class="form-input">{{ form.customer_image|as_crispy_field }}</div>
             <h3 class="form-input label-permission">Permission is</h3>
             <div class="form-input checkbox-permission">{{ form.is_active|as_crispy_field }}</div>
             <div class="form-input checkbox-permission">{{ form.is_staff|as_crispy_field }}</div>

@@ -3,10 +3,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 from django.contrib import messages
-from .forms import AddCustomerForm, UpdateCustomerForm
+from django.core.exceptions import ValidationError
+from .forms import AddCustomerForm, UpdateCustomerForm, AddCategoryForm, UpdateCategoryForm
 from main.models import Customer, Category
+import os
+from django.conf import settings
 
 
 # Create your views here.
@@ -14,9 +17,8 @@ def is_admin(user):
     return user.is_authenticated and user.is_superuser and user.is_staff and user.is_active
 
 
-# # check if user is admin and if not redirect to login page after login successful it renders page user request
-# @user_passes_test(is_admin, login_url='/auth/login/')
-# @login_required(login_url='/auth/login/')
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def admin_home(request):
     return render(request, 'dashboard/base/ad_base.html')
 
@@ -29,10 +31,7 @@ def customer_table(request):
 
     # Get the current page object from the Paginator object
     page_object = paginator(request, users)
-    context = {
-        'users': page_object,
-        'customers': customers,
-    }
+    context = {'users': page_object, 'customers': customers}
     return render(request, 'dashboard/customer_management/customer_table.html', context)
 
 
@@ -53,13 +52,18 @@ def paginator(request, objects):
 
 def add_customer(request):
     if request.method == 'POST':
-        form = AddCustomerForm(request.POST)
+        form = AddCustomerForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            customer = Customer.objects.create(user=User.objects.get(username=form.cleaned_data['username']),
-                                               address=form.cleaned_data['address'],
-                                               mobile=form.cleaned_data['mobile'])
-            Customer.save(customer)
+            # Create user object
+            user = form.save()
+
+            # Create customer object associated with the user
+            customer = Customer.objects.create(user=user)
+            customer.address = form.cleaned_data['address']
+            customer.mobile = form.cleaned_data['mobile']
+            customer.customer_image = form.cleaned_data['customer_image']
+            customer.save()
+
             messages.success(request, 'Customer {} added successfully!'.format(customer.user.username))
 
             if 'save_and_add' in request.POST:
@@ -68,10 +72,10 @@ def add_customer(request):
                 return redirect('/dashboard/update_customer/' + str(customer.user.id))
             else:
                 return redirect('/dashboard/customer_table/')
-
     else:
         form = AddCustomerForm()
-    return render(request, 'dashboard/customer_management/add_customer.html', {'form': form})
+    context = {'form': form}
+    return render(request, 'dashboard/customer_management/add_customer.html', context)
 
 
 def update_customer(request, user_id):
@@ -79,28 +83,32 @@ def update_customer(request, user_id):
     customer = Customer.objects.get(user_id=user_id)
 
     if request.method == 'POST':
-        form = UpdateCustomerForm(request.POST, instance=user, initial={'mobile': customer.mobile,
-                                                                        'address': customer.address})
+        form = UpdateCustomerForm(request.POST, request.FILES, instance=user,
+                                  initial={'mobile': customer.mobile, 'address': customer.address,
+                                           'customer_image': customer.customer_image})
         if form.is_valid():
             # Update customer
             form.save()
             customer = Customer.objects.get(user=user)
             customer.address = form.cleaned_data['address']
             customer.mobile = form.cleaned_data['mobile']
+            customer.customer_image = form.cleaned_data['customer_image']
             customer.save()
             messages.success(request, 'Customer {} updated successfully!'.format(user.username))
             # Button actions
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/add_customer/')
             elif 'save_and_update' in request.POST:
-                return redirect('dashboard/update_customer/' + str(customer.user.id))
+                return redirect('/dashboard/update_customer/' + str(customer.user.id))
             else:
                 return redirect('/dashboard/customer_table/')
     else:
         user = User.objects.get(id=user_id)
         form = UpdateCustomerForm(instance=user, initial={'mobile': customer.mobile,
-                                                          'address': customer.address})
-    return render(request, 'dashboard/customer_management/update_customer.html', {'form': form})
+                                                          'address': customer.address,
+                                                          'customer_image': customer.customer_image})
+    context = {'form': form}
+    return render(request, 'dashboard/customer_management/update_customer.html', context)
 
 
 def delete_customer(request, user_id):
@@ -114,6 +122,12 @@ def delete_customer(request, user_id):
     if user.is_superuser:
         messages.warning(request, 'Admin can not be deleted!')
     else:
+        # Delete the customer image file
+        if customer.customer_image:
+            image_path = os.path.join(settings.MEDIA_ROOT, str(customer.customer_image))
+            if os.path.isfile(image_path):
+                os.remove(image_path)
+
         user.delete()
         customer.delete()
         messages.success(request, 'Customer {} deleted successfully!'.format(user.username))
@@ -134,6 +148,12 @@ def delete_selected_customer(request, customer_ids):
                         return redirect('/dashboard/customer_table/')
                     else:
                         customer = Customer.objects.get(user=user)
+                        # Delete the customer image file
+                        if customer.customer_image:
+                            image_path = os.path.join(settings.MEDIA_ROOT, str(customer.customer_image))
+                            if os.path.isfile(image_path):
+                                os.remove(image_path)
+                        # Delete the customer
                         customer.delete()
                         user.delete()
                         messages.success(request, 'Customer deleted successfully!')
@@ -148,8 +168,8 @@ def delete_selected_customer(request, customer_ids):
 def customer_details(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
-    return render(request, 'dashboard/customer_management/customer_details.html',
-                  {'user': user, 'customer': customer})
+    context = {'user': user, 'customer': customer}
+    return render(request, 'dashboard/customer_management/customer_details.html', context)
 
 
 def search_customer(request):
@@ -181,4 +201,98 @@ def search_customer(request):
 # Category Management
 def category_table(request):
     categories = Category.objects.all()
-    return render(request, 'dashboard/category_management/category_table.html', {'categories': categories})
+    page_object = paginator(request, categories)
+    context = {'categories': page_object}
+    return render(request, 'dashboard/category_management/category_table.html', context)
+
+
+def add_category(request):
+    if request.method == 'POST':
+        form = AddCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category {} added successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/add_category/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/update_category/' + str(form.cleaned_data['id']))
+            else:
+                return redirect('/dashboard/category_table/')
+    else:
+        form = AddCategoryForm()
+    context = {'form': form}
+    return render(request, 'dashboard/category_management/add_category.html', context)
+
+
+def update_category(request, category_id):
+    category = Category.objects.get(id=category_id)
+    if request.method == 'POST':
+        form = UpdateCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category {} updated successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/add_category/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/update_category/' + str(form.cleaned_data['id']))
+            else:
+                return redirect('/dashboard/category_table/')
+    else:
+        form = UpdateCategoryForm(instance=category)
+        context = {'form': form}
+    return render(request, 'dashboard/category_management/update_category.html', context)
+
+
+def delete_category(request, category_id):
+    try:
+        category = Category.objects.get(id=category_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The category {} you are trying to delete does not exist!'.format(category_id))
+        return redirect('/dashboard/category_table/')
+
+    category.delete()
+    messages.success(request, 'Category {} deleted successfully!'.format(category.name))
+    return redirect('/dashboard/category_table/')
+
+
+def delete_selected_category(request, category_ids):
+    if request.method == 'POST':
+        # Get a list of category IDs to delete
+        category_ids = category_ids.split("+")
+        # Delete the categories
+        if category_ids:
+            for category_id in category_ids:
+                try:
+                    category = Category.objects.get(id=category_id)
+                    category.delete()
+                    messages.success(request, 'Category deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The category with ID {category_id} does not exist!')
+            return redirect('/dashboard/category_table/')
+        else:
+            messages.warning(request, 'Please select at least one category to delete!')
+    return redirect('/dashboard/category_table/')
+
+
+def category_details(request, category_id):
+    category = Category.objects.get(id=category_id)
+    context = {'category': category}
+    return render(request, 'dashboard/category_management/category_details.html', context)
+
+
+def search_category(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/category_table/')
+        else:
+            categories = Category.objects.filter(name__icontains=search_query)
+            page_object = paginator(request, categories)
+        if not categories:
+            messages.success(request, 'No categories found {} !'.format(search_query))
+    else:
+        categories = Category.objects.all()
+        page_object = paginator(request, categories)
+    context = {'categories': page_object}
+    return render(request, 'dashboard/category_management/category_table.html', context)

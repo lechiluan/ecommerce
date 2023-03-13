@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Customer(models.Model):
     REQUIRED_FIELDS = ('user',)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer', unique=True)
     mobile = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=40, null=True)
+    customer_image = models.ImageField(upload_to='customer_image/', null=True, blank=True,
+                                       default='customer_image/default.jpg')
 
     @property
     def get_name(self):
@@ -24,19 +26,15 @@ class Customer(models.Model):
         db_table = "Customer"
 
 
-class Product(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=40)
-    product_image = models.ImageField(upload_to='media/product_image/', null=True, blank=True)
-    price = models.PositiveIntegerField()
-    description = models.CharField(max_length=40)
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
-    brand = models.ForeignKey('Brand', on_delete=models.CASCADE, null=True)
+    description = models.TextField(max_length=100, default='Default description')
 
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table = "Product"
+        db_table = "Category"
 
 
 class Brand(models.Model):
@@ -50,14 +48,20 @@ class Brand(models.Model):
         db_table = "Brand"
 
 
-class Category(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=40)
+    product_image = models.ImageField(upload_to='media/product_image/', null=True, blank=True)
+    price = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField()
+    description = models.CharField(max_length=40)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
+    brand = models.ForeignKey('Brand', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table = "Category"
+        db_table = "Product"
 
 
 class Coupon(models.Model):
@@ -174,4 +178,3 @@ class Review(models.Model):
 
     class Meta:
         db_table = "Review"
-

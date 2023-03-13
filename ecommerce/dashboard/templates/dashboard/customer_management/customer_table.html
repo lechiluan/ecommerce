@@ -11,6 +11,7 @@
 {% load crispy_forms_filters %}
 {% load static %}
 
+
 {% block content %}
     <h1 class="h2 mb-2 text-black-800">Customer Management</h1>
     <div class="breadcrumb">
@@ -81,6 +82,7 @@
                             <th scope="col">Full Name</th>
                             <th scope="col">Mobile</th>
                             <th scope="col">Address</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Active</th>
                             <th scope="col">Staff</th>
                             <th scope="col">Admin</th>
@@ -101,8 +103,22 @@
                                         <td>{{ customer.get_name }}</td>
                                         <td>{{ customer.mobile }}</td>
                                         <td>{{ customer.address }}</td>
+                                        <td>
+                                            {% if customer.customer_image %}
+                                                <img src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
+                                                     alt="Customer Image"
+                                                     class="img-thumbnail" width="50px" height="50px"
+                                                     title="Customer image of {{ customer.user.username }}"/>
+                                            {% else %}
+                                                <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                     alt="Default Image"
+                                                     class="img-thumbnail" width="50px" height="50px"
+                                                     title="Default Image"/>
+                                            {% endif %}
+                                        </td>
                                     {% endif %}
                                 {% empty %}
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

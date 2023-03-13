@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from .emails import *
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -141,6 +142,9 @@ STATICFILES_DIRS = [(BASE_DIR / 'main/static'),
                     (BASE_DIR / 'dashboard/static'),
                     (BASE_DIR / 'customer/static')]  # use to find static files
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Connect to bootstrap4 for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

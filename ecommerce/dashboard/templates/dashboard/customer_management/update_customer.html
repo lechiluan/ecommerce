@@ -17,9 +17,14 @@
 <script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
 {% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/customer_table">Customer Management</a>
+        <span> > </span>
+        <a href="/dashboard/update_customers/{{ user.id }}">Update Customer</a>
+    </div>
     <div class="form-main">
         <h2 class="font-weight-bold mt-3 form-title">Update customer</h2>
-        <form method="post" class="form-group" action="">
+        <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>
             <div class="btn-form">
@@ -35,6 +40,7 @@
                     <button type="submit" class="btn btn-success" name="save">Save</button>
                 </div>
             </div>
+
         </form>
     </div>
 {% endblock %}
