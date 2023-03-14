@@ -7,8 +7,10 @@ urlpatterns = [
     path('customer_details/<int:user_id>/', views.customer_details, name='customer_details'),
     path('add_customer/', views.add_customer, name='add_customer'),
     path('update_customer/<int:user_id>', views.update_customer, name='update_customer'),
+    path('update_password_customer/<int:user_id>', views.update_customer_password, name='update_customer_password'),
     path('delete_customer/<int:user_id>/', views.delete_customer, name='delete_customer'),
-    path('delete_selected_customer/<str:customer_ids>/', views.delete_selected_customer, name='delete_selected_customer'),
+    path('delete_selected_customer/<str:customer_ids>/', views.delete_selected_customer,
+         name='delete_selected_customer'),
     path('search_customer/', views.search_customer, name='search_customer'),
     path('category_table/', views.category_table, name='category_table'),
 ]

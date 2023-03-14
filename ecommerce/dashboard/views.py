@@ -6,11 +6,11 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from .forms import AddCustomerForm, UpdateCustomerForm, AddCategoryForm, UpdateCategoryForm
+from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, UpdateCategoryForm
 from main.models import Customer, Category
 import os
 from django.conf import settings
-
+from main.views import auth_login
 
 # Create your views here.
 def is_admin(user):
@@ -109,6 +109,28 @@ def update_customer(request, user_id):
                                                           'customer_image': customer.customer_image})
     context = {'form': form}
     return render(request, 'dashboard/customer_management/update_customer.html', context)
+
+
+def update_customer_password(request, user_id):
+    user = User.objects.get(id=user_id)
+    customer = Customer.objects.get(user_id=user_id)
+    form = UpdateCustomerPasswordForm(request.POST)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            if user is not None:
+                form.save(user)
+            # Update customer password
+            # Log in the user
+            auth_login(request, user)
+            messages.success(request, 'Customer {} password updated successfully!'.format(user.username))
+            # Button actions
+            return redirect('/dashboard/update_customer/' + str(customer.user.id))
+    else:
+        user = User.objects.get(id=user_id)
+        form = UpdateCustomerPasswordForm()
+    context = {'form': form, 'user': user, 'customer': customer}
+    return render(request, 'dashboard/customer_management/update_password_customer.html', context)
 
 
 def delete_customer(request, user_id):
@@ -239,7 +261,7 @@ def update_category(request, category_id):
                 return redirect('/dashboard/category_table/')
     else:
         form = UpdateCategoryForm(instance=category)
-        context = {'form': form}
+    context = {'form': form}
     return render(request, 'dashboard/category_management/update_category.html', context)
 
 

@@ -89,6 +89,28 @@ class UpdateCustomerForm(forms.ModelForm):
             validate_image_size(customer_image)
 
 
+class UpdateCustomerPasswordForm(forms.Form):
+    password1 = forms.CharField(widget=forms.PasswordInput, required=True, label='New Password')
+    password2 = forms.CharField(widget=forms.PasswordInput, required=True, label='Confirm Password')
+
+    class Meta:
+        model = User
+        fields = ['password1', 'password2']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        if password1 != password2:
+            self.add_error('password2', 'Passwords do not match')
+
+    def save(self, user):
+        password = self.cleaned_data.get('password1')
+        user.set_password(password)
+        user.save()
+        return user
+
+
 # Category Forms
 class AddCategoryForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)

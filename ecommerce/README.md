@@ -3,9 +3,9 @@
 
 - Frontend: HTML,CSS, JavaScript. CSS framework → Bootstrap
 - Backend: Django framework → Python
-- Database: MySQL. or PostgreSQL (ORM)
-- Cloud: Heroku, Azure.
-- Tools: Docker, GitHub, Axure, Postman.
+- Database: MySQL. or PostgresSQL (ORM)
+- Cloud: Heroku, AWS.
+- Tools: Docker, GitHub, Postman.
 # Main Functions
 1. E-Commerce system 
 2. Chatbot support users
@@ -56,4 +56,24 @@ Use multi-step authentication for secure payments
  - Statistics revenue → interact BI → Profit and loss, original price, cost delivery → Profit = revenue - cost. → Data analyze → Forecast revenue → **Data Analysis**
  - Total Sale, Total sessions.
 
- 
+## Installation
+
+**1.Clone Repository & Install Packages**
+```sh
+git clone https://github.com/lechiluan/E-Commerce-System.git
+pip install -r requirements.txt
+```
+**2.Setup Virtualenv**
+```sh
+virtualenv env
+source env/bin/activate
+```
+**3.Migrate & Start Server**
+```sh
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
+## Where to find Me
+Like Me on [Facebook](https://www.facebook.com/chiluanit/), [GitHub](https://github.com/lechiluan).

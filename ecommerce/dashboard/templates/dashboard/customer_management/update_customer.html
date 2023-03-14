@@ -10,12 +10,7 @@
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
 {% load static %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}">
-<script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
-<script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
-<script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script>
-<script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+
 {% block content %}
     <div class="breadcrumb">
         <a href="/dashboard/customer_table">Customer Management</a>
@@ -27,6 +22,9 @@
         <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>
+            <div class="form-input">Raw passwords are not stored, so there is no way to see this customer’s password, but
+                you can change the password using <a href="/dashboard/update_password_customer/{{ user.id }}">this form.</a>
+            </div>
             <div class="btn-form">
                 <div class="btn-form-left">
                     <a type="button" class="btn btn-dark" href="/dashboard/customer_table">Back</a>
