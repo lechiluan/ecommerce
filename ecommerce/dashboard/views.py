@@ -68,11 +68,11 @@ def add_customer(request):
             messages.success(request, 'Customer {} added successfully!'.format(customer.user.username))
 
             if 'save_and_add' in request.POST:
-                return redirect('/dashboard/add_customer/')
+                return redirect('/dashboard/customer/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/update_customer/' + str(customer.user.id))
+                return redirect('/dashboard/customer/update/' + str(customer.user.id) + '/')
             else:
-                return redirect('/dashboard/customer_table/')
+                return redirect('/dashboard/customer/')
     else:
         form = AddCustomerForm()
     context = {'form': form}
@@ -98,11 +98,11 @@ def update_customer(request, user_id):
             messages.success(request, 'Customer {} updated successfully!'.format(user.username))
             # Button actions
             if 'save_and_add' in request.POST:
-                return redirect('/dashboard/add_customer/')
+                return redirect('/dashboard/customer/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/update_customer/' + str(customer.user.id))
+                return redirect('/dashboard/customer/update/' + str(customer.user.id) + '/')
             else:
-                return redirect('/dashboard/customer_table/')
+                return redirect('/dashboard/customer/')
     else:
         user = User.objects.get(id=user_id)
         form = UpdateCustomerForm(instance=user, initial={'mobile': customer.mobile,
@@ -126,7 +126,7 @@ def update_customer_password(request, user_id):
             auth_login(request, user)
             messages.success(request, 'Customer {} password updated successfully!'.format(user.username))
             # Button actions
-            return redirect('/dashboard/update_customer/' + str(customer.user.id))
+            return redirect('/dashboard/customer/update/' + str(customer.user.id) + '/')
     else:
         user = User.objects.get(id=user_id)
         form = UpdateCustomerPasswordForm()
@@ -140,7 +140,7 @@ def delete_customer(request, user_id):
         customer = Customer.objects.get(user=user)
     except ObjectDoesNotExist:
         messages.warning(request, 'The customer {} you are trying to delete does not exist!'.format(user_id))
-        return redirect('/dashboard/customer_table/')
+        return redirect('/dashboard/customer/')
 
     if user.is_superuser:
         messages.warning(request, 'Admin can not be deleted!')
@@ -154,7 +154,7 @@ def delete_customer(request, user_id):
         user.delete()
         customer.delete()
         messages.success(request, 'Customer {} deleted successfully!'.format(user.username))
-    return redirect('/dashboard/customer_table/')
+    return redirect('/dashboard/customer/')
 
 
 def delete_selected_customer(request, customer_ids):
@@ -168,7 +168,7 @@ def delete_selected_customer(request, customer_ids):
                     user = User.objects.get(id=user_id)
                     if user.is_superuser:
                         messages.warning(request, 'Administrator can not be deleted!')
-                        return redirect('/dashboard/customer_table/')
+                        return redirect('/dashboard/customer/')
                     else:
                         customer = Customer.objects.get(user=user)
                         # Delete the customer image file
@@ -182,10 +182,10 @@ def delete_selected_customer(request, customer_ids):
                         messages.success(request, 'Customer deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The customer-management with ID {user_id} does not exist!')
-            return redirect('/dashboard/customer_table/')
+            return redirect('/dashboard/customer/')
         else:
             messages.warning(request, 'Please select at least one customer-management to delete!')
-    return redirect('/dashboard/customer_table/')
+    return redirect('/dashboard/customer/')
 
 
 def customer_details(request, user_id):
@@ -200,7 +200,7 @@ def search_customer(request):
         search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
-            return redirect('/dashboard/customer_table/')
+            return redirect('/dashboard/customer/')
         else:
             customers = Customer.objects.filter(user__username__icontains=search_query) | Customer.objects.filter(
                 user__email__icontains=search_query) | Customer.objects.filter(
@@ -237,11 +237,11 @@ def add_category(request):
             form.save()
             messages.success(request, 'Category {} added successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
-                return redirect('/dashboard/add_category/')
+                return redirect('/dashboard/category/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/update_category/' + str(form.cleaned_data['id']))
+                return redirect('/dashboard/category/update' + str(form.cleaned_data['id']) + '/')
             else:
-                return redirect('/dashboard/category_table/')
+                return redirect('/dashboard/category/')
     else:
         form = AddCategoryForm()
     context = {'form': form}
@@ -256,11 +256,11 @@ def update_category(request, category_id):
             form.save()
             messages.success(request, 'Category {} updated successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
-                return redirect('/dashboard/add_category/')
+                return redirect('/dashboard/category/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/update_category/' + str(category_id))
+                return redirect('/dashboard/category/update/' + str(category_id) + '/')
             else:
-                return redirect('/dashboard/category_table/')
+                return redirect('/dashboard/category/')
     else:
         category = Category.objects.get(id=category_id)
         form = UpdateCategoryForm(category=category)
@@ -273,11 +273,11 @@ def delete_category(request, category_id):
         category = Category.objects.get(id=category_id)
     except ObjectDoesNotExist:
         messages.warning(request, 'The category {} you are trying to delete does not exist!'.format(category_id))
-        return redirect('/dashboard/category_table/')
+        return redirect('/dashboard/category/')
 
     category.delete()
     messages.success(request, 'Category {} deleted successfully!'.format(category.name))
-    return redirect('/dashboard/category_table/')
+    return redirect('/dashboard/category/')
 
 
 def delete_selected_category(request, category_ids):
@@ -293,10 +293,10 @@ def delete_selected_category(request, category_ids):
                     messages.success(request, 'Category deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The category with ID {category_id} does not exist!')
-            return redirect('/dashboard/category_table/')
+            return redirect('/dashboard/category/')
         else:
             messages.warning(request, 'Please select at least one category to delete!')
-    return redirect('/dashboard/category_table/')
+    return redirect('/dashboard/category/')
 
 
 def category_details(request, category_id):
@@ -310,7 +310,7 @@ def search_category(request):
         search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
-            return redirect('/dashboard/category_table/')
+            return redirect('/dashboard/category/')
         else:
             categories = Category.objects.filter(name__icontains=search_query) | Category.objects.filter(
                 description__icontains=search_query)
@@ -323,4 +323,105 @@ def search_category(request):
     context = {'categories': page_object}
     return render(request, 'dashboard/manage_category/category_table.html', context)
 
+
 # Brand Management
+def brand_table(request):
+    # Get all brands
+    brands = Brand.objects.all().order_by('id')
+    page_object = paginator(request, brands)
+    context = {'brands': page_object}
+    return render(request, 'dashboard/manage_brand/brand_table.html', context)
+
+
+def add_brand(request):
+    if request.method == 'POST':
+        form = AddBrandForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Brand {} added successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/brand/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/brand/update/' + str(form.cleaned_data['id']) + '/')
+            else:
+                return redirect('/dashboard/brand/')
+    else:
+        form = AddBrandForm()
+    context = {'form': form}
+    return render(request, 'dashboard/manage_brand/add_brand.html', context)
+
+
+def update_brand(request, brand_id):
+    brand = Brand.objects.get(id=brand_id)
+    if request.method == 'POST':
+        form = UpdateBrandForm(request.POST, request.FILES, brand=brand)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Brand {} updated successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/brand/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/brand/update/' + str(brand_id) + '/')
+            else:
+                return redirect('/dashboard/brand/')
+    else:
+        brand = Brand.objects.get(id=brand_id)
+        form = UpdateBrandForm(brand=brand)
+    context = {'form': form}
+    return render(request, 'dashboard/manage_brand/update_brand.html', context)
+
+
+def delete_brand(request, brand_id):
+    try:
+        brand = Brand.objects.get(id=brand_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The brand {} you are trying to delete does not exist!'.format(brand_id))
+        return redirect('/dashboard/brand/')
+    brand.delete()
+    messages.success(request, 'Brand {} deleted successfully!'.format(brand.name))
+
+
+def delete_selected_brand(request, brand_ids):
+    if request.method == 'POST':
+        # Get a list of brand IDs to delete
+        brand_ids = brand_ids.split("+")
+        # Delete the brands
+        if brand_ids:
+            for brand_id in brand_ids:
+                try:
+                    brand = Brand.objects.get(id=brand_id)
+                    brand.delete()
+                    messages.success(request, 'Brand deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The brand with ID {brand_id} does not exist!')
+            return redirect('/dashboard/brand/')
+        else:
+            messages.warning(request, 'Please select at least one brand to delete!')
+    return redirect('/dashboard/brand/')
+
+
+def brand_details(request, brand_id):
+    brand = Brand.objects.get(id=brand_id)
+    context = {'brand': brand}
+    return render(request, 'dashboard/manage_brand/brand_details.html', context)
+
+
+def search_brand(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/brand/')
+        else:
+            brands = Brand.objects.filter(name__icontains=search_query) | Brand.objects.filter(
+                description__icontains=search_query)
+            page_object = paginator(request, brands)
+        if not brands:
+            messages.success(request, 'No brands found {} !'.format(search_query))
+    else:
+        brands = Brand.objects.all()
+        page_object = paginator(request, brands)
+    context = {'brands': page_object}
+    return render(request, 'dashboard/manage_brand/brand_table.html', context)
+
+# Product Management

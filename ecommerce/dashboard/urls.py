@@ -25,13 +25,12 @@ urlpatterns = [
     path('category/search/', views.search_category, name='search_category'),
 
     # # Brand URL
-    # path('brand/', views.brand_table, name='brand_table'),
-    # path('brand/details/<int:brand_id>/', views.brand_details, name='brand_details'),
-    # path('brand/add/', views.add_brand, name='add_brand'),
-    # path('brand/update/<int:brand_id>/', views.update_brand, name='update_brand'),
-    # path('brand/delete/<int:brand_id>/', views.delete_brand, name='delete_brand'),
-    # path('brand/delete_selected/<str:brand_ids>/', views.delete_selected_brand,
-    #      name='delete_selected_brand'),
-    # path('brand/search/', views.search_brand, name='search_brand'),
-
+    path('brand/', views.brand_table, name='brand_table'),
+    path('brand/details/<int:brand_id>/', views.brand_details, name='brand_details'),
+    path('brand/add/', views.add_brand, name='add_brand'),
+    path('brand/update/<int:brand_id>/', views.update_brand, name='update_brand'),
+    path('brand/delete/<int:brand_id>/', views.delete_brand, name='delete_brand'),
+    path('brand/delete_selected/<str:brand_ids>/', views.delete_selected_brand,
+         name='delete_selected_brand'),
+    path('brand/search/', views.search_brand, name='search_brand'),
 ]
