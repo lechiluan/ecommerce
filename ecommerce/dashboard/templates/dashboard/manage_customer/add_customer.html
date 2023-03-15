@@ -13,9 +13,9 @@
 
 {% block content %}
     <div class="breadcrumb">
-        <a href="/dashboard/customer_table">Customer Management</a>
+        <a href="/dashboard/customer/">Customer Management</a>
         <span> > </span>
-        <a href="/dashboard/add_customer">Add Management</a>
+        <a href="/dashboard/customer/add/">Add Customer</a>
     </div>
     <div class="form-main">
         <h2 class="font-weight-bold mt-3 form-title">Add new customer</h2>
@@ -37,15 +37,15 @@
             <div class="form-input checkbox-permission">{{ form.is_superuser|as_crispy_field }}</div>
             <div class="btn-form">
                 <div class="btn-form-left">
-                    <a type="button" class="btn btn-dark" href="/dashboard/customer_table">Back</a>
-                    <button type="reset" class="btn btn-danger">Reset</button>
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/customer/">Back</a>
+                    <button type="reset" class="btn btn-danger btn-block">Reset</button>
                 </div>
                 <div class="btn-form-right">
-                    <button type="submit" class="btn btn-success" name="save_and_add">Save & Add Another
+                    <button type="submit" class="btn btn-success btn-block" name="save_and_add">Save & Add Another
                     </button>
-                    <button type="submit" class="btn btn-success" name="save_and_update">Save & Edit
+                    <button type="submit" class="btn btn-success btn-block" name="save_and_update">Save & Edit
                     </button>
-                    <button type="submit" class="btn btn-success" name="save">Save</button>
+                    <button type="submit" class="btn btn-success btn-block" name="save">Save</button>
                 </div>
             </div>
         </form>

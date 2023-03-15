@@ -1,0 +1,71 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Category {{ category.id }} Details{% endblock %}
+{% block style %}
+    <style>
+        .card-title, .form-display {
+            padding: 10px 0;
+            margin: 5px 0;
+        }
+
+        .img-details {
+            border: 1px solid #ccc;
+            max-width: 300px;
+            margin: 20px 0;
+        }
+
+        .badge-success {
+            background-color: green;
+        }
+
+        .badge-danger {
+            background-color: red;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="breadcrumb">
+            <a href="/dashboard/category/">Category Management</a>
+            <span> > </span>
+            <a href="/dashboard/category/details/{{ category.id }}/">Category Details</a>
+        </div>
+        <h1 class="h3 mb-2 text-gray-800">Category Details</h1>
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h2 class="font-weight-bold mt-3 form-title">Details about category
+                    - "{{ category.name }}"</h2>
+                <li class="form-display"><strong>Category ID</strong>: {{ category.id }}</li>
+                <li class="form-display"><strong>Category Name</strong>: {{ category.name }}</li>
+                <li class="form-display"><strong>Description</strong>: {{ category.description }}</li>
+                <div class="btn-form">
+                    <div class="btn-form-left">
+                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/category/">Back</a>
+                        <a type="button" class="btn btn-danger btn-block"
+                           href="/dashboard/delete_category/{{ category.id }}?t={{ timestamp }}"
+                           onclick="return confirm('Are you sure?')">Delete</a>
+                        <a type="button" class="btn btn-success btn-block"
+                           href="/dashboard/update_category/{{ category.id }}?t={{ timestamp }}">Update</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

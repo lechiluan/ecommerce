@@ -17,11 +17,11 @@
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
-        <a href="/dashboard/customer_table/">Customer Management</a>
+        <a href="/dashboard/custome/">Customer Management</a>
     </div>
     {# Searchbox bar right here#}
     <div class="search-form">
-        <form action="/dashboard/search_customer/" method="post">
+        <form action="/dashboard/customer/search/" method="post">
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
@@ -31,7 +31,7 @@
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
-                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/customer_table/">
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/customer/">
                         <i class="fas fa-times fa-sm"></i>
                     </a>
                 </div>
@@ -41,32 +41,30 @@
     {# End of searchbox bar#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <form id="delete-form" method="post" action="/dashboard/delete_selected_customer/">
+            <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><img
+                    src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
+                    title="Export Data">
+                Export Data
+            </button>
+            <form id="delete-form" method="post" action="/dashboard/customer/delete_selected/">
                 {% csrf_token %}
-                <a type="button" class="btn btn-primary btn-md float-right button-add" href="/dashboard/add_customer/"
-                   title="Add New"><img
-                        src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
-                        title="Add New"> Add New
-                </a>
-
-                <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right button-delete"
+                <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
                         title="Delete Selected" name="delete_selected" data-submit-form><img
                         src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon" alt="Delete Selected"
                         title="Delete Selected">Delete Selected
                 </button>
-
-                <button type="button" class="btn btn-success float-right dropdown-toggle button-delete btn-md"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"><img
-                        src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
-                        title="Export Data">
-                    Export Data
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="/dashboard/export_customers/csv/">CSV</a>
-                    <a class="dropdown-item" href="/dashboard/export_customers/xls/">Excel</a>
-                </div>
             </form>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/dashboard/export/customer/csv/">CSV</a>
+                <a class="dropdown-item" href="/dashboard/export/customer/xls/">Excel</a>
+            </div>
+            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/customer/add/"
+               title="Add New"><img
+                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
+                    title="Add New"> Add New
+            </a>
         </div>
         {% if users %}
             <div class="card-body">
@@ -145,15 +143,15 @@
                                              title="False"></td>
                                 {% endif %}
                                 <td class="action">
-                                    <a href="/dashboard/customer_details/{{ user.id }}"><img
+                                    <a href="/dashboard/customer/details/{{ user.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"
                                             title="Details"></a>
-                                    <a href="/dashboard/update_customer/{{ user.id }}"><img
+                                    <a href="/dashboard/customer/update/{{ user.id }}/"><img
                                             src="{% static 'dashboard/images/icons/edit.png' %}"
                                             alt="Edit"
                                             title="Edit"></a>
-                                    <a href="/dashboard/delete_customer/{{ user.id }}?t={{ timestamp }}"
+                                    <a href="/dashboard/customer/delete/{{ user.id }}?t={{ timestamp }}/"
                                        onclick="return confirm('Are you sure?')"><img
                                             src="{% static 'dashboard/images/icons/delete.png' %}"
                                             alt="Delete"
@@ -164,10 +162,10 @@
                         </tbody>
                     </table>
                 </div>
-                {% include 'dashboard/customer_management/pagination.html' %}
+                {% include 'dashboard/manage_customer/pagination.html' %}
             </div>
         {% else %}
-            {% include 'dashboard/customer_management/404.html' %}
+            {% include 'dashboard/manage_customer/404.html' %}
         {% endif %}
     </div>
 
@@ -196,7 +194,7 @@
                     let customerIds = Array.from(checkboxes).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/delete_selected_customer/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
                     // Submit the form
                     form.submit();
                 }
@@ -212,7 +210,7 @@
                     let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/delete_selected_customer/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
                 });
             });
         });

@@ -179,6 +179,7 @@
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .user .customer_image {
@@ -383,83 +384,10 @@
     line-height: 1.2em;
 }
 
-/* Make Responsive */
-@media (max-width: 992px) {
-    .navigation {
-        left: -300px;
-    }
-
-    .navigation.active {
-        left: 0;
-        width: 300px;
-    }
-
-    .main {
-        width: 100%;
-        left: 0;
-    }
-
-    .main.active {
-        width: calc(100% - 300px);
-        left: 300px;
-    }
-
-    .cardBox {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .details {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    .cardHeader h2 {
-        font-size: 18px;
-        font-weight: 600;
-    }
-}
-
-@media (max-width: 480px) {
-    .cardBox {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    .details .recentOrders {
-        overflow-x: auto;
-    }
-
-    .details .recentOrders table {
-        width: 600px;
-    }
-
-    .navigation {
-        width: 100%;
-        left: -100%;
-        z-index: 1000;
-    }
-
-    .navigation.active {
-        width: 100%;
-        left: 0;
-    }
-
-    .toggle.active {
-        position: fixed;
-        z-index: 10000;
-        right: 0;
-        left: initial;
-    }
-
-    .toggle.active:before {
-        color: #fff;
-    }
-
-    .main,
-    .main.active {
-        width: 100%;
-        left: 0;
-    }
+.btn-block {
+    display: inline-block;
+    width: auto;
+    margin-right: 10px;
 }
 
 /*Custom CSS*/
@@ -475,11 +403,6 @@
 .card-header {
     background-color: #fff;
 }
-
-.card-header .button-delete {
-    margin-right: 10px;
-}
-
 
 /* Table */
 .action img {
@@ -616,8 +539,7 @@ td.action {
 }
 
 .card-body {
-    margin-left: 15px;
-    margin-right: 15px;
+    margin: 20px 40px;
 }
 
 .no-objects {
@@ -628,6 +550,7 @@ td.action {
     font-size: 20px;
 }
 
+/* Breadcrumb */
 .breadcrumb {
     display: flex;
     align-items: center;
@@ -651,7 +574,7 @@ td.action {
     margin: 0 8px;
 }
 
-
+/*pagination*/
 .pagination {
     display: flex;
     justify-content: space-between;
@@ -763,7 +686,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 }
 
 
-.img-details{
+.img-details {
     position: relative;
     min-width: 200px;
     width: 200px;
@@ -772,11 +695,206 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     cursor: pointer;
     border: 1px solid #000;
 }
-.img-details .img-display{
+
+.img-details .img-display {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Make Responsive */
+@media (max-width: 1024px) {
+    .navigation {
+        left: -300px;
+    }
+
+    .navigation.active {
+        left: 0;
+        width: 300px;
+    }
+
+    .main {
+        width: 100%;
+        left: 0;
+    }
+
+    .main.active {
+        width: calc(100% - 300px);
+        left: 300px;
+    }
+
+    .cardBox {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .btn-block {
+        display: inline-block;
+        width: auto;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .details {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .cardHeader h2 {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .float-right {
+        float: none;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-direction: column;
+    }
+
+    .pagination .left {
+        order: 2;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .pagination .right {
+        order: 3;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .pagination a,
+    .pagination span {
+        margin: 5px;
+    }
+
+    .btn-form {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .btn-form-left {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .btn-form-right {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardBox {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .details .recentOrders {
+        overflow-x: auto;
+    }
+
+    .details .recentOrders table {
+        width: 600px;
+    }
+
+    .navigation {
+        width: 100%;
+        left: -100%;
+        z-index: 1000;
+    }
+
+    .navigation.active {
+        width: 100%;
+        left: 0;
+    }
+
+    .toggle.active {
+        position: fixed;
+        z-index: 10000;
+        right: 0;
+        left: initial;
+    }
+
+    .toggle.active:before {
+        color: #fff;
+    }
+
+    .main,
+    .main.active {
+        width: 100%;
+        left: 0;
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .float-right {
+        float: none;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-direction: column;
+    }
+
+    .pagination .left {
+        order: 2;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .pagination .right {
+        order: 3;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .pagination a,
+    .pagination span {
+        margin: 5px;
+    }
+
+    /*Form Action */
+    .btn-form {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .btn-form-left {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
+
+    .btn-form-right {
+        display: block;
+        width: 100%;
+        margin: 0.5rem auto;
+        float: none;
+    }
 }

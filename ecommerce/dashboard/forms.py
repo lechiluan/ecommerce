@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from main.models import Category
+from main.models import Category, Brand
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -146,6 +146,10 @@ class UpdateCategoryForm(forms.Form):
         self.category = kwargs.pop('category')
         super().__init__(*args, **kwargs)
 
+        if self.category:
+            self.fields['name'].initial = self.category.name
+            self.fields['description'].initial = self.category.description
+
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
@@ -159,3 +163,62 @@ class UpdateCategoryForm(forms.Form):
         self.category.description = description
         self.category.save()
         return self.category
+
+
+class AddBrandForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    logo = forms.ImageField(required=True, label='Upload logo')
+
+    class Meta:
+        model = Brand
+        fields = ['name', 'logo']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        logo = cleaned_data.get('logo')
+        if Brand.objects.filter(name=name).exists():
+            self.add_error('name', 'Brand already exists')
+        if logo:
+            validate_image_size(logo)
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        logo = self.cleaned_data.get('logo')
+        brand = Brand(name=name, logo=logo)
+        brand.save()
+        return brand
+
+
+class UpdateBrandForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    logo = forms.ImageField(required=False, label='Upload logo')
+
+    class Meta:
+        model = Brand
+        fields = ['name', 'logo']
+
+    def __init__(self, *args, **kwargs):
+        self.brand = kwargs.pop('brand')
+        super().__init__(*args, **kwargs)
+
+        if self.brand:
+            self.fields['name'].initial = self.brand.name
+            self.fields['logo'].initial = self.brand.logo
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        logo = cleaned_data.get('logo')
+        if Brand.objects.filter(name=name).exclude(id=self.brand.id).exists():
+            self.add_error('name', 'Brand already exists')
+        if logo:
+            validate_image_size(logo)
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        logo = self.cleaned_data.get('logo')
+        self.brand.name = name
+        self.brand.logo = logo
+        self.brand.save()
+        return self.brand

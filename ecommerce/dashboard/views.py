@@ -5,12 +5,13 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.core.exceptions import ValidationError
-from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, UpdateCategoryForm
-from main.models import Customer, Category
 import os
 from django.conf import settings
 from main.views import auth_login
+from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
+    UpdateCategoryForm, AddBrandForm, UpdateBrandForm
+from main.models import Customer, Category, Brand
+
 
 # Create your views here.
 def is_admin(user):
@@ -26,13 +27,13 @@ def admin_home(request):
 # Customer Management
 def customer_table(request):
     # Get all customers
-    users = User.objects.all()
+    users = User.objects.all().order_by('date_joined')
     customers = Customer.objects.all()
 
     # Get the current page object from the Paginator object
     page_object = paginator(request, users)
     context = {'users': page_object, 'customers': customers}
-    return render(request, 'dashboard/customer_management/customer_table.html', context)
+    return render(request, 'dashboard/manage_customer/customer_table.html', context)
 
 
 def paginator(request, objects):
@@ -75,7 +76,7 @@ def add_customer(request):
     else:
         form = AddCustomerForm()
     context = {'form': form}
-    return render(request, 'dashboard/customer_management/add_customer.html', context)
+    return render(request, 'dashboard/manage_customer/add_customer.html', context)
 
 
 def update_customer(request, user_id):
@@ -108,7 +109,7 @@ def update_customer(request, user_id):
                                                           'address': customer.address,
                                                           'customer_image': customer.customer_image})
     context = {'form': form}
-    return render(request, 'dashboard/customer_management/update_customer.html', context)
+    return render(request, 'dashboard/manage_customer/update_customer.html', context)
 
 
 def update_customer_password(request, user_id):
@@ -130,7 +131,7 @@ def update_customer_password(request, user_id):
         user = User.objects.get(id=user_id)
         form = UpdateCustomerPasswordForm()
     context = {'form': form, 'user': user, 'customer': customer}
-    return render(request, 'dashboard/customer_management/update_password_customer.html', context)
+    return render(request, 'dashboard/manage_customer/update_password_customer.html', context)
 
 
 def delete_customer(request, user_id):
@@ -191,7 +192,7 @@ def customer_details(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
     context = {'user': user, 'customer': customer}
-    return render(request, 'dashboard/customer_management/customer_details.html', context)
+    return render(request, 'dashboard/manage_customer/customer_details.html', context)
 
 
 def search_customer(request):
@@ -217,15 +218,16 @@ def search_customer(request):
         page_object = paginator(request, users)
     context = {'users': page_object,
                'customers': customers}
-    return render(request, 'dashboard/customer_management/customer_table.html', context)
+    return render(request, 'dashboard/manage_customer/customer_table.html', context)
 
 
 # Category Management
 def category_table(request):
-    categories = Category.objects.all()
+    # Get all categories
+    categories = Category.objects.all().order_by('id')
     page_object = paginator(request, categories)
     context = {'categories': page_object}
-    return render(request, 'dashboard/category_management/category_table.html', context)
+    return render(request, 'dashboard/manage_category/category_table.html', context)
 
 
 def add_category(request):
@@ -243,26 +245,27 @@ def add_category(request):
     else:
         form = AddCategoryForm()
     context = {'form': form}
-    return render(request, 'dashboard/category_management/add_category.html', context)
+    return render(request, 'dashboard/manage_category/add_category.html', context)
 
 
 def update_category(request, category_id):
     category = Category.objects.get(id=category_id)
     if request.method == 'POST':
-        form = UpdateCategoryForm(request.POST, instance=category)
+        form = UpdateCategoryForm(request.POST, category=category)
         if form.is_valid():
             form.save()
             messages.success(request, 'Category {} updated successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/add_category/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/update_category/' + str(form.cleaned_data['id']))
+                return redirect('/dashboard/update_category/' + str(category_id))
             else:
                 return redirect('/dashboard/category_table/')
     else:
-        form = UpdateCategoryForm(instance=category)
+        category = Category.objects.get(id=category_id)
+        form = UpdateCategoryForm(category=category)
     context = {'form': form}
-    return render(request, 'dashboard/category_management/update_category.html', context)
+    return render(request, 'dashboard/manage_category/update_category.html', context)
 
 
 def delete_category(request, category_id):
@@ -299,7 +302,7 @@ def delete_selected_category(request, category_ids):
 def category_details(request, category_id):
     category = Category.objects.get(id=category_id)
     context = {'category': category}
-    return render(request, 'dashboard/category_management/category_details.html', context)
+    return render(request, 'dashboard/manage_category/category_details.html', context)
 
 
 def search_category(request):
@@ -309,7 +312,8 @@ def search_category(request):
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/category_table/')
         else:
-            categories = Category.objects.filter(name__icontains=search_query)
+            categories = Category.objects.filter(name__icontains=search_query) | Category.objects.filter(
+                description__icontains=search_query)
             page_object = paginator(request, categories)
         if not categories:
             messages.success(request, 'No categories found {} !'.format(search_query))
@@ -317,4 +321,6 @@ def search_category(request):
         categories = Category.objects.all()
         page_object = paginator(request, categories)
     context = {'categories': page_object}
-    return render(request, 'dashboard/category_management/category_table.html', context)
+    return render(request, 'dashboard/manage_category/category_table.html', context)
+
+# Brand Management

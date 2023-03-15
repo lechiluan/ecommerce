@@ -18,6 +18,15 @@ from django.urls import path, include
 from main import views as main_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import handler404
+from django.shortcuts import render
+
+
+def error_404(request, exception):
+    return render(request, 'main/base/404.html', {})
+
+
+handler404 = 'ecommerce.urls.error_404'
 
 urlpatterns = [
     path('', main_views.home, name='index'),
@@ -25,6 +34,8 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('auth/', include('main.urls')),
     path('customer/', include('customer.urls')),
+
 ]
+
 if settings.DEBUG:
-     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

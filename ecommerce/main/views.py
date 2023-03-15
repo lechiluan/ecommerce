@@ -101,7 +101,7 @@ def login(request, *args, **kwargs):
                 # authenticate the user and log them in
                 auth_login(request, user)
                 # check if admin redirect to admin page else redirect to user page
-                if form.cleaned_data['username'] == 'admin':
+                if user.is_superuser and user.is_staff and user.is_active:
                     messages.success(request, 'Welcome back administrator!')
                     return redirect("/dashboard/")
                 else:
