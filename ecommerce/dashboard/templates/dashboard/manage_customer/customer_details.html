@@ -37,9 +37,11 @@
 {% block content %}
     <div class="container-fluid">
         <div class="breadcrumb">
+            <a href="/dashboard/">Home</a>
+            <span> > </span>
             <a href="/dashboard/customer/">Customer Management</a>
             <span> > </span>
-            <a href="/dashboard/customer/details/{{ user.id }}">Customer Details</a>
+            <a href="/dashboard/customer/details/{{ user.id }}/">Customer Details</a>
         </div>
         <h1 class="h3 mb-2 text-gray-800">Customer Details</h1>
         <div class="card shadow mb-4">
@@ -78,7 +80,8 @@
                     <p class="form-display">Designates whether the user can log into this admin site.</p>
                 {% endif %}
                 {% if customer.user.is_superuser %}
-                    <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-success">Yes</span></li>
+                    <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-success">Yes</span>
+                    </li>
                     <p class="form-display">Designates that this user has all permissions without explicitly assigning
                         them.</p>
                 {% else %}

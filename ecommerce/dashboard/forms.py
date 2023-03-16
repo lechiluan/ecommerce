@@ -2,7 +2,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from main.models import Category, Brand
+from django.forms import Textarea
+
+from main.models import Category, Brand, Product
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -222,3 +224,113 @@ class UpdateBrandForm(forms.Form):
         self.brand.logo = logo
         self.brand.save()
         return self.brand
+
+
+# Product Forms
+class AddProductForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
+    brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
+    price = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    stock = forms.IntegerField(required=True)
+    description = forms.CharField(required=True, widget=forms.Textarea)
+    product_image = forms.ImageField(required=True, label='Upload Product Image')
+
+    class Meta:
+        model = Product
+        fields = ['name', 'category', 'brand', 'price', 'old_price', 'stock', 'description', 'product_image']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        category = cleaned_data.get('category')
+        brand = cleaned_data.get('brand')
+        price = cleaned_data.get('price')
+        old_price = cleaned_data.get('old_price')
+        stock = cleaned_data.get('stock')
+        description = cleaned_data.get('description')
+        product_image = cleaned_data.get('product_image')
+        if Product.objects.filter(name=name).exists():
+            self.add_error('name', 'Product already exists')
+        if product_image:
+            validate_image_size(product_image)
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        category = self.cleaned_data.get('category')
+        brand = self.cleaned_data.get('brand')
+        price = self.cleaned_data.get('price')
+        old_price = self.cleaned_data.get('old_price')
+        stock = self.cleaned_data.get('stock')
+        description = self.cleaned_data.get('description')
+        product_image = self.cleaned_data.get('product_image')
+        product = Product(name=name, category=category, brand=brand, price=price, old_price=old_price, stock=stock,
+                          description=description, product_image=product_image)
+        product.save()
+        return product
+
+
+class UpdateProductForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+    brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True)
+    price = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    stock = forms.IntegerField(required=True)
+    description = forms.CharField(required=True, max_length=5000, widget=forms.Textarea)
+    product_image = forms.ImageField(required=False, label='Upload Product Image')
+
+    class Meta:
+        model = Product
+        fields = ['name', 'category', 'brand', 'price', 'old_price', 'stock', 'description', 'product_image']
+
+    def __init__(self, *args, **kwargs):
+        self.product = kwargs.pop('product')
+        super().__init__(*args, **kwargs)
+
+        if self.product:
+            self.fields['name'].initial = self.product.name
+            self.fields['category'].initial = self.product.category
+            self.fields['brand'].initial = self.product.brand
+            self.fields['price'].initial = self.product.price
+            self.fields['old_price'].initial = self.product.old_price
+            self.fields['stock'].initial = self.product.stock
+            self.fields['description'].initial = self.product.description
+            self.fields['product_image'].initial = self.product.product_image
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        category = cleaned_data.get('category')
+        brand = cleaned_data.get('brand')
+        price = cleaned_data.get('price')
+        old_price = cleaned_data.get('old_price')
+        stock = cleaned_data.get('stock')
+        description = cleaned_data.get('description')
+        product_image = cleaned_data.get('product_image')
+        if Product.objects.filter(name=name).exclude(id=self.product.id).exists():
+            self.add_error('name', 'Product already exists')
+        if product_image:
+            validate_image_size(product_image)
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        category = self.cleaned_data.get('category')
+        brand = self.cleaned_data.get('brand')
+        price = self.cleaned_data.get('price')
+        old_price = self.cleaned_data.get('old_price')
+        stock = self.cleaned_data.get('stock')
+        description = self.cleaned_data.get('description')
+        product_image = self.cleaned_data.get('product_image')
+        self.product.name = name
+        self.product.category = category
+        self.product.brand = brand
+        self.product.price = price
+        self.product.old_price = old_price
+        self.product.stock = stock
+        self.product.description = description
+        if product_image:
+            self.product.product_image = product_image
+        self.product.save()
+        return self.product

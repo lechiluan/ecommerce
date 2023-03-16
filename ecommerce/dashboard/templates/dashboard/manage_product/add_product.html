@@ -1,6 +1,6 @@
 {% extends "dashboard/base/ad_base.html" %}
 
-{% block title %}Add Category{% endblock %}
+{% block title %}Add Product{% endblock %}
 {% block style %}
     <style>
 
@@ -15,20 +15,26 @@
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
-        <a href="/dashboard/category/">Category Management</a>
+        <a href="/dashboard/product/">Product Management</a>
         <span> > </span>
-        <a href="/dashboard/category/add/">Add New Category</a>
+        <a href="/dashboard/product/add/">Add New Product</a>
     </div>
     <div class="form-main">
-        <h2 class="font-weight-bold mt-3 form-title">Add new category</h2>
+        <h2 class="font-weight-bold mt-3 form-title">Add new product</h2>
         <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
             {#            <div class="form-input">{{ form|crispy }}</div>#}
             <div class="form-input">{{ form.name|as_crispy_field }}</div>
+            <div class="form-input">{{ form.category|as_crispy_field }}</div>
+            <div class="form-input">{{ form.brand|as_crispy_field }}</div>
+            <div class="form-input">{{ form.price|as_crispy_field }}</div>
+            <div class="form-input">{{ form.old_price|as_crispy_field }}</div>
+            <div class="form-input">{{ form.stock|as_crispy_field }}</div>
             <div class="form-input">{{ form.description|as_crispy_field }}</div>
+            <div class="form-input">{{ form.product_image|as_crispy_field }}</div>
             <div class="btn-form">
                 <div class="btn-form-left">
-                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/category/">Back</a>
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/product/">Back</a>
                     <button type="reset" class="btn btn-danger btn-block">Reset</button>
                 </div>
                 <div class="btn-form-right">

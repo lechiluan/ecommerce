@@ -13,9 +13,11 @@
 
 {% block content %}
     <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
         <a href="/dashboard/customer/">Customer Management</a>
         <span> > </span>
-        <a href="/dashboard/customers/update/{{ user.id }}">Update Customer</a>
+        <a href="/dashboard/customer/update/{{ user.id }}/">Update Customer</a>
     </div>
     <div class="form-main">
         <h2 class="font-weight-bold mt-3 form-title">Update customer</h2>

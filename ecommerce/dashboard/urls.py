@@ -24,7 +24,7 @@ urlpatterns = [
          name='delete_selected_category'),
     path('category/search/', views.search_category, name='search_category'),
 
-    # # Brand URL
+    # Brand URL
     path('brand/', views.brand_table, name='brand_table'),
     path('brand/details/<int:brand_id>/', views.brand_details, name='brand_details'),
     path('brand/add/', views.add_brand, name='add_brand'),
@@ -33,4 +33,14 @@ urlpatterns = [
     path('brand/delete_selected/<str:brand_ids>/', views.delete_selected_brand,
          name='delete_selected_brand'),
     path('brand/search/', views.search_brand, name='search_brand'),
+
+    # Product URL
+    path('product/', views.product_table, name='product_table'),
+    path('product/details/<int:product_id>/', views.product_details, name='product_details'),
+    path('product/add/', views.add_product, name='add_product'),
+    path('product/update/<int:product_id>/', views.update_product, name='update_product'),
+    path('product/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('product/delete_selected/<str:product_ids>/', views.delete_selected_product,
+         name='delete_selected_product'),
+    path('product/search/', views.search_product, name='search_product'),
 ]

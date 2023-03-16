@@ -9,8 +9,8 @@ import os
 from django.conf import settings
 from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
-    UpdateCategoryForm, AddBrandForm, UpdateBrandForm
-from main.models import Customer, Category, Brand
+    UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm
+from main.models import Customer, Category, Brand, Product
 
 
 # Create your views here.
@@ -25,6 +25,8 @@ def admin_home(request):
 
 
 # Customer Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def customer_table(request):
     # Get all customers
     users = User.objects.all().order_by('date_joined')
@@ -51,6 +53,8 @@ def paginator(request, objects):
     return page_obj
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def add_customer(request):
     if request.method == 'POST':
         form = AddCustomerForm(request.POST, request.FILES)
@@ -79,6 +83,8 @@ def add_customer(request):
     return render(request, 'dashboard/manage_customer/add_customer.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def update_customer(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
@@ -112,6 +118,8 @@ def update_customer(request, user_id):
     return render(request, 'dashboard/manage_customer/update_customer.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def update_customer_password(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
@@ -134,6 +142,8 @@ def update_customer_password(request, user_id):
     return render(request, 'dashboard/manage_customer/update_password_customer.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_customer(request, user_id):
     try:
         user = User.objects.get(id=user_id)
@@ -157,6 +167,8 @@ def delete_customer(request, user_id):
     return redirect('/dashboard/customer/')
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_selected_customer(request, customer_ids):
     if request.method == 'POST':
         # Get a list of user IDs to delete
@@ -188,6 +200,8 @@ def delete_selected_customer(request, customer_ids):
     return redirect('/dashboard/customer/')
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def customer_details(request, user_id):
     user = User.objects.get(id=user_id)
     customer = Customer.objects.get(user_id=user_id)
@@ -195,6 +209,8 @@ def customer_details(request, user_id):
     return render(request, 'dashboard/manage_customer/customer_details.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def search_customer(request):
     if request.method == 'POST':
         search_query = request.POST.get('search', '')
@@ -222,6 +238,8 @@ def search_customer(request):
 
 
 # Category Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def category_table(request):
     # Get all categories
     categories = Category.objects.all().order_by('id')
@@ -230,6 +248,8 @@ def category_table(request):
     return render(request, 'dashboard/manage_category/category_table.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def add_category(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST)
@@ -248,6 +268,8 @@ def add_category(request):
     return render(request, 'dashboard/manage_category/add_category.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def update_category(request, category_id):
     category = Category.objects.get(id=category_id)
     if request.method == 'POST':
@@ -268,6 +290,8 @@ def update_category(request, category_id):
     return render(request, 'dashboard/manage_category/update_category.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_category(request, category_id):
     try:
         category = Category.objects.get(id=category_id)
@@ -280,6 +304,8 @@ def delete_category(request, category_id):
     return redirect('/dashboard/category/')
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_selected_category(request, category_ids):
     if request.method == 'POST':
         # Get a list of category IDs to delete
@@ -299,12 +325,16 @@ def delete_selected_category(request, category_ids):
     return redirect('/dashboard/category/')
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def category_details(request, category_id):
     category = Category.objects.get(id=category_id)
     context = {'category': category}
     return render(request, 'dashboard/manage_category/category_details.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def search_category(request):
     if request.method == 'POST':
         search_query = request.POST.get('search', '')
@@ -325,6 +355,8 @@ def search_category(request):
 
 
 # Brand Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def brand_table(request):
     # Get all brands
     brands = Brand.objects.all().order_by('id')
@@ -333,6 +365,8 @@ def brand_table(request):
     return render(request, 'dashboard/manage_brand/brand_table.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def add_brand(request):
     if request.method == 'POST':
         form = AddBrandForm(request.POST, request.FILES)
@@ -351,6 +385,8 @@ def add_brand(request):
     return render(request, 'dashboard/manage_brand/add_brand.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def update_brand(request, brand_id):
     brand = Brand.objects.get(id=brand_id)
     if request.method == 'POST':
@@ -371,6 +407,8 @@ def update_brand(request, brand_id):
     return render(request, 'dashboard/manage_brand/update_brand.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_brand(request, brand_id):
     try:
         brand = Brand.objects.get(id=brand_id)
@@ -381,6 +419,8 @@ def delete_brand(request, brand_id):
     messages.success(request, 'Brand {} deleted successfully!'.format(brand.name))
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def delete_selected_brand(request, brand_ids):
     if request.method == 'POST':
         # Get a list of brand IDs to delete
@@ -400,12 +440,16 @@ def delete_selected_brand(request, brand_ids):
     return redirect('/dashboard/brand/')
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def brand_details(request, brand_id):
     brand = Brand.objects.get(id=brand_id)
     context = {'brand': brand}
     return render(request, 'dashboard/manage_brand/brand_details.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def search_brand(request):
     if request.method == 'POST':
         search_query = request.POST.get('search', '')
@@ -424,4 +468,117 @@ def search_brand(request):
     context = {'brands': page_object}
     return render(request, 'dashboard/manage_brand/brand_table.html', context)
 
+
 # Product Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def product_table(request):
+    # Get all products
+    products = Product.objects.all().order_by('id')
+    page_object = paginator(request, products)
+    context = {'products': page_object}
+    return render(request, 'dashboard/manage_product/product_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def add_product(request):
+    if request.method == 'POST':
+        form = AddProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Product {} added successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/product/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/product/update/' + str(form.cleaned_data['id']) + '/')
+            else:
+                return redirect('/dashboard/product/')
+    else:
+        form = AddProductForm()
+    context = {'form': form}
+    return render(request, 'dashboard/manage_product/add_product.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def update_product(request, product_id):
+    product = Product.objects.get(id=product_id)
+    if request.method == 'POST':
+        form = UpdateProductForm(request.POST, request.FILES, product=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Product {} updated successfully!'.format(form.cleaned_data['name']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/product/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/product/update/' + str(product_id) + '/')
+            else:
+                return redirect('/dashboard/product/')
+    else:
+        product = Product.objects.get(id=product_id)
+        form = UpdateProductForm(product=product)
+    context = {'form': form}
+    return render(request, 'dashboard/manage_product/update_product.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_product(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The product {} you are trying to delete does not exist!'.format(product_id))
+        return redirect('/dashboard/product/')
+    product.delete()
+    messages.success(request, 'Product {} deleted successfully!'.format(product.name))
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_product(request, product_ids):
+    if request.method == 'POST':
+        # Get a list of product IDs to delete
+        product_ids = product_ids.split("+")
+        # Delete the products
+        if product_ids:
+            for product_id in product_ids:
+                try:
+                    product = Product.objects.get(id=product_id)
+                    product.delete()
+                    messages.success(request, 'Product deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The product with ID {product_id} does not exist!')
+            return redirect('/dashboard/product/')
+        else:
+            messages.warning(request, 'Please select at least one product to delete!')
+    return redirect('/dashboard/product/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def product_details(request, product_id):
+    product = Product.objects.get(id=product_id)
+    context = {'product': product}
+    return render(request, 'dashboard/manage_product/product_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_product(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/product/')
+        else:
+            products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(
+                description__icontains=search_query)
+            page_object = paginator(request, products)
+        if not products:
+            messages.success(request, 'No products found {} !'.format(search_query))
+    else:
+        products = Product.objects.all()
+        page_object = paginator(request, products)
+    context = {'products': page_object}
+    return render(request, 'dashboard/manage_product/product_table.html', context)

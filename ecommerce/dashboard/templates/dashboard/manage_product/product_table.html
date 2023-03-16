@@ -1,6 +1,6 @@
 {% extends "dashboard/base/ad_base.html" %}
 
-{% block title %}Customer Management{% endblock %}
+{% block title %}Product Management{% endblock %}
 {% block style %}
     <style>
 
@@ -13,15 +13,15 @@
 
 
 {% block content %}
-    <h1 class="h2 mb-2 text-black-800">Customer Management</h1>
+    <h1 class="h2 mb-2 text-black-800">Product Management</h1>
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
-        <a href="/dashboard/customer/">Customer Management</a>
+        <a href="/dashboard/product/">Product Management</a>
     </div>
     {# Searchbox bar right here#}
     <div class="search-form">
-        <form action="/dashboard/customer/search/" method="post">
+        <form action="/dashboard/product/search/" method="post">
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
@@ -31,7 +31,7 @@
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
-                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/customer/">
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/product/">
                         <i class="fas fa-times fa-sm"></i>
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                     title="Export Data">
                 Export Data
             </button>
-            <form id="delete-form" method="post" action="/dashboard/customer/delete_selected/">
+            <form id="delete-form" method="post" action="/dashboard/product/delete_selected/">
                 {% csrf_token %}
                 <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
                         title="Delete Selected" name="delete_selected" data-submit-form><img
@@ -57,16 +57,16 @@
                 </button>
             </form>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="/dashboard/export/customer/csv/">CSV</a>
-                <a class="dropdown-item" href="/dashboard/export/customer/xls/">Excel</a>
+                <a class="dropdown-item" href="/dashboard/export/product/csv/">CSV</a>
+                <a class="dropdown-item" href="/dashboard/export/product/xls/">Excel</a>
             </div>
-            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/customer/add/"
+            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/product/add/"
                title="Add New"><img
                     src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
                     title="Add New"> Add New
             </a>
         </div>
-        {% if users %}
+        {% if products %}
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-auto table-style">
@@ -75,83 +75,52 @@
                             <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Full Name</th>
-                            <th scope="col">Mobile</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Active</th>
-                            <th scope="col">Staff</th>
-                            <th scope="col">Admin</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Product Image</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Old Price</th>
+                            <th scope="col">Stock</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for user in users %}
+                        {% for product in products %}
                             <tr>
                                 <td><input type="checkbox" class="select-checkbox" name="selected_customer"
-                                           value="{{ user.id }}"></td>
+                                           value="{{ product.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                {% for customer in customers %}
-                                    {% if customer.user == user %}
-                                        <td>{{ customer.get_name }}</td>
-                                        <td>{{ customer.mobile }}</td>
-                                        <td>{{ customer.address }}</td>
-                                        <td>
-                                            {% if customer.customer_image %}
-                                                <img src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
-                                                     alt="Customer Image"
-                                                     class="img-thumbnail image-table"
-                                                     title="Customer image of {{ customer.user.username }}"/>
-                                            {% else %}
-                                                <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
-                                                     alt="Default Image"
-                                                     class="img-thumbnail image-table"
-                                                     title="Default Image"/>
-                                            {% endif %}
-                                        </td>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>
+                                    {% if product.product_image %}
+                                        <img src="{{ MEDIA_URL }}{{ product.product_image.url }}"
+                                             alt="Product Image"
+                                             class="img-thumbnail image-table"
+                                             title="Product image of {{ product.name }}"/>
+                                    {% else %}
+                                        <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                             alt="Default Image"
+                                             class="img-thumbnail image-table"
+                                             title="Default Image"/>
                                     {% endif %}
-                                {% empty %}
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                {% endfor %}
-                                {% if user.is_active %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
-                                             title="True"></td>
-                                {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
-                                             title="False"></td>
-                                {% endif %}
-                                {% if user.is_staff %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
-                                             title="True"></td>
-                                {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
-                                             title="False"></td>
-                                {% endif %}
-                                {% if user.is_superuser %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
-                                             title="True"></td>
-                                {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
-                                             title="False"></td>
-                                {% endif %}
+                                </td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.brand }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.old_price }}</td>
+                                <td>{{ product.stock }}</td>
                                 <td class="action">
-                                    <a href="/dashboard/customer/details/{{ user.id }}/"><img
+                                    <a href="/dashboard/product/details/{{ product.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"
                                             title="Details"></a>
-                                    <a href="/dashboard/customer/update/{{ user.id }}/"><img
+                                    <a href="/dashboard/product/update/{{ product.id }}/"><img
                                             src="{% static 'dashboard/images/icons/edit.png' %}"
                                             alt="Edit"
                                             title="Edit"></a>
-                                    <a href="/dashboard/customer/delete/{{ user.id }}?t={{ timestamp }}/"
+                                    <a href="/dashboard/product/delete/{{ product.id }}?t={{ timestamp }}/"
                                        onclick="return confirm('Are you sure?')"><img
                                             src="{% static 'dashboard/images/icons/delete.png' %}"
                                             alt="Delete"
@@ -162,10 +131,10 @@
                         </tbody>
                     </table>
                 </div>
-                {% include 'dashboard/manage_customer/pagination.html' %}
+                {% include 'dashboard/manage_product/pagination.html' %}
             </div>
         {% else %}
-            {% include 'dashboard/manage_customer/404.html' %}
+            {% include 'dashboard/manage_product/404.html' %}
         {% endif %}
     </div>
 
@@ -188,13 +157,13 @@
                 // If no checkboxes are selected, prevent the form submission
                 if (checkboxes.length === 0) {
                     event.preventDefault();
-                    alert("Please select at least one customer to delete.");
+                    alert("Please select at least one product to delete.");
                 } else {
                     // Update the action attribute of the form
                     let customerIds = Array.from(checkboxes).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/product/delete_selected/" + customerIds.join("+") + "/";
                     // Submit the form
                     form.submit();
                 }
@@ -210,7 +179,7 @@
                     let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/product/delete_selected/" + customerIds.join("+") + "/";
                 });
             });
         });
