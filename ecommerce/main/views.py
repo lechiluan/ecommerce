@@ -28,7 +28,11 @@ def home(request):
 
 
 def is_admin(user):
-    return user.is_authenticated and user.is_superuser and user.is_staff and user.is_active
+    return user.is_authenticated and user.is_active and user.is_superuser and user.is_staff
+
+
+def is_customer(user):
+    return user.is_authenticated and user.is_active
 
 
 def register(request):
@@ -156,6 +160,7 @@ def activate_new_email(request, uidb64, token):
         return render(request, 'registration/profile/verify_new_email_invalid.html')
 
 
+@user_passes_test(is_customer, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def change_email(request):
     if request.method == 'POST':
@@ -185,6 +190,7 @@ def change_email(request):
     return render(request, "registration/profile/change_email.html", {"form": form})
 
 
+@user_passes_test(is_customer, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_profile(request):
     user = request.user
@@ -211,6 +217,7 @@ def update_profile(request):
     return render(request, 'registration/profile/update_profile.html', {'form': form})
 
 
+@user_passes_test(is_customer, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def change_password(request):
     if request.method == 'POST':
@@ -229,6 +236,7 @@ def change_password(request):
     return render(request, 'registration/profile/change_password.html', {'form': form})
 
 
+@user_passes_test(is_customer, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def change_password_done(request):
     auth_logout(request)

@@ -5,37 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_password.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_password_done.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/update_profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email_invalid.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email_sent.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_invalid.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/brand_logo/iphone-14-pro.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/brand_logo/iphone-14-pro_rvWwjBk.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_9jpsDq0.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_j9kMRZZ.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/static/dashboard/images/icons/check-icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/add_brand.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/add_brand.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/update_brand.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/update_brand.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/add_category.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/add_category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/update_category.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/update_category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/add_customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/add_customer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/update_customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/update_customer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/update_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/update_product.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +64,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/dashboard/templates/dashboard/account",
+    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/dashboard/static/dashboard/images/icons",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,18 +77,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\icons" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\account" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\templates\dashboard\manage_product" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\media\customer_image" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\dashboard\static\dashboard\images\dashboard" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\GitHub\E-Commerce-System\ecommerce" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\profile" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\register" />
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration" />
-      <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\registration\password" />
     </key>
   </component>
   <component name="RunManager">
@@ -179,7 +153,7 @@
       <workItem from="1678859806364" duration="784000" />
       <workItem from="1678860742609" duration="19322000" />
       <workItem from="1678930427433" duration="4184000" />
-      <workItem from="1678948084130" duration="21140000" />
+      <workItem from="1678948084130" duration="29391000" />
     </task>
     <servers />
   </component>
