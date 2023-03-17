@@ -151,9 +151,9 @@ def activate_new_email(request, uidb64, token):
         user.save()
         auth_login(request, user)
         messages.success(request, 'Your email has been updated. Now you can login your account.')
-        return redirect('/profile/')
+        return redirect('/auth/profile/')
     else:
-        return render(request, 'registration/register/account_activation_invalid.html')
+        return render(request, 'registration/profile/verify_new_email_invalid.html')
 
 
 @login_required(login_url='/auth/login/')

@@ -1,0 +1,35 @@
+{% extends "dashboard/base/ad_base.html" %}
+{% block title %}Profile{% endblock %}
+{% block style %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/profile/">Update Profile</a>
+    </div>
+    <div class="form-main">
+        <h2 class="font-weight-bold mt-3 form-title">Update Profile</h2>
+        <form method="POST" class="form-group" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-input">{{ form|crispy }}</div>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/">Back</a>
+                    <button type="reset" class="btn btn-danger btn-block">Reset</button>
+                    <button type="submit" class="btn btn-success btn-block">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}

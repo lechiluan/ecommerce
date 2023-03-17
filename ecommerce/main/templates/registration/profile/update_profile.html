@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="form-main">
-        <h2 class="font-weight-bold mt-3 form-title">Update profile</h2>
+        <h2 class="font-weight-bold mt-3 form-title">Update Profile</h2>
         <form method="POST" class="form-group" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-input">{{ form|crispy }}</div>

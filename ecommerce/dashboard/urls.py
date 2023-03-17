@@ -3,6 +3,15 @@ from . import views
 
 urlpatterns = [
     path('', views.admin_home, name='index'),
+
+    # Administration URL
+    path('profile/', views.update_profile, name='profile'),
+    path('change_password/', views.change_password, name='change_password'),
+    path('change_password_done/', views.change_password_done, name='change_password_done'),
+    path('change_email/', views.change_email, name='change_email'),
+    path('activate_email/<uidb64>/<token>/', views.activate_new_email, name='activate_email'),
+    path('logout/', views.logout, name='logout'),
+
     # Customer URL
     path('customer/', views.customer_table, name='user_customer_table'),
     path('customer/details/<int:user_id>/', views.customer_details, name='customer_details'),

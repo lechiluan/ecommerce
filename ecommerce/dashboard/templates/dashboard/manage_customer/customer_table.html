@@ -41,13 +41,11 @@
     {# End of searchbox bar#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"><img
-                    src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
-                    title="Export Data">
-                Export Data
-            </button>
+            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/customer/add/"
+               title="Add New"><img
+                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
+                    title="Add New"> Add New
+            </a>
             <form id="delete-form" method="post" action="/dashboard/customer/delete_selected/">
                 {% csrf_token %}
                 <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
@@ -56,15 +54,17 @@
                         title="Delete Selected">Delete Selected
                 </button>
             </form>
+            <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><img
+                    src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
+                    title="Export Data">
+                Export Data
+            </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="/dashboard/export/customer/csv/">CSV</a>
                 <a class="dropdown-item" href="/dashboard/export/customer/xls/">Excel</a>
             </div>
-            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/customer/add/"
-               title="Add New"><img
-                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
-                    title="Add New"> Add New
-            </a>
         </div>
         {% if users %}
             <div class="card-body">
@@ -190,13 +190,17 @@
                     event.preventDefault();
                     alert("Please select at least one customer to delete.");
                 } else {
-                    // Update the action attribute of the form
-                    let customerIds = Array.from(checkboxes).map(function (checkbox) {
-                        return checkbox.value;
-                    });
-                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
-                    // Submit the form
-                    form.submit();
+                    // Show confirm dialog and proceed only if OK is clicked
+                    let confirmed = confirm('Are you sure to delete this selected?');
+                    if (confirmed) {
+                        // Update the action attribute of the form
+                        let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                            return checkbox.value;
+                        });
+                        form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
+                        // Submit the form
+                        form.submit();
+                    }
                 }
             });
 

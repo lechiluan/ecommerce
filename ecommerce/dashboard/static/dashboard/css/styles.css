@@ -406,6 +406,8 @@
 
 .card-header {
     background-color: #fff;
+    display: flex;
+    justify-content: flex-end;
 }
 
 /* Table */
@@ -759,6 +761,10 @@ a#navbarDropdown.nav-link.dropdown-toggle {
         font-weight: 600;
     }
 
+    .card-header {
+        flex-direction: column;
+    }
+
     .btn-block {
         display: block;
         width: 100%;
@@ -853,6 +859,10 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     .main.active {
         width: 100%;
         left: 0;
+    }
+
+    .card-header {
+        flex-direction: column;
     }
 
     .btn-block {

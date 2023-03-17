@@ -1,15 +1,25 @@
-# from django.http import HttpResponse, HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator
-from django.contrib import messages
 import os
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
+from django.contrib.sites.shortcuts import get_current_site
+from .forms import UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+# Password Reset Imports
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+# from django.contrib.auth.tokens import default_token_generator
+from django.contrib import messages
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from main.tokens import account_activation_token, password_reset_token, update_email_token
+from django.contrib.auth.models import User
 from django.conf import settings
 from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
-    UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm
+    UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm
 from main.models import Customer, Category, Brand, Product
 
 
@@ -22,6 +32,130 @@ def is_admin(user):
 @login_required(login_url='/auth/login/')
 def admin_home(request):
     return render(request, 'dashboard/base/ad_base.html')
+
+
+# Administration Account
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def change_email(request):
+    if request.method == 'POST':
+        form = ChangeEmailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            user = authenticate(username=request.user.username, password=form.cleaned_data['current_password'])
+            if user is not None:
+                # check if new email is already exist
+                new_email = form.cleaned_data['new_email']
+                if new_email == request.user.email:
+                    form.add_error('new_email', 'New email is same as current email.')
+                    return render(request, "dashboard/account/change_email.html", {"form": form})
+                elif User.objects.filter(email=new_email).exists():
+                    form.add_error('new_email', 'Email is already exist. Please enter another email.')
+                    return render(request, "dashboard/account/change_email.html", {"form": form})
+                else:
+                    user.email = form.cleaned_data['new_email']
+                    user.is_active = False
+                    user.save()
+                    send_verify_new_email(request, user)
+                    return render(request, 'dashboard/account/verify_new_email_sent.html')
+            else:
+                form.add_error('current_password', 'Password is incorrect')
+                return render(request, "dashboard/account/change_email.html", {"form": form})
+    else:
+        form = ChangeEmailForm(instance=request.user)
+    return render(request, "dashboard/account/change_email.html", {"form": form})
+
+
+def send_verify_new_email(request, user):
+    current_site = get_current_site(request)
+    mail_subject = 'Update your account.'
+    message = render_to_string('dashboard/account/verify_new_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': update_email_token.make_token(user),
+        'protocol': 'http',
+    })
+    to_email = [user.email]
+    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    email = EmailMessage(mail_subject, message, form_email, to_email)
+    email.content_subtype = "html"
+    email.send()
+
+
+def activate_new_email(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and update_email_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        auth_login(request, user)
+        messages.success(request, 'Your email has been updated. Now you can login your account.')
+        return redirect('/dashboard/profile/')
+    else:
+        return render(request, 'dashboard/account/verify_new_email_invalid.html')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def update_profile(request):
+    user = request.user
+    # get customer-management object
+    customer = Customer.objects.filter(user=user).first()
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, request.FILES, instance=user,
+                                 initial={'address': customer.address, 'mobile': customer.mobile,
+                                          'customer_image': customer.customer_image})
+
+        if form.is_valid():
+            form.save()
+            customer.mobile = form.cleaned_data['mobile']
+            customer.address = form.cleaned_data['address']
+            customer.customer_image = form.cleaned_data['customer_image']
+
+            customer.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('/dashboard/profile/')
+    else:
+        form = UpdateProfileForm(instance=user, initial={'address': customer.address,
+                                                         'mobile': customer.mobile,
+                                                         'customer_image': customer.customer_image})
+    return render(request, 'dashboard/account/update_profile.html', {'form': form})
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = authenticate(username=request.user.username, password=form.cleaned_data['old_password'])
+            if user is not None:
+                user.set_password(form.cleaned_data['new_password1'])
+                user.save()
+                update_session_auth_hash(request, user)
+                return redirect('/change_password_done/')
+            else:
+                form.add_error('old_password', 'Wrong password. Please try again.')
+    else:
+        form = ChangePasswordForm(user=request.user)
+    return render(request, 'dashboard/account/change_password.html', {'form': form})
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def change_password_done(request):
+    auth_logout(request)
+    return render(request, 'dashboard/account/change_password_done.html')
+
+
+def logout(request):
+    auth_logout(request)
+    messages.success(request, "You have logged out. See you again. Administrator!")
+    return redirect('/')
 
 
 # Customer Management

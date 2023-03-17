@@ -1,0 +1,25 @@
+{% extends "main/base/base.html" %}
+
+{% block title %}Link Invalid{% endblock %}
+
+{% block style %}
+    <style>
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="form-main">
+        <h2 class="font-weight-bold mt-3 form-title">Activation link is invalid</h2>
+        <div class="text-form"><p>The activation link you clicked is either invalid or has expired. </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
