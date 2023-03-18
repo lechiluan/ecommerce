@@ -27,7 +27,7 @@ EMAIl_FROM = os.environ.get('EMAIL_FROM')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 14400
+PASSWORD_RESET_TIMEOUT = 86400  # 24 hours to reset password
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -40,6 +40,11 @@ if os.path.isfile(dotenv_file):
 
 # UPDATE secret key
 SECRET_KEY = os.environ['SECRET_KEY']
+
+# SECURITY TO USE HTTPS
+# SESSION_COOKIE_SECURE = True  # for https only, it uses to secure session
+# CSRF_COOKIE_SECURE = True  # for https only, it uses to secure csrf token
+# SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

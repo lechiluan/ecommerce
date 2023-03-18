@@ -69,7 +69,11 @@ class Product(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
-    discount = models.PositiveIntegerField(default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.PositiveIntegerField(default=1)
+    valid_from = models.DateTimeField(blank=True, null=True)
+    valid_to = models.DateTimeField(blank=True, null=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
@@ -150,9 +154,10 @@ class DeliveryAddress(models.Model):
 class Contact(models.Model):
     name = models.CharField(max_length=40)
     email = models.CharField(max_length=50, null=True)
-    phone = models.CharField(max_length=20, null=True)
-    message = models.CharField(max_length=500)
-    date = models.DateField(auto_now_add=True, null=True)
+    mobile = models.CharField(max_length=20, null=True)
+    subject = models.CharField(max_length=100, null=True)
+    message = models.CharField(null=True, max_length=2000)
+    date_sent = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.name
@@ -173,9 +178,7 @@ class Payment(models.Model):
         ('Paid', 'Paid')
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
-    quantity = models.PositiveIntegerField()
-    price = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()
+    order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
     payment_method = models.CharField(max_length=50, null=True, choices=METHOD)
     payment_date = models.DateField(auto_now_add=True, null=True)
     payment_status = models.CharField(max_length=50, null=True, choices=PAYMENT)

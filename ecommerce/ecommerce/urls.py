@@ -22,6 +22,7 @@ from django.conf.urls import handler404
 from django.shortcuts import render
 
 
+# 404 error handler
 def error_404(request, exception):
     return render(request, 'main/base/404.html', {})
 
@@ -30,12 +31,11 @@ handler404 = 'ecommerce.urls.error_404'
 
 urlpatterns = [
     path('', main_views.home, name='index'),
-    path('admin/', admin.site.urls),
-    path('dashboard/', include('dashboard.urls')),
-    path('auth/', include('main.urls')),
-    path('customer/', include('customer.urls')),
-
+    path('admin/', admin.site.urls), # admin site of django
+    path('dashboard/', include('dashboard.urls')), # dashboard admin site custom
+    path('auth/', include('main.urls')), # auth site custom to process authentication
+    path('customer/', include('customer.urls')), # customer site custom to process customer data order, cart.
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # for media folder

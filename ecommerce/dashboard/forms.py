@@ -2,9 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from django.forms import Textarea
-
-from main.models import Category, Brand, Product
+from main.models import Category, Brand, Product, Coupon, Contact, Payment
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -380,3 +378,124 @@ class UpdateProductForm(forms.Form):
             self.product.product_image = product_image
         self.product.save()
         return self.product
+
+
+# Coupon Forms
+class AddCouponForm(forms.Form):
+    code = forms.CharField(required=True, max_length=20)
+    discount = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    amount = forms.IntegerField(required=True, min_value=1)
+    valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    active = forms.BooleanField(required=False, initial=True)
+
+    class Meta:
+        model = Coupon
+        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'active']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code')
+        discount = cleaned_data.get('discount')
+        amount = cleaned_data.get('amount')
+        valid_from = cleaned_data.get('valid_from')
+        valid_to = cleaned_data.get('valid_to')
+        active = cleaned_data.get('active')
+        if Coupon.objects.filter(code=code).exists():
+            self.add_error('code', 'Coupon already exists')
+        if valid_from > valid_to:
+            self.add_error('valid_from', 'Valid from date must be before valid to date')
+        if valid_to < valid_from:
+            self.add_error('valid_to', 'Valid to date must be after valid from date')
+
+    def save(self):
+        code = self.cleaned_data.get('code')
+        discount = self.cleaned_data.get('discount')
+        amount = self.cleaned_data.get('amount')
+        valid_from = self.cleaned_data.get('valid_from')
+        valid_to = self.cleaned_data.get('valid_to')
+        active = self.cleaned_data.get('active')
+        coupon = Coupon(code=code, discount=discount, amount=amount, valid_from=valid_from, valid_to=valid_to,
+                        active=active)
+        coupon.save()
+        return coupon
+
+
+class UpdateCouponForm(forms.Form):
+    code = forms.CharField(required=True, max_length=20)
+    discount = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    amount = forms.IntegerField(required=True, min_value=1)
+    valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+    active = forms.BooleanField(required=False, initial=True)
+
+    class Meta:
+        model = Coupon
+        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'active']
+
+    def __init__(self, *args, **kwargs):
+        self.coupon = kwargs.pop('coupon')
+        super().__init__(*args, **kwargs)
+
+        if self.coupon:
+            self.fields['code'].initial = self.coupon.code
+            self.fields['discount'].initial = self.coupon.discount
+            self.fields['amount'].initial = self.coupon.amount
+            self.fields['valid_from'].initial = self.coupon.valid_from
+            self.fields['valid_to'].initial = self.coupon.valid_to
+            self.fields['active'].initial = self.coupon.active
+
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code')
+        discount = cleaned_data.get('discount')
+        amount = cleaned_data.get('amount')
+        valid_from = cleaned_data.get('valid_from')
+        valid_to = cleaned_data.get('valid_to')
+        active = cleaned_data.get('active')
+        if Coupon.objects.filter(code=code).exclude(id=self.coupon.id).exists():
+            self.add_error('code', 'Coupon already exists')
+        if valid_from > valid_to:
+            self.add_error('valid_from', 'Valid from date must be before valid to date')
+        if valid_to < valid_from:
+            self.add_error('valid_to', 'Valid to date must be after valid from date')
+
+    def save(self):
+        code = self.cleaned_data.get('code')
+        discount = self.cleaned_data.get('discount')
+        amount = self.cleaned_data.get('amount')
+        valid_from = self.cleaned_data.get('valid_from')
+        valid_to = self.cleaned_data.get('valid_to')
+        active = self.cleaned_data.get('active')
+        self.coupon.code = code
+        self.coupon.discount = discount
+        self.coupon.amount = amount
+        self.coupon.valid_from = valid_from
+        self.coupon.valid_to = valid_to
+        self.coupon.active = active
+        self.coupon.save()
+        return self.coupon
+
+
+# Payment Forms
+class AddPaymentForm(forms.Form):
+    name = forms.CharField(required=True, max_length=20)
+    active = forms.BooleanField(required=False, initial=True)
+
+    class Meta:
+        model = Payment
+        fields = ['name', 'active']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        active = cleaned_data.get('active')
+        if Payment.objects.filter(name=name).exists():
+            self.add_error('name', 'Payment already exists')
+
+    def save(self):
+        name = self.cleaned_data.get('name')
+        active = self.cleaned_data.get('active')
+        payment = Payment(name=name, active=active)
+        payment.save()
+        return payment

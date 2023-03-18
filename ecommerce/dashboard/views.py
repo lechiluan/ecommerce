@@ -1,26 +1,26 @@
 import os
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
-from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
+from django.contrib.auth import authenticate, update_session_auth_hash, logout as auth_logout
 from django.contrib.sites.shortcuts import get_current_site
-from .forms import UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
+from .forms import UpdateProfileForm, ChangePasswordForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 # Password Reset Imports
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
 # from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from main.tokens import account_activation_token, password_reset_token, update_email_token
+from main.tokens import update_email_token
 from django.contrib.auth.models import User
 from django.conf import settings
 from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
-    UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm
-from main.models import Customer, Category, Brand, Product
+    UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm, \
+    AddCouponForm, UpdateCouponForm
+from main.models import Customer, Category, Brand, Product, Coupon, Contact, Orders, OrderDetails, Payment
 
 
 # Create your views here.
@@ -716,3 +716,289 @@ def search_product(request):
         page_object = paginator(request, products)
     context = {'products': page_object}
     return render(request, 'dashboard/manage_product/product_table.html', context)
+
+
+# Coupon Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def coupon_table(request):
+    # Get all coupons
+    coupons = Coupon.objects.all().order_by('id')
+    page_object = paginator(request, coupons)
+    context = {'coupons': page_object}
+    return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def add_coupon(request):
+    if request.method == 'POST':
+        form = AddCouponForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Coupon {} added successfully!'.format(form.cleaned_data['code']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/coupon/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/coupon/update/' + str(form.cleaned_data['id']) + '/')
+            else:
+                return redirect('/dashboard/coupon/')
+    else:
+        form = AddCouponForm()
+    context = {'form': form}
+    return render(request, 'dashboard/manage_coupon/add_coupon.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def update_coupon(request, coupon_id):
+    coupon = Coupon.objects.get(id=coupon_id)
+    if request.method == 'POST':
+        form = UpdateCouponForm(request.POST, coupon=coupon)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Coupon {} updated successfully!'.format(form.cleaned_data['code']))
+            if 'save_and_add' in request.POST:
+                return redirect('/dashboard/coupon/add/')
+            elif 'save_and_update' in request.POST:
+                return redirect('/dashboard/coupon/update/' + str(coupon.id) + '/')
+            else:
+                return redirect('/dashboard/coupon/')
+    else:
+        coupon = Coupon.objects.get(id=coupon_id)
+        form = UpdateCouponForm(coupon=coupon)
+    context = {'form': form}
+    return render(request, 'dashboard/manage_coupon/update_coupon.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_coupon(request, coupon_id):
+    try:
+        coupon = Coupon.objects.get(id=coupon_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The coupon {} you are trying to delete does not exist!'.format(coupon_id))
+        return redirect('/dashboard/coupon/')
+    coupon.delete()
+    messages.success(request, 'Coupon {} deleted successfully!'.format(coupon.code))
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_coupon(request, coupon_ids):
+    if request.method == 'POST':
+        # Get a list of coupon IDs to delete
+        coupon_ids = coupon_ids.split("+")
+        # Delete the coupons
+        if coupon_ids:
+            for coupon_id in coupon_ids:
+                try:
+                    coupon = Coupon.objects.get(id=coupon_id)
+                    coupon.delete()
+                    messages.success(request, 'Coupon deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The coupon with ID {coupon_id} does not exist!')
+            return redirect('/dashboard/coupon/')
+        else:
+            messages.warning(request, 'Please select at least one coupon to delete!')
+    return redirect('/dashboard/coupon/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def coupon_details(request, coupon_id):
+    coupon = Coupon.objects.get(id=coupon_id)
+    context = {'coupon': coupon}
+    return render(request, 'dashboard/manage_coupon/coupon_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_coupon(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/coupon/')
+        else:
+            coupons = Coupon.objects.filter(
+                code__icontains=search_query) | Coupon.objects.filter(
+                discount__icontains=search_query) | Coupon.objects.filter(
+                amount__icontains=search_query) | Coupon.objects.filter(
+                active__icontains=search_query)
+            page_object = paginator(request, coupons)
+        if not coupons:
+            messages.success(request, 'No coupons found {} !'.format(search_query))
+    else:
+        coupons = Coupon.objects.all()
+        page_object = paginator(request, coupons)
+    context = {'coupons': page_object}
+    return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
+
+
+# Contact Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def contact_table(request):
+    # Get all contacts
+    contacts = Contact.objects.all().order_by('id')
+    page_object = paginator(request, contacts)
+    context = {'contacts': page_object}
+    return render(request, 'dashboard/manage_contact/contact_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def contact_details(request, contact_id):
+    contact = Contact.objects.get(id=contact_id)
+    context = {'contact': contact}
+    return render(request, 'dashboard/manage_contact/contact_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_contact(request, contact_id):
+    try:
+        contact = Contact.objects.get(id=contact_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The contact {} you are trying to delete does not exist!'.format(contact_id))
+        return redirect('/dashboard/contact/')
+    contact.delete()
+    messages.success(request, 'Contact {} deleted successfully!'.format(contact.name))
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_contact(request, contact_ids):
+    if request.method == 'POST':
+        # Get a list of contact IDs to delete
+        contact_ids = contact_ids.split("+")
+        # Delete the contacts
+        if contact_ids:
+            for contact_id in contact_ids:
+                try:
+                    contact = Contact.objects.get(id=contact_id)
+                    contact.delete()
+                    messages.success(request, 'Contact deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The contact with ID {contact_id} does not exist!')
+            return redirect('/dashboard/contact/')
+        else:
+            messages.warning(request, 'Please select at least one contact to delete!')
+    return redirect('/dashboard/contact/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_contact(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/contact/')
+        else:
+            contacts = Contact.objects.filter(
+                name__icontains=search_query) | Contact.objects.filter(
+                email__icontains=search_query) | Contact.objects.filter(
+                subject__icontains=search_query) | Contact.objects.filter(
+                message__icontains=search_query)
+            page_object = paginator(request, contacts)
+        if not contacts:
+            messages.success(request, 'No contacts found {} !'.format(search_query))
+    else:
+        contacts = Contact.objects.all()
+        page_object = paginator(request, contacts)
+    context = {'contacts': page_object}
+    return render(request, 'dashboard/manage_contact/contact_table.html', context)
+
+
+# Payement Management
+
+
+# Order Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def order_table(request):
+    # Get all orders
+    orders = Orders.objects.all().order_by('id')
+    page_object = paginator(request, orders)
+    context = {'orders': page_object}
+    return render(request, 'dashboard/manage_order/order_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def order_details(request, order_id):
+    # Get data from orders and order_details
+    order = Orders.objects.get(id=order_id)
+    order_detail = OrderDetails.objects.filter(order_id=order_id)
+    context = {'order': order,
+               'order_details': order_detail}
+    return render(request, 'dashboard/manage_order/order_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_order(request, order_id):
+    try:
+        order = Orders.objects.get(id=order_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The order {} you are trying to delete does not exist!'.format(order_id))
+        return redirect('/dashboard/order/')
+    order.delete()
+    messages.success(request, 'Order {} deleted successfully!'.format(order_id))
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_order(request, order_ids):
+    if request.method == 'POST':
+        # Get a list of order IDs to delete
+        order_ids = order_ids.split("+")
+        # Delete the orders
+        if order_ids:
+            for order_id in order_ids:
+                try:
+                    order = Orders.objects.get(id=order_id)
+                    order.delete()
+                    messages.success(request, 'Order deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The order with ID {order_id} does not exist!')
+            return redirect('/dashboard/order/')
+        else:
+            messages.warning(request, 'Please select at least one order to delete!')
+    return redirect('/dashboard/order/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_order(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/order/')
+        else:
+            orders = Orders.objects.filter(
+                id__icontains=search_query) | Orders.objects.filter(
+                first_name__icontains=search_query) | Orders.objects.filter(
+                last_name__icontains=search_query) | Orders.objects.filter(
+                email__icontains=search_query) | Orders.objects.filter(
+                phone__icontains=search_query) | Orders.objects.filter(
+                address__icontains=search_query) | Orders.objects.filter(
+                city__icontains=search_query) | Orders.objects.filter(
+                state__icontains=search_query) | Orders.objects.filter(
+                zipcode__icontains=search_query) | Orders.objects.filter(
+                country__icontains=search_query) | Orders.objects.filter(
+                payment_method__icontains=search_query) | Orders.objects.filter(
+                payment_id__icontains=search_query) | Orders.objects.filter(
+                payment_status__icontains=search_query) | Orders.objects.filter(
+                order_status__icontains=search_query)
+            page_object = paginator(request, orders)
+        if not orders:
+            messages.success(request, 'No orders found {} !'.format(search_query))
+    else:
+        orders = Orders.objects.all()
+        page_object = paginator(request, orders)
+    context = {'orders': page_object}
+    return render(request, 'dashboard/manage_order/order_table.html', context)

@@ -52,4 +52,15 @@ urlpatterns = [
     path('product/delete_selected/<str:product_ids>/', views.delete_selected_product,
          name='delete_selected_product'),
     path('product/search/', views.search_product, name='search_product'),
+
+    # Coupon URL
+    path('coupon/', views.coupon_table, name='coupon_table'),
+    path('coupon/details/<int:coupon_id>/', views.coupon_details, name='coupon_details'),
+    path('coupon/add/', views.add_coupon, name='add_coupon'),
+    path('coupon/update/<int:coupon_id>/', views.update_coupon, name='update_coupon'),
+    path('coupon/delete/<int:coupon_id>/', views.delete_coupon, name='delete_coupon'),
+    path('coupon/delete_selected/<str:coupon_ids>/', views.delete_selected_coupon,
+         name='delete_selected_coupon'),
+    path('coupon/search/', views.search_coupon, name='search_coupon'),
+
 ]
