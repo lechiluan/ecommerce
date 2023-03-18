@@ -99,7 +99,8 @@ class UpdateCustomerForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar')
+    customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
+                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
     is_active = forms.BooleanField(required=False, label='Active', initial=True)
     is_staff = forms.BooleanField(required=False, label='Staff', initial=False)
     is_superuser = forms.BooleanField(required=False, label='Superuser', initial=False)
@@ -213,7 +214,8 @@ class UpdateCategoryForm(forms.Form):
 
 class AddBrandForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
-    logo = forms.ImageField(required=True, label='Upload logo')
+    logo = forms.ImageField(required=True, label='Upload logo', widget=forms.FileInput,
+                            help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
@@ -238,7 +240,8 @@ class AddBrandForm(forms.Form):
 
 class UpdateBrandForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
-    logo = forms.ImageField(required=False, label='Upload logo')
+    logo = forms.ImageField(required=True, label='Upload new logo', widget=forms.FileInput,
+                            help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
@@ -279,7 +282,8 @@ class AddProductForm(forms.Form):
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
     stock = forms.IntegerField(required=True)
     description = forms.CharField(required=True, widget=forms.Textarea)
-    product_image = forms.ImageField(required=True, label='Upload Product Image')
+    product_image = forms.ImageField(required=True, label='Upload Product Image', widget=forms.FileInput,
+                                     help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Product
@@ -323,7 +327,8 @@ class UpdateProductForm(forms.Form):
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
     stock = forms.IntegerField(required=True)
     description = forms.CharField(required=True, max_length=5000, widget=forms.Textarea)
-    product_image = forms.ImageField(required=False, label='Upload Product Image')
+    product_image = forms.ImageField(required=True, label='Upload New Product Image', widget=forms.FileInput,
+                                     help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Product

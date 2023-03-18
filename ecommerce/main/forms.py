@@ -20,8 +20,8 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar')
-
+    customer_image = forms.ImageField(required=False, label='Upload avatar', widget=forms.FileInput,
+                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username", "email", "password1", "password2", "address", "mobile",
@@ -59,7 +59,8 @@ class UpdateProfileForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar')
+    customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
+                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = User

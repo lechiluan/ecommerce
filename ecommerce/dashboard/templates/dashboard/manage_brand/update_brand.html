@@ -23,6 +23,13 @@
         <h2 class="font-weight-bold mt-3 form-title">Update brand</h2>
         <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
+            <h5 class="card-title">Brand Logo</h5>
+            <div class="img-details">
+                <img id="avatar" class="img-display"
+                     src="{{ MEDIA_URL }}{{ form.brand.logo.url }}"
+                     alt="{{ form.brand.name }}"
+                     title="Logo of {{ form.brand.name }}">
+            </div>
             <div class="form-input">{{ form|crispy }}</div>
             <div class="btn-form">
                 <div class="btn-form-left">
@@ -44,5 +51,17 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        const avatarInput = document.querySelector('#id_logo');
+        const avatarImg = document.querySelector('#avatar');
+        avatarInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener('load', (event) => {
+                avatarImg.src = event.target.result;
+            });
+
+            reader.readAsDataURL(file);
+        });
     </script>
 {% endblock %}

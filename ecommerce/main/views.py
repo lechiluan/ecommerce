@@ -21,7 +21,6 @@ from .models import Customer
 
 
 # Create your views here.
-
 # Display Homepage for all users. Display List of all products, categories, brands, etc.
 def home(request):
     return render(request, 'main/base/base.html')

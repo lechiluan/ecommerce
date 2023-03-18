@@ -7,18 +7,50 @@
         #hint_id_password1 ul {
             padding-left: 15px;
         }
+
+        .img-details {
+            position: relative;
+            text-align: center;
+            max-width: 200px;
+            max-height: 200px;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            border-radius: 10%;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        .img-details .img-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
     </style>
 {% endblock %}
 
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
+{% load static %}
 {% block content %}
     <div class="form-main">
-        <h2 class="font-weight-bold mt-3 form-title">Register</h2>
+        <h2 class="font-weight-bold mt-3 form-title">Register an account</h2>
         <form method="post" class="form-group" enctype="multipart/form-data">
             {% csrf_token %}
+            <h5 class="card-title">Your Avatar</h5>
+            <div class="img-details">
+            <img id="avatar" class="img-display" src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                 alt="Default Avatar" title="Default Avatar">
+            </div>
             <div class="form-input">{{ form|crispy }}</div>
-            <div class="form-input">
+            <div class="text-checkbox">
                 <input type="checkbox" name="terms" required checked> I agree to the <a href="#">Terms and
                 Conditions.</a>
             </div>
@@ -32,6 +64,17 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        const avatarInput = document.querySelector('#id_customer_image');
+        const avatarImg = document.querySelector('#avatar');
+        avatarInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
 
+            reader.addEventListener('load', (event) => {
+                avatarImg.src = event.target.result;
+            });
+
+            reader.readAsDataURL(file);
+        });
     </script>
 {% endblock %}

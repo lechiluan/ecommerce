@@ -33,11 +33,13 @@
 
 {% include "main/base/header.html" %}
 
-<div class="content">
-    {% include "main/base/message.html"%}
-    {% block content %}
-        {% include "main/base/home.html" %}
-    {% endblock %}
+<div class="body">
+    <div class="container content">
+        {% include "main/base/message.html" %}
+        {% block content %}
+            {% include "main/base/home.html" %}
+        {% endblock %}
+    </div>
 </div>
 
 {% include "main/base/footer.html" %}

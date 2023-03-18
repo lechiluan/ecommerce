@@ -2,7 +2,31 @@
 {% block title %}Profile{% endblock %}
 {% block style %}
     <style>
+        .img-details {
+            position: relative;
+            text-align: center;
+            max-width: 200px;
+            max-height: 200px;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            border-radius: 10%;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
 
+        .img-details .img-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
     </style>
 {% endblock %}
 
@@ -14,11 +38,51 @@
         <h2 class="font-weight-bold mt-3 form-title">Update Profile</h2>
         <form method="POST" class="form-group" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-input">{{ form|crispy }}</div>
-            <div class="btn-form"><button type="submit" class="btn btn-default form-button">Save changes</button></div>
+            <h5 class="card-title">Your Avatar</h5>
+            <div class="img-details">
+                <img id="avatar" class="img-display" src="{{ MEDIA_URL }}{{ user.customer.customer_image.url }}"
+                     alt="{{ customer.user.username }}" title="Customer Image of {{ customer.user.username }}">
+            </div>
+            <div class="form-input">
+                {{ form.username|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.first_name|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.mobile|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.address|as_crispy_field }}
+            </div>
+            <div class="text-img">
+                {{ form.customer_image|as_crispy_field }}
+            </div>
+            <div class="btn-form">
+                <button type="submit" class="btn btn-default form-button">Save changes</button>
+            </div>
         </form>
     </div>
 {% endblock %}
 {% block scripts %}
+    <script>
+        const avatarInput = document.querySelector('#id_customer_image');
+        const avatarImg = document.querySelector('#avatar');
+        avatarInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
 
+            reader.addEventListener('load', (event) => {
+                avatarImg.src = event.target.result;
+            });
+
+            reader.readAsDataURL(file);
+        });
+    </script>
 {% endblock %}

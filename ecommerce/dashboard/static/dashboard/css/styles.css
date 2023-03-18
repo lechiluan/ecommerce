@@ -443,6 +443,7 @@ td.action {
     white-space: nowrap;
 }
 
+/*Form CSS*/
 .form-main {
     width: 100%;
     min-width: 300px;
@@ -702,12 +703,18 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 
 .img-details {
     position: relative;
-    min-width: 200px;
+    text-align: center;
+    max-width: 200px;
+    max-height: 200px;
     width: 200px;
     height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    border-radius: 10%;
     overflow: hidden;
-    cursor: pointer;
-    border: 1px solid #000;
+    border: 1px solid #ccc;
 }
 
 .img-details .img-display {
@@ -717,6 +724,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1;
 }
 
 /* Make Responsive */
