@@ -57,18 +57,17 @@ Use multi-step authentication for secure payments
  - Total Sale, Total sessions.
 
 ## Installation
-
-**1.Clone Repository & Install Packages**
+**1. Clone Repository & Install Packages**
 ```sh
 git clone https://github.com/lechiluan/E-Commerce-System.git
 pip install -r requirements.txt
 ```
-**2.Setup Virtualenv**
+**2. Setup Virtualenv**
 ```sh
 virtualenv env
 source env/bin/activate
 ```
-**3.Migrate & Start Server**
+**3. Migrate & Start Server**
 ```sh
 python manage.py makemigrations
 python manage.py migrate

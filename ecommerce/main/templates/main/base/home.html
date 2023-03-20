@@ -1,16 +1,97 @@
 {% block style %}
     <style>
-
     </style>
 {% endblock %}
-
+{% load static %}
 {% block content %}
-    <h1>My First Django App</h1>
-    <p>My first Django app is running!</p>
+    <div class="homepage">
+        {# Searchbox bar right here#}
+        <div class="search-form">
+            <form action="/customer/product/search/" method="post">
+                {% csrf_token %}
+                <div class="input-group search-manage">
+                    <input type="text" class="form-control border-0 small search-manage-input"
+                           placeholder="Search for Product ..."
+                           aria-label="Search" aria-describedby="basic-addon2" name="search">
+                    <input type="hidden" name="t" value="{{ timestamp }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                        <a type="button" class="btn btn-danger" id="clear-btn" href="/">
+                            <i class="fas fa-times fa-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {# End of searchbox bar #}
+        {# Product Card #}
+        <div class="product-card">
+            <div class="card-main">
+                <div class="container">
+                    {% for product in products %}
+                        <div class="card">
+                            <div class="imgBx">
+                                <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
+                                <ul class="action">
+                                    <li>
+                                        <a href="#"><i class="fa fa-heart" aria-hidden="true"></i></a>
+                                        <span>Add to WishList</span>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                                        <span>Add to Cart</span>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                        <span>View Details</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content">
+                                <div class="productName">
+                                    <h3>{{ product.name }}</h3>
+                                </div>
+                                <div class="price_rating">
+                                    <div class="price">
+                                        <h2>$ {{ product.price }}</h2>
+                                    </div>
+                                    <div class="old_price">
+                                        {% if product.old_price %}
+                                            <h2 class="old_price">$ {{ product.old_price }}</h2>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="rating">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            {% include 'main/base/pagination.html' %}
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">
+        const card = document.querySelector('.card-main');
+        card.addEventListener('touchstart', function () {
+            card.classList.add('hover');
+        });
 
+        card.addEventListener('touchend', function () {
+            card.classList.remove('hover');
+        });
     </script>
 {% endblock %}

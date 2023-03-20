@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator
 
 # from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
@@ -17,13 +18,32 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
-from .models import Customer
+from .models import Customer, Product
 
 
 # Create your views here.
+
+def paginator(request, objects):
+    # Set the number of items per page
+    per_page = 8
+
+    # Create a Paginator object with the customers queryset and the per_page value
+    page = Paginator(objects, per_page)
+
+    # Get the current page number from the request's GET parameters
+    page_number = request.GET.get('page')
+
+    # Get the current page object from the Paginator object
+    page_obj = page.get_page(page_number)
+    return page_obj
+
+
 # Display Homepage for all users. Display List of all products, categories, brands, etc.
 def home(request):
-    return render(request, 'main/base/base.html')
+    products = Product.objects.all().order_by('id')
+    page_object = paginator(request, products)
+    context = {'products': page_object}
+    return render(request, 'main/base/base.html', context)
 
 
 def is_admin(user):

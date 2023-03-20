@@ -3,7 +3,6 @@
 
 {% block style %}
     <style>
-
     </style>
 {% endblock %}
 
@@ -11,19 +10,21 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-    <div class="form-main">
-        <h2 class="font-weight-bold mt-3 form-title">Login</h2>
-        <form method="post" class="form-group">
-            {% csrf_token %}
-            <div class="form-input">{{ form.username|as_crispy_field }}</div>
-            <div class="form-input">{{ form.password|as_crispy_field }}</div>
-            <div class="text-checkbox">{{ form.rememberMe|as_crispy_field }}</div>
-            <p>Don't have an account? <a href="/auth/register">Create an account.</a></p>
-            <p><a href="/auth/password_reset">Forgot Password?</a></p>
-            <div class="btn-form">
-                <button type="submit" class="btn btn-default form-button">Login</button>
-            </div>
-        </form>
+    <div class="container-main">
+        <div class="form-main">
+            <h2 class="font-weight-bold mt-3 form-title">Login</h2>
+            <form method="post" class="form-group">
+                {% csrf_token %}
+                <div class="form-input">{{ form.username|as_crispy_field }}</div>
+                <div class="form-input">{{ form.password|as_crispy_field }}</div>
+                <div class="text-checkbox">{{ form.rememberMe|as_crispy_field }}</div>
+                <p>Don't have an account? <a href="/auth/register">Create an account.</a></p>
+                <p><a href="/auth/password_reset">Forgot Password?</a></p>
+                <div class="btn-form">
+                    <button type="submit" class="btn btn-default form-button">Login</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 

@@ -30,11 +30,14 @@
 </head>
 
 <body>
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
 
 {% include "main/base/header.html" %}
 
 <div class="body">
-    <div class="container content">
+    <div class="container">
         {% include "main/base/message.html" %}
         {% block content %}
             {% include "main/base/home.html" %}

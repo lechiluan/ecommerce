@@ -700,6 +700,19 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     color: #fff;
 }
 
+.btn {
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background-color: #081c6e;
+    color: #fff;
+}
+
+.hi-user:hover {
+    background-color: #fff;
+    color: #000;
+}
 
 .img-details {
     position: relative;
@@ -805,6 +818,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     .pagination span {
         margin: 5px;
     }
+
 
     .btn-form {
         display: block;

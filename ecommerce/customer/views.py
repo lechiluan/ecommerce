@@ -23,7 +23,7 @@ from main.models import Customer, Category, Brand, Product, Coupon, Contact
 
 # Create your views here.
 def cart(request):
-    return render(request, 'customer/cart.html')
+    return render(request, 'customer/templates/customer/cart.html')
 
 
 def contact(request):
@@ -38,3 +38,9 @@ def contact(request):
     return render(request, 'customer/contact.html', {'form': form})
 
 
+def product_details(request, product_id):
+    product = Product.objects.get(id=product_id)
+    context = {
+        'product': product,
+    }
+    return render(request, 'customer/templates/customer/product_details.html', context)
