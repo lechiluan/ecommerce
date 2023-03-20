@@ -13,15 +13,6 @@
             max-width: 300px;
             margin: 20px 0;
         }
-
-        .badge-success {
-            background-color: green;
-        }
-
-        .badge-danger {
-            background-color: red;
-        }
-
         .card-title {
             font-size: 1.2rem;
             font-weight: bold;
@@ -55,6 +46,7 @@
                 </div>
                 <li class="form-display"><strong>ID</strong>: {{ product.id }}</li>
                 <li class="form-display"><strong>Product Name</strong>: {{ product.name }}</li>
+                <li class="form-display"><strong>Product Price Original</strong>: {{ product.price_original }}</li>
                 <li class="form-display"><strong>Product Price</strong>: {{ product.price }}</li>
                 <li class="form-display"><strong>Product Old Price</strong>: {{ product.old_price }}</li>
                 <li class="form-display"><strong>Product Description</strong>: {{ product.description }}</li>

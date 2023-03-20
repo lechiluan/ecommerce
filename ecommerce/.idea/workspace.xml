@@ -5,48 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/customer/templates/customer_cart/cart.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/migrations/0015_remove_cart_coupon_remove_payment_amount_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/migrations/0016_remove_orderdetails_coupon_remove_orders_coupon.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/migrations/0017_wishlist.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/migrations/0018_alter_product_old_price_alter_product_price.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/static/main/images/products/iphone-14-pro.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/main/base/pagination.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_AGxufpL.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_yGFSQpT.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/product_image/xiaomi-logo.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ecommerce.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ecommerce.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/cart.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_help/contact.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_topbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/static/main/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/main/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/footer.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/message.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/message.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_complete.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_complete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_confirm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/password/password_reset_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/password/password_reset_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/update_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_invalid.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_invalid.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_sent.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/profile/verify_new_email_sent.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/account_activation_invalid.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_invalid.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/account_activation_sent.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/account_activation_sent.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/registration/register/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,17 +85,25 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/main/templates/main/base",
+    "last_opened_file_path": "E:/Sample/django-chatbot-example-master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "settings.sync",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="ecommerce" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="ecommerce" />
+      </console-settings>
+    </option>
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\GitHub\E-Commerce-System\ecommerce\main\templates\main\base" />
@@ -139,11 +129,22 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="ecommerce.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="E:\GitHub\E-Commerce-System\ECommerce\venv\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.10 (ECommerce)" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
       <option name="host" value="" />
@@ -199,7 +200,7 @@
       <workItem from="1679069790508" duration="20145000" />
       <workItem from="1679128900373" duration="174000" />
       <workItem from="1679129223778" duration="35105000" />
-      <workItem from="1679231882018" duration="19363000" />
+      <workItem from="1679231882018" duration="35382000" />
     </task>
     <servers />
   </component>

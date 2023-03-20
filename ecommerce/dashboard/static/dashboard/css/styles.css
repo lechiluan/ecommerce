@@ -433,6 +433,7 @@ td.action {
     background-color: #fff;
     margin-top: 10px;
     margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .search-manage-input {
@@ -724,7 +725,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin: 15px auto;
     border-radius: 10%;
     overflow: hidden;
     border: 1px solid #ccc;

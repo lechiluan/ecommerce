@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator
-
 # from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
 from django.shortcuts import render, redirect

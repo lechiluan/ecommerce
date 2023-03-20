@@ -43,12 +43,16 @@
                         <a class="nav-link" href="#">Feedback</a>
                     </li>
                 </ul>
+
                 <ul class="navbar-nav ml-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/cart/"><i class="fa fa-heart" aria-hidden="true"></i>
+                            WishList(3)</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/customer/cart/"><i class="fa fa-shopping-cart"
                                                                       aria-hidden="true"></i>
-                            Cart
-                            (2)</a>
+                            Cart(2)</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">

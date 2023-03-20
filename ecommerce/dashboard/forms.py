@@ -25,7 +25,8 @@ class UpdateProfileForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar')
+    customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
+                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = User
@@ -278,22 +279,25 @@ class AddProductForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
-    price = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
-    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    price_original = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
+    price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
+    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
-    description = forms.CharField(required=True, widget=forms.Textarea)
+    description = forms.CharField(required=True, widget=forms.Textarea())
     product_image = forms.ImageField(required=True, label='Upload Product Image', widget=forms.FileInput,
                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'brand', 'price', 'old_price', 'stock', 'description', 'product_image']
+        fields = ['name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
+                  'product_image']
 
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
         category = cleaned_data.get('category')
         brand = cleaned_data.get('brand')
+        price_original = cleaned_data.get('price_original')
         price = cleaned_data.get('price')
         old_price = cleaned_data.get('old_price')
         stock = cleaned_data.get('stock')
@@ -308,6 +312,7 @@ class AddProductForm(forms.Form):
         name = self.cleaned_data.get('name')
         category = self.cleaned_data.get('category')
         brand = self.cleaned_data.get('brand')
+        price_original = self.cleaned_data.get('price_original')
         price = self.cleaned_data.get('price')
         old_price = self.cleaned_data.get('old_price')
         stock = self.cleaned_data.get('stock')
@@ -323,8 +328,9 @@ class UpdateProductForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True)
-    price = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
-    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    price_original = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
+    price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
+    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
     description = forms.CharField(required=True, max_length=5000, widget=forms.Textarea)
     product_image = forms.ImageField(required=True, label='Upload New Product Image', widget=forms.FileInput,
@@ -332,7 +338,8 @@ class UpdateProductForm(forms.Form):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'brand', 'price', 'old_price', 'stock', 'description', 'product_image']
+        fields = ['name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
+                  'product_image']
 
     def __init__(self, *args, **kwargs):
         self.product = kwargs.pop('product')
@@ -342,6 +349,7 @@ class UpdateProductForm(forms.Form):
             self.fields['name'].initial = self.product.name
             self.fields['category'].initial = self.product.category
             self.fields['brand'].initial = self.product.brand
+            self.fields['price_original'].initial = self.product.price_original
             self.fields['price'].initial = self.product.price
             self.fields['old_price'].initial = self.product.old_price
             self.fields['stock'].initial = self.product.stock
@@ -353,6 +361,7 @@ class UpdateProductForm(forms.Form):
         name = cleaned_data.get('name')
         category = cleaned_data.get('category')
         brand = cleaned_data.get('brand')
+        price_original = cleaned_data.get('price_original')
         price = cleaned_data.get('price')
         old_price = cleaned_data.get('old_price')
         stock = cleaned_data.get('stock')
@@ -367,6 +376,7 @@ class UpdateProductForm(forms.Form):
         name = self.cleaned_data.get('name')
         category = self.cleaned_data.get('category')
         brand = self.cleaned_data.get('brand')
+        price_original = self.cleaned_data.get('price_original')
         price = self.cleaned_data.get('price')
         old_price = self.cleaned_data.get('old_price')
         stock = self.cleaned_data.get('stock')
@@ -375,6 +385,7 @@ class UpdateProductForm(forms.Form):
         self.product.name = name
         self.product.category = category
         self.product.brand = brand
+        self.product.price_original = price_original
         self.product.price = price
         self.product.old_price = old_price
         self.product.stock = stock

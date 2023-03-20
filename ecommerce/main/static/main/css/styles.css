@@ -59,7 +59,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin: 15px auto;
     border-radius: 10%;
     overflow: hidden;
     border: 1px solid #ccc;
@@ -78,7 +78,7 @@
 /* HomePage */
 /* Product Card */
 .product-card {
-    background-color: #fff;
+    background-color: #ffffff;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -237,7 +237,7 @@
 .card-main .container .card .content .price_rating .old_price {
     font-size: 20px;
     font-weight: 500;
-    color: #333;
+    color: #4f4e4e;
     text-decoration: line-through;
 }
 
@@ -272,7 +272,7 @@
 
 .input-group {
     border: 3px solid #f9f9f9;
-    border-radius: 5px;
+    border-radius: 7px;
 }
 
 .search-form {

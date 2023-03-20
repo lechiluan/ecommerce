@@ -64,8 +64,8 @@ pip install -r requirements.txt
 ```
 **2. Setup Virtualenv**
 ```sh
-virtualenv env
-source env/bin/activate
+virtualenv venv
+.\venv\Scripts\Activate.ps1
 ```
 **3. Migrate & Start Server**
 ```sh
