@@ -95,17 +95,19 @@
                                 <td>{{ product.id }}</td>
                                 <td>{{ product.name }}</td>
                                 <td>
-                                    {% if product.product_image %}
-                                        <img src="{{ MEDIA_URL }}{{ product.product_image.url }}"
-                                             alt="Product Image"
-                                             class="img-thumbnail image-table"
-                                             title="Product image of {{ product.name }}"/>
-                                    {% else %}
-                                        <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
-                                             alt="Default Image"
-                                             class="img-thumbnail image-table"
-                                             title="Default Image"/>
-                                    {% endif %}
+                                    <div class="main-image-table">
+                                        {% if product.product_image %}
+                                            <img src="{{ MEDIA_URL }}{{ product.product_image.url }}"
+                                                 alt="Product Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Product image of {{ product.name }}"/>
+                                        {% else %}
+                                            <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                 alt="Default Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Default Image"/>
+                                        {% endif %}
+                                    </div>
                                 </td>
                                 <td>{{ product.category }}</td>
                                 <td>{{ product.brand }}</td>

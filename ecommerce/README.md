@@ -12,13 +12,13 @@
 3. Data Analysis → Data analysis is a procedure of investigating, cleaning, transforming, and training the data with the aim of finding some useful information, recommending conclusions, and helping in decision-making.
 
 # User functions
-- Homepage → Introduce store, list product, header (navigation), footer. Hiển thị button Support → Chatbot support.
-- Login and Register (Using cookie an display for user know → law of EU) → Login with Google Account.
+- Homepage → Introduce store, list product, header (navigation), footer. Display button Support → Chatbot support.
+- Login and Register (Using cookie a display for user know → law of EU) → Login with Google Account.
 - Product detail → View product detail and enter number of product. choose category of product. Such as Color, Size. → Add to Cart button → Display recommended products.
 - Cart → View Cart, Update Quality, Delete Product → Save in database.
 - List love product.
 - (Advanced) Payment → Display payment information → COD, VISA, E-Wallet, Bank Transfer. → Confirm payment (AD) → Delivery product.
-- Display status orders → Allow user cancel orders before AD confrim order → Allow user send feedback for product → Make an exchange or return the defective product → Search order with email and order number.
+- Display status orders → Allow user cancel orders before AD confirm order → Allow user send feedback for product → Make an exchange or return the defective product → Search order with email and order number.
 - Join email to send AD.
 - Search products or (Advanced) Filter → by Price, Color, Function, Review.
 - Review Product
@@ -42,7 +42,7 @@
 - (Advanced) Get paid. There should be a seamless transition from your website to the payment gateway. Typically, payment gateways allow customers to:
 Choose a payment option
 Provide details like credit card number and CVV
-Use multi-step authentication for secure payments
+Use multistep authentication for secure payments
 # Admin functions
  - Payment management → Search
  - Category management → Search

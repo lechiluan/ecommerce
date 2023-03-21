@@ -8,11 +8,31 @@
             margin: 5px 0;
         }
 
+        .form-display-description {
+            padding-top: 20px;
+            border: 2px solid #ccc;
+            margin-top: 20px;
+            padding-left: 15px;
+            padding-right: 15px;
+            border-radius: 5px;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+        }
+
         .img-details {
             border: 1px solid #ccc;
             max-width: 300px;
+            max-height: 300px;
+            height: 300px;
+            width: 300px;
             margin: 20px 0;
         }
+
         .card-title {
             font-size: 1.2rem;
             font-weight: bold;
@@ -49,12 +69,16 @@
                 <li class="form-display"><strong>Product Price Original</strong>: {{ product.price_original }}</li>
                 <li class="form-display"><strong>Product Price</strong>: {{ product.price }}</li>
                 <li class="form-display"><strong>Product Old Price</strong>: {{ product.old_price }}</li>
-                <li class="form-display"><strong>Product Description</strong>: {{ product.description }}</li>
                 <li class="form-display"><strong>Product Category</strong>: {{ product.category }}</li>
                 <li class="form-display"><strong>Product Brand</strong>: {{ product.brand }}</li>
                 <li class="form-display"><strong>Product Stock</strong>: {{ product.stock }}</li>
                 <li class="form-display"><strong>Product Created Date</strong>: {{ product.created_date }}</li>
                 <li class="form-display"><strong>Product Updated Date</strong>: {{ product.updated_date }}</li>
+                <li class="form-display"><strong>Product Description</strong>:
+                    <div id="product-description" class="form-display-description">
+                        {{ product.description }}
+                    </div>
+                </li>
                 <div class="btn-form">
                     <div class="btn-form-left">
                         <a type="button" class="btn btn-dark btn-block" href="/dashboard/product/">Back</a>
@@ -72,6 +96,6 @@
 
 {% block scripts %}
     <script type="text/javascript">
-
+        document.getElementById("product-description").innerHTML = "{{ product.description|escapejs }}";
     </script>
 {% endblock %}

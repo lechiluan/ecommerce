@@ -24,6 +24,7 @@
     <!-- Font Awesome version 4.3.0-->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"
           type='text/css'>
+    {{ form.media }}
 
     <!-- Custom CSS -->
     {% load static %}
@@ -45,10 +46,10 @@
         {% block content %}
             {% include "dashboard/base/ad_body.html" %}
         {% endblock %}
+        {% include "dashboard/base/ad_footer.html" %}
     </div>
 </div>
 
-{% include "dashboard/base/ad_footer.html" %}
 
 <!-- JavaScript Code-->
 <!-- Custom Javascript -->

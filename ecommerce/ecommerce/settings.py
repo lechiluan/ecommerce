@@ -56,26 +56,27 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'main.apps.MainConfig',
-    'dashboard.apps.DashboardConfig',
-    'customer.apps.CustomerConfig',
-    'crispy_forms',
+    'django.contrib.admin',  # for admin
+    'django.contrib.auth',  # for authentication
+    'django.contrib.contenttypes',  # for content types
+    'django.contrib.sessions',  # for sessions
+    'django.contrib.messages',  # for messages
+    'django.contrib.staticfiles',  # for static files
+    'main.apps.MainConfig',  # for main app
+    'dashboard.apps.DashboardConfig',  # for dashboard app
+    'customer.apps.CustomerConfig',  # for customer app
+    'crispy_forms',  # for crispy forms
+    'tinymce',  # for tinymce editor
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',  # for security
+    'django.contrib.sessions.middleware.SessionMiddleware',  # for sessions
+    'django.middleware.common.CommonMiddleware',  # for common middleware
+    'django.middleware.csrf.CsrfViewMiddleware',  # for csrf token
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # for authentication
+    'django.contrib.messages.middleware.MessageMiddleware',  # for messages middleware
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # for clickjacking
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -89,16 +90,16 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',  # for debug context processor
+                'django.template.context_processors.request',  # for request context processor
+                'django.contrib.auth.context_processors.auth',  # for auth context processor
+                'django.contrib.messages.context_processors.messages',  # for messages context processor
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'ecommerce.wsgi.application'
+WSGI_APPLICATION = 'ecommerce.wsgi.application'  # for wsgi application
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -166,3 +167,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+# Configure tinymce editor for django
+TINYMCE_DEFAULT_CONFIG = {
+    'selector': 'textarea',
+    'plugins': 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help quickbars emoticons code legacyoutput ltr rtl spellchecker',
+    'toolbar': 'formatselect | bold italic strikethrough forecolor backcolor | link image media | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat | help | codesample code | emoticons hr image link media nonbreaking pagebreak preview print save searchreplace table template toc charmap fullscreen insertdatetime media noneditable powerpaste advcode advlist anchor autolink codesample code directionality fullpage help image insertdatetime link lists media nonbreaking pagebreak paste print quickbars save searchreplace table template textpattern toc visualblocks visualchars wordcount | fullscreen | undo redo | cut copy paste | selectall | searchreplace | charmap | spellchecker | pagebreak | nonbreaking | template | print | preview | save | insertdatetime | anchor | image | media | codesample | help | code | emoticons | hr | link | table | toc',
+    'menubar': 'file edit view insert format tools table help',
+    'toolbar_mode': 'sliding',
+    'toolbar_sticky': True,
+}
+TINYMCE_UPLOAD_DIR = 'uploads/'
+TINYMCE_UPLOAD_NAME = 'tinymce_upload'

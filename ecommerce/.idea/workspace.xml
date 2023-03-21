@@ -5,30 +5,66 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ecommerce.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ecommerce.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/brand_logo/apple_VzfkZla.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/brand_logo/samsung_3zojpWu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/GCC19023_rkxHupT.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/lclshop_kdFTjzM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/customer_image/user_aeOsWtb.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/check-icon_cF0LkKZ.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_2FReXlF.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_7N3Lr0D.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_7r2YLyL.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_qTda26W.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/product_image/iphone-14-pro_zwYH7ZR.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer/templates/customer_help/product_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_help/customer_product_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_email.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/change_password_done.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email_sent.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/account/verify_new_email_sent.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_footer.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/base/ad_header.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/add_product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_details.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecommerce/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecommerce/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecommerce/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0002_deliveryaddress.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0003_alter_category_description.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0004_alter_brand_logo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0005_alter_product_description.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0006_product_created_date_product_updated_date.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0007_remove_orders_address_remove_orders_email_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0008_alter_coupon_discount_alter_product_product_image.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0009_alter_product_created_date_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0010_coupon_active_coupon_amount_coupon_valid_from_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0011_alter_coupon_amount_alter_coupon_discount.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0012_rename_date_contact_date_sent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0013_alter_contact_message.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0014_rename_phone_contact_mobile_contact_subject.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0015_remove_cart_coupon_remove_payment_amount_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0016_remove_orderdetails_coupon_remove_orders_coupon.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0017_wishlist.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0018_alter_product_old_price_alter_product_price.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0019_product_price_original.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0020_alter_product_description.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/migrations/0021_alter_product_description.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main/static/main/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/register/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/register/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/change_password_done.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +121,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/Sample/django-chatbot-example-master",
+    "last_opened_file_path": "E:/Frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -200,7 +236,8 @@
       <workItem from="1679069790508" duration="20145000" />
       <workItem from="1679128900373" duration="174000" />
       <workItem from="1679129223778" duration="35105000" />
-      <workItem from="1679231882018" duration="35382000" />
+      <workItem from="1679231882018" duration="40663000" />
+      <workItem from="1679360278755" duration="20546000" />
     </task>
     <servers />
   </component>

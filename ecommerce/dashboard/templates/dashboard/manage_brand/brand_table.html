@@ -89,17 +89,19 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ brand.id }}</td>
                                 <td>
-                                    {% if brand.logo %}
-                                        <img src="{{ MEDIA_URL }}{{ brand.logo.url }}"
-                                             alt="Brand Logo"
-                                             class="img-thumbnail image-table"
-                                             title="Brand Logo of {{ brand.name }}"/>
-                                    {% else %}
-                                        <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
-                                             alt="Default Image"
-                                             class="img-thumbnail image-table"
-                                             title="Default Image"/>
-                                    {% endif %}
+                                    <div class="main-image-table">
+                                        {% if brand.logo %}
+                                            <img src="{{ MEDIA_URL }}{{ brand.logo.url }}"
+                                                 alt="Brand Logo"
+                                                 class="img-thumbnail image-table"
+                                                 title="Brand Logo of {{ brand.name }}"/>
+                                        {% else %}
+                                            <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                 alt="Default Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Default Image"/>
+                                        {% endif %}
+                                    </div>
                                 </td>
                                 <td>{{ brand.name }}</td>
                                 <td class="action">

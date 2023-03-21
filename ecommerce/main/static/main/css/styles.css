@@ -224,7 +224,7 @@
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    margin: 10px 0;
+    margin: 10px 5px;
 }
 
 .card-main .container .card .content .price_rating h2 {
@@ -424,7 +424,8 @@
 
 .pagination .current {
     font-weight: bold;
-    background-color: #ccc;
+    color: #fff;
+    background-color: #7da6f8;
 }
 
 .pagination .disabled {

@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from main.models import Category, Brand, Product, Coupon, Contact, Payment
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from tinymce.widgets import TinyMCE
 
 phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
 
@@ -283,7 +284,7 @@ class AddProductForm(forms.Form):
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
-    description = forms.CharField(required=True, widget=forms.Textarea())
+    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
     product_image = forms.ImageField(required=True, label='Upload Product Image', widget=forms.FileInput,
                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
@@ -319,7 +320,7 @@ class AddProductForm(forms.Form):
         description = self.cleaned_data.get('description')
         product_image = self.cleaned_data.get('product_image')
         product = Product(name=name, category=category, brand=brand, price=price, old_price=old_price, stock=stock,
-                          description=description, product_image=product_image)
+                          description=description, product_image=product_image, price_original=price_original)
         product.save()
         return product
 
@@ -332,7 +333,7 @@ class UpdateProductForm(forms.Form):
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
-    description = forms.CharField(required=True, max_length=5000, widget=forms.Textarea)
+    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
     product_image = forms.ImageField(required=True, label='Upload New Product Image', widget=forms.FileInput,
                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 

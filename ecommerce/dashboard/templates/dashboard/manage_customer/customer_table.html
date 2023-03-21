@@ -102,17 +102,19 @@
                                         <td>{{ customer.mobile }}</td>
                                         <td>{{ customer.address }}</td>
                                         <td>
-                                            {% if customer.customer_image %}
-                                                <img src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
-                                                     alt="Customer Image"
-                                                     class="img-thumbnail image-table"
-                                                     title="Customer image of {{ customer.user.username }}"/>
-                                            {% else %}
-                                                <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
-                                                     alt="Default Image"
-                                                     class="img-thumbnail image-table"
-                                                     title="Default Image"/>
-                                            {% endif %}
+                                            <div class="main-image-table">
+                                                {% if customer.customer_image %}
+                                                    <img src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
+                                                         alt="Customer Image"
+                                                         class="img-thumbnail image-table"
+                                                         title="Customer image of {{ customer.user.username }}"/>
+                                                {% else %}
+                                                    <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                         alt="Default Image"
+                                                         class="img-thumbnail image-table"
+                                                         title="Default Image"/>
+                                                {% endif %}
+                                            </div>
                                         </td>
                                     {% endif %}
                                 {% empty %}
@@ -122,24 +124,30 @@
                                     <td></td>
                                 {% endfor %}
                                 {% if user.is_active %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
+                                             style="width:20px;height: 20px;"
                                              title="True"></td>
                                 {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
+                                             style="width:20px;height: 20px;"
                                              title="False"></td>
                                 {% endif %}
                                 {% if user.is_staff %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
+                                             style="width:20px;height: 20px;"
                                              title="True"></td>
                                 {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
+                                             style="width:20px;height: 20px;"
                                              title="False"></td>
                                 {% endif %}
                                 {% if user.is_superuser %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
+                                             style="width:20px;height: 20px;"
                                              title="True"></td>
                                 {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
+                                             style="width:20px;height: 20px;"
                                              title="False"></td>
                                 {% endif %}
                                 <td class="action">

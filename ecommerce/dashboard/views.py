@@ -82,7 +82,7 @@ def send_verify_new_email(request, user):
     email.send()
 
 
-def activate_new_email(request, uidb64, token):
+def activate_new_email_admin (request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -137,19 +137,13 @@ def change_password(request):
                 user.set_password(form.cleaned_data['new_password1'])
                 user.save()
                 update_session_auth_hash(request, user)
-                return redirect('/change_password_done/')
+                messages.success(request, 'Your password has been updated.')
+                return redirect('/dashboard/change_password/')
             else:
                 form.add_error('old_password', 'Wrong password. Please try again.')
     else:
         form = ChangePasswordForm(user=request.user)
     return render(request, 'dashboard/account/change_password.html', {'form': form})
-
-
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def change_password_done(request):
-    auth_logout(request)
-    return render(request, 'dashboard/account/change_password_done.html')
 
 
 def logout(request):

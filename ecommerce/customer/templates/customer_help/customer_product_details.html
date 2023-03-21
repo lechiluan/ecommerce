@@ -1,0 +1,108 @@
+{% extends "main/base/base.html" %}
+{% block title %}Product Detail{% endblock %}
+
+{% block style %}
+    <style>
+        .product-details {
+            padding-top: 100px;
+            padding-bottom: 50px;
+            background: #ffffff;
+
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .product-details {
+            padding: 50px 0;
+        }
+
+        .product-details h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .product-details p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .product-details .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .product-details .form-group input {
+            width: 100px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .product-details .col-md-6 {
+                width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .product-details .form-group input {
+                width: 70px;
+            }
+        }
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="product-details">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    {% load static %} <img src="{% static 'main/images/products/iphone-14-pro.jpg' %}"
+                                           class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                    <h1>Product Name</h1>
+                    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam blandit turpis eu felis
+                        malesuada, a hendrerit mauris sagittis.</p>
+                    <p class="font-weight-bold">Brand: Apple</p>
+                    <p class="font-weight-bold">Category: Mobile Phones</p>
+                    <div class="rating">
+                        <span class="font-weight-bold">Rating: </span>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                    </div>
+                    <p class="font-weight-bold">Price: $99.99</p>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" class="form-control" id="quantity" value="1" min="1">
+                    </div>
+                    <button class="btn btn-primary btn-lg">Add to Cart</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Product Description</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam blandit turpis eu felis malesuada, a
+                        hendrerit mauris sagittis. Nullam euismod, nisl vitae ultricies lacinia, nisl nisl aliquet
+                        ligula, nec lacinia nunc nisl eget nisl. Nulla facili
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
