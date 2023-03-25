@@ -1,0 +1,63 @@
+{% extends "main/base/base.html" %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block style %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>My Wishlist</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in wishlist %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><img class="img-thumbnail"
+                                     src="{{ MEDIA_URL }}{{ item.product.product_image.url }}" alt=""
+                                     width="100px" height="100px"></td>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.product.price }}</td>
+                            <td><a href="/customer/remove_from_wishlist/{{ item.product.id }}/">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if wishlist %}
+                            <a href="/customer/add_all_to_cart_from_wishlist/" class="btn btn-primary">Add All To
+                                Cart</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

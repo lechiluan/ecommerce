@@ -1,13 +1,91 @@
 {% block style %}
     <style>
+        .slides-show-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            margin: 0 auto;
+            padding: 10px 0;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .slides-show-container .container {
+            margin: 0;
+            padding: 0;
+        }
+
+        .slides-show-image {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .slides-show-image a img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+
     </style>
 {% endblock %}
 {% load static %}
 {% block content %}
-    <div class="homepage">
+    {% load static %}
+    <div class="slides-show-container">
+        <div class="container">
+            <div id="demo" class="carousel slide" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    <li data-target="#demo" data-slide-to="0" class="active"></li>
+                    <li data-target="#demo" data-slide-to="1"></li>
+                    <li data-target="#demo" data-slide-to="2"></li>
+                </ul>
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image"></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+    <div class="homepage" id="product">
         {# Searchbox bar right here#}
         <div class="search-form">
-            <form action="/customer/product/search/" method="post">
+            <form action="/customer/product/search/" method="GET">
                 {% csrf_token %}
                 <div class="input-group search-manage">
                     <input type="text" class="form-control border-0 small search-manage-input"
@@ -28,6 +106,9 @@
         {# End of searchbox bar #}
         {# Product Card #}
         <div class="product-card">
+            <div class="card-header">
+                <h2>Our Products</h2>
+            </div>
             <div class="card-main">
                 <div class="container">
                     {% for product in products %}
@@ -36,15 +117,18 @@
                                 <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
                                 <ul class="action">
                                     <li>
-                                        <a href="#"><i class="fa fa-heart" aria-hidden="true"></i></a>
+                                        <a href="/customer/add_to_wishlist/{{ product.id }}/">
+                                            <i class="fa fa-heart" aria-hidden="true"></i></a>
                                         <span>Add to WishList</span>
                                     </li>
                                     <li>
-                                        <a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                                        <a href="/customer/add_to_cart/{{ product.id }}/">
+                                            <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
                                         <span>Add to Cart</span>
                                     </li>
                                     <li>
-                                        <a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                        <a href="/customer/product_details/{{ product.id }}">
+                                            <i class="fa fa-eye" aria-hidden="true"></i></a>
                                         <span>View Details</span>
                                     </li>
                                 </ul>
@@ -79,6 +163,7 @@
                 {% include 'main/base/pagination.html' %}
             </div>
         </div>
+        {# End of Product Card #}
     </div>
 
 {% endblock %}

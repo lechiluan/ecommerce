@@ -30,17 +30,35 @@
 {% endblock %}
 <!-- Site footer -->
 <footer class="site-footer">
+
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-6">
                 {% load static %}<img src="{% static 'main/images/main/logolclshop.png' %}" alt="LCL Shop"
-                                      title="LCL Shop" style="width:50px; height: 50px">
+                                      title="LCL Shop" style="width:50px; height:50px">
                 <h6 class="text-uppercase font-weight-bold">LCL Shop</h6>
                 <p class="text-justify">LCL Shop is a website that sells all kinds of technology products. We have a
                     wide
                     range of products from the most popular brands in the world. We are always committed to bringing the
                     best
                     products to our customers.</p>
+                <h4>We accept payment: </h4>
+                <div class="payments">
+                    {% load static %}<img src="{% static 'main/images/payments/bank-transfer.png' %}"
+                                          alt="Bank Transfer"
+                                          title="Bank Transfer" class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/cache.png' %}" alt="Cash On Delivery"
+                                          title="Cash On Delivery" class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/card.png' %}" alt="Card" title="Card"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/paypal.png' %}" alt="Paypal"
+                                          title="Paypal"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/visa.png' %}" alt="Visa" title="Visa"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/mastercard.png' %}" alt="Mastercard"
+                                          title="Mastercard" class="img-payment-icon">
+                </div>
             </div>
 
             <div class="col-xs-6 col-md-3">
@@ -75,7 +93,8 @@
                 <p class="copyright-text">Copyright &copy; {% now "Y" %} All Rights Reserved by
                     <a href="#">LCL Shop</a>. Developed by <a href="https://www.github.com/lechiluan/"
                                                               target="_blank">Le Chi Luan <img
-                            src="{% static 'dashboard/images/icons/check-icon.png' %}" style="width:18px;height:18px;"></a>
+                            src="{% static 'dashboard/images/icons/check-icon.png' %}"
+                            style="width:18px;height:18px;"></a>
                 </p>
             </div>
 
@@ -92,6 +111,30 @@
     </div>
 </footer>
 <style>
+    .payments {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .img-payment-icon {
+        width: 60px;
+        height: 35px;
+        object-fit: contain;
+        background-color: white;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+    }
+
+    .img-payment-icon:hover {
+        transform: scale(1.2);
+    }
+
     /* Footer CSS */
     .site-footer {
         background-color: #343a40;

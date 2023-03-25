@@ -8,13 +8,32 @@
 }
 
 /* My color*/
-/*#081c6e blue */
+/*#1253cc blue */
 /*#343a40 black */
 /*#28a745 green */
 /*#ffffff white */
+/*ff2020 red*/
+
+/*background: linear-gradient(60deg, rgb(255, 0, 0), rgb(0, 0, 255));*/
+/*animation: gradient1 5s ease infinite;*/
+
+@keyframes gradient1 {
+    0% {
+        background: linear-gradient(60deg, rgb(255, 0, 0), rgb(0, 0, 255));
+    }
+    33% {
+        background: linear-gradient(10deg, rgb(25, 123, 23), #ff22af);
+    }
+    66% {
+        background: radial-gradient(rgb(25, 123, 223), red);
+    }
+    100% {
+        background: linear-gradient(60deg, rgb(255, 0, 0), rgb(0, 0, 255));
+    }
+}
 
 .body {
-    background-color: #f5f5f5;
+    background-color: #F5F9FA;
 }
 
 .message-display {
@@ -31,7 +50,7 @@
 }
 
 .dropdown-item:hover {
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
 }
 
@@ -47,7 +66,10 @@
 .background {
     background: #343A40;
 }
-
+.background .navbar{
+    margin-left: 20px;
+    margin-right: 20px;
+}
 /* Display Image */
 .img-details {
     position: relative;
@@ -79,8 +101,15 @@
 /* Product Card */
 .product-card {
     background-color: #ffffff;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.product-card .card-header {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-main {
@@ -155,7 +184,7 @@
 
 .card-main .container .card .imgBx .action li:hover,
 .card-main .container .card .imgBx .action li:hover .fa {
-    background: #ff2020;
+    background: #28a745;
     color: #fff;
 }
 
@@ -267,7 +296,7 @@
 }
 
 .search-manage-input {
-    background-color: #e5e1e1;
+    background-color: #F5F9FA;
 }
 
 .input-group {
@@ -280,31 +309,46 @@
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 .homepage {
     padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 /* Scroll View */
 .button-scroll {
     display: none;
     position: fixed;
-    bottom: 30px;
-    right: 20px;
+    bottom: 23px;
+    right: 110px;
     z-index: 99;
     border: none;
     outline: none;
-    background-color: #4CAF50;
+    height: 45px;
+    width: 45px;
+    background-color: #1253cc;
     color: #fff;
     cursor: pointer;
-    padding: 7px 10px;
-    border-radius: 15px;
-    font-size: 30px;
+    padding: 0;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.button-scroll .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: none;
+    outline: none;
+    transform: translate(-50%, -50%);
 }
 
 .button-scroll:hover {
-    background-color: #555;
+    border: none;
+    outline: none;
+    background-color: #5491ff;
 }
 
 .card-title {
@@ -326,7 +370,7 @@
 .form-main {
     width: 100%;
     padding: 20px;
-    border: 2px solid #081c6e;
+    border: 2px solid #1253cc;
     border-radius: 5px;
     align-content: center;
     justify-content: center;
@@ -338,7 +382,7 @@
 }
 
 .form-title {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .form-input {
@@ -360,7 +404,7 @@
 .form-button {
     width: 100%;
     border-radius: 10px;
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
     font-size: 20px;
 }
@@ -444,7 +488,7 @@
     /* Form CSS */
     .form-main {
         padding: 20px;
-        border: 2px solid #081c6e;
+        border: 2px solid #1253cc;
         border-radius: 5px;
         display: flex;
         flex-direction: column;
@@ -452,7 +496,7 @@
     }
 
     .form-title {
-        padding-bottom: 20px;
+        padding-bottom: 10px;
     }
 
     .form-input {
@@ -476,7 +520,7 @@
         padding: 10px 20px;
         border: none;
         border-radius: 10px;
-        background-color: #081c6e;
+        background-color: #1253cc;
         color: #fff;
         font-size: 20px;
         cursor: pointer;
@@ -502,7 +546,6 @@
     }
 
     .text-form {
-        margin-top: 20px;
         font-size: 18px;
         text-align: center;
     }

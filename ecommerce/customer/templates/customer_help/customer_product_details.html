@@ -64,15 +64,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    {% load static %} <img src="{% static 'main/images/products/iphone-14-pro.jpg' %}"
+                    <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="{{ product.name }}" title="{{ product.name }}"
                                            class="img-fluid">
                 </div>
                 <div class="col-md-6">
-                    <h1>Product Name</h1>
-                    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam blandit turpis eu felis
-                        malesuada, a hendrerit mauris sagittis.</p>
-                    <p class="font-weight-bold">Brand: Apple</p>
-                    <p class="font-weight-bold">Category: Mobile Phones</p>
+                    <h1>{{ product.name }}</h1>
+                    <p class="lead"></p>
+                    <p class="font-weight-bold">Brand: {{ product.brand.name }}</p>
+                    <p class="font-weight-bold">Category: {{ product.category.name }}</p>
                     <div class="rating">
                         <span class="font-weight-bold">Rating: </span>
                         <i class="fa fa-star" aria-hidden="true"></i>
@@ -81,7 +80,8 @@
                         <i class="fa fa-star grey" aria-hidden="true"></i>
                         <i class="fa fa-star grey" aria-hidden="true"></i>
                     </div>
-                    <p class="font-weight-bold">Price: $99.99</p>
+                    <p class="font-weight-bold">Price: $ {{ product.price }}</p>
+                    <p class="font-weight-bold">Old Price: {{ product.oldPrice }}</p>
                     <div class="form-group">
                         <label for="quantity">Quantity:</label>
                         <input type="number" class="form-control" id="quantity" value="1" min="1">
@@ -92,9 +92,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <h2>Product Description</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam blandit turpis eu felis malesuada, a
-                        hendrerit mauris sagittis. Nullam euismod, nisl vitae ultricies lacinia, nisl nisl aliquet
-                        ligula, nec lacinia nunc nisl eget nisl. Nulla facili
+                    <div id="product-description" class="form-display-description">
+                        {{ product.description }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,6 +103,6 @@
 
 {% block scripts %}
     <script type="text/javascript">
-
+        document.getElementById("product-description").innerHTML = "{{ product.description|escapejs }}";
     </script>
 {% endblock %}

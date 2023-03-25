@@ -50,7 +50,7 @@
 }
 
 .navigation ul li:hover {
-    background: #081c6e;
+    background: #1253cc;
 }
 
 .navigation ul li:nth-child(1) {
@@ -226,7 +226,7 @@
 
 .cardBox .mycard .iconBox {
     font-size: 2.5em;
-    color: #081c6e;
+    color: #1253cc;
 }
 
 .details {
@@ -260,7 +260,7 @@
 .btnView {
     position: relative;
     padding: 5px 10px;
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
     text-decoration: none;
     border-radius: 6px;
@@ -290,7 +290,7 @@
 }
 
 .details .recentOrders table tbody tr:hover {
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
 }
 
@@ -374,7 +374,7 @@
 
 .details .recentCustomers table tr:hover td span,
 .details .recentCustomers table tr:hover {
-    background: #081c6e;
+    background: #1253cc;
     color: #fff;
 }
 
@@ -487,7 +487,7 @@ td.action {
 
 .form-button {
     border-radius: 10px;
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
     font-size: 20px;
 }
@@ -736,7 +736,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 }
 
 .dropdown-item:hover {
-    background-color: #081c6e;
+    background-color: #1253cc;
     color: #fff;
 }
 

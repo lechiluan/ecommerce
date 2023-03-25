@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 
 # Create your models here.
@@ -18,6 +19,14 @@ class Customer(models.Model):
     @property
     def get_id(self):
         return self.user.id
+
+    @property
+    def cart_items_count(self):
+        return self.cartitem_set.aggregate(Sum('quantity'))['quantity__sum'] or 0
+
+    @property
+    def wishlist_items_count(self):
+        return self.wishlist_set.count() or 0
 
     def __str__(self):
         return self.user.first_name
@@ -83,18 +92,23 @@ class Coupon(models.Model):
         db_table = "Coupon"
 
 
-class Cart(models.Model):
+class CartItem(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
-    quantity = models.PositiveIntegerField()
-    price = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(null=True, blank=True)
+    price = models.PositiveIntegerField(null=True, blank=True)
+    amount = models.PositiveIntegerField(null=True, blank=True)
+    date_added = models.DateField(auto_now_add=True, null=True)
+
+    @property
+    def total(self):
+        return self.quantity * self.price
 
     def __str__(self):
         return self.product.name
 
     class Meta:
-        db_table = "Cart"
+        db_table = "CartItem"
 
 
 class Orders(models.Model):
@@ -143,25 +157,11 @@ class DeliveryAddress(models.Model):
     city = models.CharField(max_length=40, null=True)
     state = models.CharField(max_length=40, null=True)
     zip_code = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=40, null=True)
     date_added = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.address
-
-
-class Contact(models.Model):
-    name = models.CharField(max_length=40)
-    email = models.CharField(max_length=50, null=True)
-    mobile = models.CharField(max_length=20, null=True)
-    subject = models.CharField(max_length=100, null=True)
-    message = models.CharField(null=True, max_length=2000)
-    date_sent = models.DateField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "Contact"
 
 
 class Payment(models.Model):
@@ -210,3 +210,18 @@ class Wishlist(models.Model):
 
     class Meta:
         db_table = "Wishlist"
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=40)
+    email = models.CharField(max_length=50, null=True)
+    mobile = models.CharField(max_length=20, null=True)
+    subject = models.CharField(max_length=100, null=True)
+    message = models.CharField(null=True, max_length=2000)
+    date_sent = models.DateField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "Contact"
