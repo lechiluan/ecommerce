@@ -67,6 +67,7 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
     description = models.TextField(null=True, blank=True)
     product_image = models.ImageField(upload_to='product_image/', null=True, blank=True)
+    sold = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
 

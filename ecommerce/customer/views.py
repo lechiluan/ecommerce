@@ -6,6 +6,7 @@ from django.contrib import messages
 from .forms import ContactForm, CheckoutForm
 from main.models import Customer, Category, Brand, Product, Coupon, Contact, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
@@ -45,24 +46,88 @@ def product_details(request, product_id):
 
 
 def search(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('id')
+    categories = Category.objects.all().order_by('id')
+    brands = Brand.objects.all().order_by('id')
     page_object = paginator(request, products)
-    context = {
-        'products': page_object,
-    }
+    context = {'products': page_object,
+               'categories': categories,
+               'brands': brands}
     return render(request, 'customer_help/customer_product_list.html', context)
 
 
 def product_search(request):
     if request.method == 'GET':
-        query = request.GET.get('search')
-        if query:
-            products = Product.objects.filter(
-                Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query) | Q(
-                    brand__name__icontains=query))
-            messages.success(request, 'Search results for: ' + query)
-        else:
-            products = Product.objects.all()
+        search_query = request.GET.get('search')
+        sort_by = request.GET.get('sort_by')
+        brand_id = request.GET.get('filter_by_brand')  # updated variable name
+        category_id = request.GET.get('filter_by_category')  # updated variable name
+
+        products = Product.objects.all()
+
+        # apply brand filter if selected
+
+        if brand_id and category_id:
+            products = products.filter(brand__id=brand_id, category__id=category_id)
+            brand_name = Brand.objects.get(id=brand_id).name
+            category_name = Category.objects.get(id=category_id).name
+            messages.success(request, 'Filtered by brand: "' + brand_name + '" and category: "' + category_name + '"')
+        elif brand_id:
+            products = products.filter(brand__id=brand_id)
+            brand_name = Brand.objects.get(id=brand_id).name
+            messages.success(request, 'Filtered by brand: "' + brand_name + '"')
+
+        # apply category filter if selected
+        elif category_id:
+            products = products.filter(category__id=category_id)
+            category_name = Category.objects.get(id=category_id).name
+            messages.success(request, 'Filtered by category: "' + category_name + '"')
+
+        # apply search filter if search query exists
+        if search_query:
+            products = products.filter(
+                Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(
+                    category__name__icontains=search_query) | Q(
+                    brand__name__icontains=search_query)
+            )
+            messages.success(request, 'Search results for: ' + search_query)
+
+        # apply sorting based on selected option
+        if sort_by == 'newest':
+            products = products.order_by('-created_date')
+            messages.success(request, 'Sorted by newest')
+        elif sort_by == 'best_seller':
+            products = products.order_by('-updated_date')
+            messages.success(request, 'Sorted by best seller')
+        elif sort_by == 'name_asc':
+            products = products.order_by('name')
+            messages.success(request, 'Sorted by name ascending')
+        elif sort_by == 'name_desc':
+            products = products.order_by('-name')
+            messages.success(request, 'Sorted by name descending')
+        elif sort_by == 'price_asc':
+            products = products.order_by('price')
+            messages.success(request, 'Sorted by price ascending')
+        elif sort_by == 'price_desc':
+            products = products.order_by('-price')
+            messages.success(request, 'Sorted by price descending')
+
+        page_obj = paginator(request, products)
+
+        brands = Brand.objects.all()
+        categories = Category.objects.all()
+
+        context = {
+            'products': page_obj,
+            'brands': brands,  # add brands to the context
+            'categories': categories,
+            'search_query': search_query,
+            'brand_id': brand_id,  # updated variable name
+            'category_id': category_id,  # updated variable name
+        }
+        return render(request, 'customer_help/customer_product_list.html', context)
+    else:
+        products = Product.objects.all()
         page_object = paginator(request, products)
         context = {
             'products': page_object,
@@ -73,9 +138,13 @@ def product_search(request):
 def product_list_category(request, category_id):
     category = Category.objects.get(id=category_id)
     products = Product.objects.filter(category=category)
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
     page_object = paginator(request, products)
     context = {
         'products': page_object,
+        'categories': categories,
+        'brands': brands,
     }
     return render(request, 'customer_help/customer_product_list.html', context)
 
@@ -90,6 +159,7 @@ def product_list_brand(request, brand_id):
     return render(request, 'customer_help/customer_product_list.html', context)
 
 
+@login_required(login_url='/auth/login')
 # add to cart function for customer
 def add_to_cart(request, product_id):
     # get the product from the database
@@ -117,7 +187,7 @@ def add_to_cart(request, product_id):
             messages.success(request, 'Product quantity updated successfully')
             return redirect('/customer/cart/')
     else:
-        messages.success(request, 'Please login to add product to cart')
+        messages.success(request, 'Please login to add to cart')
         return redirect('/auth/login/')
 
 
@@ -224,9 +294,12 @@ def remove_from_wishlist(request, product_id):
     # get the product from the database
     product = Product.objects.get(id=product_id)
     customer = request.user.customer
-    wishlist_item = Wishlist.objects.get(customer=customer, product=product)
-    wishlist_item.delete()
-    messages.success(request, 'Product removed from wishlist successfully')
+    try:
+        wishlist_item = Wishlist.objects.get(customer=customer, product=product)
+        wishlist_item.delete()
+        messages.success(request, 'Product removed from wishlist successfully')
+    except Wishlist.DoesNotExist:
+        messages.warning(request, 'Product not found in wishlist')
     return redirect('/customer/wishlist/')
 
 

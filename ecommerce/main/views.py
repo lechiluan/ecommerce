@@ -17,7 +17,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
-from .models import Customer, Product
+from .models import Customer, Product, Category, Brand
 
 
 # Create your views here.
@@ -39,8 +39,12 @@ def paginator(request, objects):
 # Display Homepage for all users. Display List of all products, categories, brands, etc.
 def home(request):
     products = Product.objects.all().order_by('id')
+    categories = Category.objects.all().order_by('id')
+    brands = Brand.objects.all().order_by('id')
     page_object = paginator(request, products)
-    context = {'products': page_object}
+    context = {'products': page_object,
+               'categories': categories,
+               'brands': brands}
     return render(request, 'main/base/base.html', context)
 
 

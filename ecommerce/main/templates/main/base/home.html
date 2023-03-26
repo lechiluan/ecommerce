@@ -104,11 +104,73 @@
             </form>
         </div>
         {# End of searchbox bar #}
+        {# Sort by bar right here#}
+        <div class="filter-form">
+            <form action="/customer/product/search/" method="GET">
+                {% csrf_token %}
+                <div class="form-row align-items-center">
+                    <ul>
+                        <li>
+                            <div class="col-auto">
+                                <label class="sr-only" for="sort_by">Sort by</label>
+                                <select class="form-control mb-2" id="sort_by" name="sort_by">
+                                    <option value="">Sort by</option>
+                                    <option value="newest">Newest</option>
+                                    <option value="best_seller">Best Seller</option>
+                                    <option value="name_asc">Name (A-Z)</option>
+                                    <option value="name_desc">Name (Z-A)</option>
+                                    <option value="price_asc">Price (low to high)</option>
+                                    <option value="price_desc">Price (high to low)</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <select class="form-control mb-2" id="filter_by_brand" name="filter_by_brand">
+                                    <option value="">Filter by Brand</option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <select class="form-control mb-2" id="filter_by_category" name="filter_by_category">
+                                    <option value="">Filter by Category</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary mb-2">Apply</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <input type="hidden" name="search" value="{{ request.GET.search }}">
+                <input type="hidden" name="t" value="{{ timestamp }}">
+            </form>
+        </div>
+        {# End of Sort by bar #}
         {# Product Card #}
         <div class="product-card">
             <div class="card-header">
                 <h2>Our Products</h2>
             </div>
+            {# Product Categories #}
+            <div class="card-categories">
+                <ul>
+                    {% for category in categories %}
+                        <li><a href="/customer/product_list_category/{{ category.id }}/">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {# End of Product Categories #}
+            {# Product Card #}
             <div class="card-main">
                 <div class="container">
                     {% for product in products %}
