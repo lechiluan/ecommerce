@@ -30,7 +30,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in wishlist %}
+                    {% for item in wishlists %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><img class="img-thumbnail"
@@ -45,7 +45,7 @@
                 </table>
                 <div class="row">
                     <div class="col-md-12">
-                        {% if wishlist %}
+                        {% if wishlists %}
                             <a href="/customer/add_all_to_cart_from_wishlist/" class="btn btn-primary">Add All To
                                 Cart</a>
                         {% endif %}

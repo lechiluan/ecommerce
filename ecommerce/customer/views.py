@@ -1,28 +1,45 @@
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models.query_utils import Q
 from django.contrib import messages
+from django.template.loader import render_to_string
 from .forms import ContactForm, CheckoutForm
 from main.models import Customer, Category, Brand, Product, Coupon, Contact, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
 
-# Create your views here.
-def paginator(request, objects):
-    # Set the number of items per page
-    per_page = 8
+# Send email newsletter
+def send_email_newsletter(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        if User.objects.filter(email=email).exists():
+            messages.warning(request, 'This email already exists')
+            return redirect('/')
+        else:
+            send_email(request, email)
+            messages.success(request, 'Thank you for subscribing to our newsletter. We will send you the latest news')
+            return redirect('/')
+    else:
+        return redirect('/')
 
-    # Create a Paginator object with the customers queryset and the per_page value
-    page = Paginator(objects, per_page)
 
-    # Get the current page number from the request's GET parameters
-    page_number = request.GET.get('page')
-
-    # Get the current page object from the Paginator object
-    page_obj = page.get_page(page_number)
-    return page_obj
+def send_email(request, email):
+    current_site = get_current_site(request)
+    mail_subject = 'Activate your account.'
+    message = render_to_string('registration/register/email_newsletter.html', {
+        'domain': current_site.domain,
+        'email': email,
+        'protocol': 'http',
+    })
+    to_email = [email]
+    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    email = EmailMessage(mail_subject, message, form_email, to_email)
+    email.content_subtype = "html"
+    email.send()
 
 
 def contact(request):
@@ -37,6 +54,22 @@ def contact(request):
     return render(request, 'customer_help/contact.html', {'form': form})
 
 
+# Code pagination
+def paginator(request, objects):
+    # Set the number of items per page
+    per_page = 8
+    # Create a Paginator object with the customers queryset and the per_page value
+    page = Paginator(objects, per_page)
+
+    # Get the current page number from the request's GET parameters
+    page_number = request.GET.get('page')
+
+    # Get the current page object from the Paginator object
+    page_obj = page.get_page(page_number)
+    return page_obj
+
+
+# Code for display product
 def product_details(request, product_id):
     product = Product.objects.get(id=product_id)
     context = {
@@ -45,28 +78,17 @@ def product_details(request, product_id):
     return render(request, 'customer_help/customer_product_details.html', context)
 
 
-def search(request):
-    products = Product.objects.all().order_by('id')
-    categories = Category.objects.all().order_by('id')
-    brands = Brand.objects.all().order_by('id')
-    page_object = paginator(request, products)
-    context = {'products': page_object,
-               'categories': categories,
-               'brands': brands}
-    return render(request, 'customer_help/customer_product_list.html', context)
-
-
+# Search product and filter product
 def product_search(request):
     if request.method == 'GET':
+        # get the search query from the request
         search_query = request.GET.get('search')
         sort_by = request.GET.get('sort_by')
-        brand_id = request.GET.get('filter_by_brand')  # updated variable name
-        category_id = request.GET.get('filter_by_category')  # updated variable name
-
+        brand_id = request.GET.get('filter_by_brand')
+        category_id = request.GET.get('filter_by_category')
         products = Product.objects.all()
 
         # apply brand filter if selected
-
         if brand_id and category_id:
             products = products.filter(brand__id=brand_id, category__id=category_id)
             brand_name = Brand.objects.get(id=brand_id).name
@@ -114,13 +136,8 @@ def product_search(request):
 
         page_obj = paginator(request, products)
 
-        brands = Brand.objects.all()
-        categories = Category.objects.all()
-
         context = {
             'products': page_obj,
-            'brands': brands,  # add brands to the context
-            'categories': categories,
             'search_query': search_query,
             'brand_id': brand_id,  # updated variable name
             'category_id': category_id,  # updated variable name
@@ -135,28 +152,43 @@ def product_search(request):
         return render(request, 'customer_help/customer_product_list.html', context)
 
 
+# Display product by category
 def product_list_category(request, category_id):
-    category = Category.objects.get(id=category_id)
-    products = Product.objects.filter(category=category)
-    categories = Category.objects.all()
-    brands = Brand.objects.all()
-    page_object = paginator(request, products)
-    context = {
-        'products': page_object,
-        'categories': categories,
-        'brands': brands,
-    }
-    return render(request, 'customer_help/customer_product_list.html', context)
+    if category_id:
+        category = Category.objects.get(id=category_id)
+        products = Product.objects.filter(category=category)
+        page_object = paginator(request, products)
+        context = {
+            'products': page_object,
+        }
+        return render(request, 'customer_help/customer_product_list.html', context)
+    else:
+        products = Product.objects.all()
+        page_object = paginator(request, products)
+        context = {
+            'products': page_object,
+        }
+        return render(request, 'customer_help/customer_product_list.html', context)
 
 
+# Display product by brand
 def product_list_brand(request, brand_id):
-    brand = Brand.objects.get(id=brand_id)
-    products = Product.objects.filter(brand=brand)
-    page_object = paginator(request, products)
-    context = {
-        'products': page_object,
-    }
-    return render(request, 'customer_help/customer_product_list.html', context)
+    if brand_id:
+        brand = Brand.objects.get(id=brand_id)
+        products = Product.objects.filter(brand=brand)
+        categories = Category.objects.all()
+        page_object = paginator(request, products)
+        context = {
+            'products': page_object,
+        }
+        return render(request, 'customer_help/customer_product_list.html', context)
+    else:
+        products = Product.objects.all()
+        page_object = paginator(request, products)
+        context = {
+            'products': page_object,
+        }
+        return render(request, 'customer_help/customer_product_list.html', context)
 
 
 @login_required(login_url='/auth/login')
@@ -230,7 +262,7 @@ def update_cart_quantity(request, product_id):
     cart_item.amount = amount
     cart_item.save()
     messages.success(request, 'Product quantity updated successfully')
-    return redirect('/cart/')
+    return render(request, 'customer_cart/view_cart.html')
 
 
 @login_required(login_url='/auth/login/')
@@ -266,7 +298,8 @@ def add_to_wishlist(request, product_id):
         # check if the product is already in the wishlist
         wishlist_item, created = Wishlist.objects.get_or_create(customer=customer, product=product)
         if created:
-            messages.success(request, 'Product added to wishlist successfully')
+            messages.success(request,
+                             f'Product added to wishlist successfully. Click here to view <a href="/customer/wishlist/">wishlist</a>')
             return redirect('/')
         else:
             messages.success(request, 'Product already in wishlist')
@@ -279,9 +312,10 @@ def add_to_wishlist(request, product_id):
 # view wishlist function for customer
 def view_wishlist(request):
     if request.user.is_authenticated:
-        wishlist = request.user.customer.wishlist_set.all()
+        customer = request.user.customer
+        wishlists = Wishlist.objects.filter(customer=customer)
         context = {
-            'wishlist': wishlist,
+            'wishlists': wishlists,
         }
         return render(request, 'customer_wishlist/view_wishlist.html', context)
     else:
@@ -306,8 +340,8 @@ def remove_from_wishlist(request, product_id):
 # add all products to cart form wishlist function for customer
 def add_all_to_cart_form_wishlist(request):
     customer = request.user.customer
-    wishlist = customer.wishlist_set.all()
-    for item in wishlist:
+    wishlists = customer.wishlist_set.all()
+    for item in wishlists:
         product = item.product
         price = product.price
         quantity = 1
@@ -319,13 +353,13 @@ def add_all_to_cart_form_wishlist(request):
             cart_item.price = price
             cart_item.amount = amount
             cart_item.save()
-            wishlist.delete()
+            wishlists.delete()
         else:
             cart_item.quantity += quantity
             cart_item.price = price
             cart_item.amount += amount
             cart_item.save()
-            wishlist.delete()
+            wishlists.delete()
     messages.success(request, 'All products added to cart successfully')
     return redirect('/customer/cart/')
 
@@ -352,4 +386,4 @@ def add_selected_products_from_wishlist(request):
             cart_item.amount += amount
             cart_item.save()
     messages.success(request, 'All products added to cart successfully')
-    return redirect('/customer/cart/')
+    render(request, 'customer_cart/view_cart.html')

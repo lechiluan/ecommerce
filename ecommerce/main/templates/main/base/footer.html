@@ -25,12 +25,18 @@
         }
     }
 </script>
-{% block style %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-{% endblock %}
 <!-- Site footer -->
 <footer class="site-footer">
-
+    <div class="container">
+        <div class="newsletter-form">
+            <h3>Sign Up for Our Newsletter</h3>
+            <form action="/customer/send_email_newsletter/" method="post">
+                {% csrf_token %}
+                <input type="email" placeholder="Enter your email" required name="email">
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-6">
@@ -111,6 +117,52 @@
     </div>
 </footer>
 <style>
+    .newsletter-form {
+        text-align: center;
+        margin: 10px auto;
+        background-color: #343a40;
+        padding-bottom: 20px;
+    }
+
+    .newsletter-form h3 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .newsletter-form form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .newsletter-form input[type="email"] {
+        width: 300px;
+        height: 40px;
+        margin-right: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .newsletter-form button[type="submit"] {
+        height: 40px;
+        padding: 0 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #0066CC;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .newsletter-form button[type="submit"]:hover {
+        background-color: #003366;
+    }
+
     .payments {
         display: flex;
         flex-wrap: wrap;
@@ -138,7 +190,7 @@
     /* Footer CSS */
     .site-footer {
         background-color: #343a40;
-        padding: 45px 0 20px;
+        padding: 20px 0 20px;
         font-size: 15px;
         line-height: 24px;
         color: #dcc9c9;

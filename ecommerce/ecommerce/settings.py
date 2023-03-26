@@ -94,6 +94,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # for request context processor
                 'django.contrib.auth.context_processors.auth',  # for auth context processor
                 'django.contrib.messages.context_processors.messages',  # for messages context processor
+                'main.context_processors.categories',  # for categories context processor
+                'main.context_processors.brands',  # for brands context processor
             ],
         },
     },

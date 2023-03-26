@@ -1,0 +1,33 @@
+{% autoescape off %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Newsletter</title>
+</head>
+<body>
+<h1>
+    Register Newsletter
+</h1>
+<h3>Welcome to LCL Shop - {{ email }}</h3>
+<p>
+    Thank you for registering newsletter on LCL Shop. We are excited to have you on board. <br>
+</p>
+<p>
+    You will receive the latest news and promotions from LCL Shop. <br>
+</p>
+<p>
+    Please visit our website at {{ protocol }}://{{ domain }}  to get more information. <br>
+</p>
+<p>
+    If you have any questions, please contact us at <a href="mailto:lclshop.dev@gmail.com">lclshop.dev@gmail.com</a> <br>
+</p>
+<p>
+    Sincerely, <br>
+    LCL Shop
+</p>
+</body>
+</html>
+{% endautoescape %}

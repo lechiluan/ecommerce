@@ -46,15 +46,29 @@
                        data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">Category</a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Laptop</a>
-                        <a class="dropdown-item" href="#">Smartphone</a>
-                        <a class="dropdown-item" href="#">Smart Watch</a>
+                        {% for category in categories %}
+                            <a class="dropdown-item"
+                               href="/customer/product/category/{{ category.id }}/">{{ category.name }}</a>
+                        {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">All products</a>
+                        <a class="dropdown-item" href="/customer/product/category/0/">All products</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Brand</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        {% for brand in brands %}
+                            <a class="dropdown-item"
+                               href="/customer/product/brand/{{ brand.id }}/">{{ brand.name }}</a>
+                        {% endfor %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/customer/product/brand/0/">All Brand</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/customer/search/">Search</a>
+                    <a class="nav-link" href="/customer/product/search/">Search</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About us</a>

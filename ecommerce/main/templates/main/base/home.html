@@ -165,7 +165,7 @@
             <div class="card-categories">
                 <ul>
                     {% for category in categories %}
-                        <li><a href="/customer/product_list_category/{{ category.id }}/">{{ category.name }}</a></li>
+                        <li><a href="/customer/product/category/{{ category.id }}/">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -189,7 +189,7 @@
                                         <span>Add to Cart</span>
                                     </li>
                                     <li>
-                                        <a href="/customer/product_details/{{ product.id }}">
+                                        <a href="/customer/product/details/{{ product.id }}">
                                             <i class="fa fa-eye" aria-hidden="true"></i></a>
                                         <span>View Details</span>
                                     </li>
