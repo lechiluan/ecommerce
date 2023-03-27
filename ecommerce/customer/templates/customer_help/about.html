@@ -1,18 +1,96 @@
 {% extends "main/base/base.html" %}
-{% block title %}Login{% endblock %}
+{% block title %}Contact Us{% endblock %}
 
 {% block style %}
     <style>
 
+        .about {
+            padding-top: 10px;
+            padding-bottom: 30px;
+            background: #ffffff;
+        }
+
+        .about h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .about .contact-us-content {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .about .contact-us-content i {
+            color: #ff6f61;
+            margin-right: 10px;
+        }
+
+        .about .contact-us-content a {
+            color: #666;
+        }
+
+        #map-container {
+            padding-top: 20px;
+            height: 450px;
+            width: 100%;
+        }
+
+        #map-container iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .form-title {
+            color: #ff6f61;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .story-content {
+            text-align: justify;
+        }
     </style>
 {% endblock %}
 
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
+{% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-
+    <div class="about">
+        <div class="container">
+            <h2 class="font-weight-bold mt-3 form-title">About Us</h2>
+            <div class="row">
+                <div class="col-md-6" id="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2484.64737651578!2d-0.0063882999999999995!3d51.4829866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602844a443523%3A0x9f5181128b65430a!2sUniversity%20of%20Greenwich!5e0!3m2!1sen!2s!4v1679889538001!5m2!1sen!2s"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="col-md-6">
+                    <h4>Our Story</h4>
+                    <p class="story-content">LCL Shop is a website that sells all kinds of technology products. We have
+                        a wide range of products from the most popular brands in the world. LCL shop was founded with a
+                        mission to bring the latest and greatest technology devices to the fingertips of tech
+                        enthusiasts and casual users alike. Our journey began with a passion for all things tech, and a
+                        desire to share that passion with others. We are always committed to bringing the best products
+                        to our customers. If you have any questions or comments, please don't hesitate to contact us.
+                    </p>
+                    <h4>Contact Us</h4>
+                    <div class="contact-us-content">
+                        <i class="fa fa-map"></i><a href="https://goo.gl/maps/c4nD1ySUwRSHPq9q6" target="_blank"> Old
+                        Royal
+                        Naval College, Park Row, London, United Kingdom</a> <br>
+                        <i class="fa fa-phone"></i><a href="tel:+84386363677"> +84 386 363 677</a><br>
+                        <i class="fa fa-envelope"></i><a href="mailto:lclshop.dev@gmail.com" target="_blank">
+                        lclshop.dev@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

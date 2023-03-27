@@ -29,7 +29,7 @@ def send_email_newsletter(request):
 
 def send_email(request, email):
     current_site = get_current_site(request)
-    mail_subject = 'Activate your account.'
+    mail_subject = 'Register newsletter.'
     message = render_to_string('registration/register/email_newsletter.html', {
         'domain': current_site.domain,
         'email': email,
@@ -52,6 +52,10 @@ def contact(request):
     else:
         form = ContactForm()
     return render(request, 'customer_help/contact.html', {'form': form})
+
+
+def about(request):
+    return render(request, 'customer_help/about.html')
 
 
 # Code pagination
