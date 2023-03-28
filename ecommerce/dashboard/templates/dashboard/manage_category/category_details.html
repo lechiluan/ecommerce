@@ -12,31 +12,30 @@
 {% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="breadcrumb">
-            <a href="/dashboard/">Home</a>
-            <span> > </span>
-            <a href="/dashboard/category/">Category Management</a>
-            <span> > </span>
-            <a href="/dashboard/category/details/{{ category.id }}/">Category Details</a>
-        </div>
-        <h1 class="h3 mb-2 text-gray-800">Category Details</h1>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h2 class="font-weight-bold mt-3 form-title">Details about category
-                    - "{{ category.name }}"</h2>
-                <li class="form-display"><strong>Category ID</strong>: {{ category.id }}</li>
-                <li class="form-display"><strong>Category Name</strong>: {{ category.name }}</li>
-                <li class="form-display"><strong>Description</strong>: {{ category.description }}</li>
-                <div class="btn-form">
-                    <div class="btn-form-left">
-                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/category/">Back</a>
-                        <a type="button" class="btn btn-danger btn-block"
-                           href="/dashboard/category/delete/{{ category.id }}?t={{ timestamp }}/"
-                           onclick="return confirm('Are you sure?')">Delete</a>
-                        <a type="button" class="btn btn-success btn-block"
-                           href="/dashboard/category/update/{{ category.id }}?t={{ timestamp }}/">Update</a>
-                    </div>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/category/">Category Management</a>
+        <span> > </span>
+        <a href="/dashboard/category/details/{{ category.id }}/">Category Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Category Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about category
+                - "{{ category.name }}"</h2>
+            <li class="form-display"><strong>Category ID</strong>: {{ category.id }}</li>
+            <li class="form-display"><strong>Category Slug</strong>: {{ category.slug }}</li>
+            <li class="form-display"><strong>Category Name</strong>: {{ category.name }}</li>
+            <li class="form-display"><strong>Description</strong>: {{ category.description }}</li>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/category/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/category/delete/{{ category.id }}?t={{ timestamp }}/"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/category/update/{{ category.id }}?t={{ timestamp }}/">Update</a>
                 </div>
             </div>
         </div>

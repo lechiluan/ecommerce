@@ -202,10 +202,10 @@
                     let confirmed = confirm('Are you sure to delete this selected?');
                     if (confirmed) {
                         // Update the action attribute of the form
-                        let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                        let Ids = Array.from(checkboxes).map(function (checkbox) {
                             return checkbox.value;
                         });
-                        form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
+                        form.action = "/dashboard/customer/delete_selected/" + Ids.join("+") + "/";
                         // Submit the form
                         form.submit();
                     }
@@ -219,10 +219,10 @@
                 // Set their checked property based on the select-all checkbox
                 customerCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
-                    let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
+                    let Ids = Array.from(customerCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/customer/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/customer/delete_selected/" + Ids.join("+") + "/";
                 });
             });
         });

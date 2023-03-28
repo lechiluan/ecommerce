@@ -86,8 +86,8 @@
                         <tbody>
                         {% for coupon in coupons %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_customer"
-                                           value="{{ category.id }}"></td>
+                                <td><input type="checkbox" class="select-checkbox" name="selected_coupon"
+                                           value="{{ coupon.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ coupon.id }}</td>
                                 <td>{{ coupon.code }}</td>
@@ -95,7 +95,7 @@
                                 <td>{{ coupon.amount }}</td>
                                 <td>{{ coupon.valid_from }}</td>
                                 <td>{{ coupon.valid_to }}</td>
-                                {% if coupon.active %}
+                                {% if coupon.is_active %}
                                     <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True" style="width:20px;height: 20px;"
                                              title="True"></td>
                                 {% else %}
@@ -148,16 +148,16 @@
                     // If no checkboxes are selected, prevent the form submission
                     if (checkboxes.length === 0) {
                         event.preventDefault();
-                        alert("Please select at least one category to delete.");
+                        alert("Please select at least one coupon to delete.");
                     } else {
                         // Show confirm dialog and proceed only if OK is clicked
                         let confirmed = confirm('Are you sure to delete this selected?');
                         if (confirmed) {
                             // Update the action attribute of the form
-                            let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                            let Ids = Array.from(checkboxes).map(function (checkbox) {
                                 return checkbox.value;
                             });
-                            form.action = "/dashboard/category/delete_selected/" + customerIds.join("+") + "/";
+                            form.action = "/dashboard/coupon/delete_selected/" + Ids.join("+") + "/";
                             // Submit the form
                             form.submit();
                         }
@@ -168,15 +168,15 @@
 
             // Listen for the click event on the select-all checkbox
             selectAllCheckbox.addEventListener("click", function () {
-                // Get all the customer checkboxes
-                let customerCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
                 // Set their checked property based on the select-all checkbox
-                customerCheckboxesAll.forEach(function (checkbox) {
+                objectCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
-                    let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
+                    let Ids = Array.from(objectCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/category/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/coupon/delete_selected/" + Ids.join("+") + "/";
                 });
             });
         });

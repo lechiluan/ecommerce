@@ -1,5 +1,5 @@
 {% extends "main/base/base.html" %}
-{% block title %}Product List{% endblock %}
+{% block title %}List of Products{% endblock %}
 
 {% block style %}
     <style>
@@ -42,40 +42,52 @@
                         <li>
                             <div class="col-auto">
                                 <label class="sr-only" for="sort_by">Sort by</label>
-                                <select class="form-control mb-2" id="sort_by" name="sort_by">
+                                <select class="form-control" id="sort_by" name="sort_by">
                                     <option value="">Sort by</option>
-                                    <option value="newest">Newest</option>
-                                    <option value="best_seller">Best Seller</option>
-                                    <option value="name_asc">Name (A-Z)</option>
-                                    <option value="name_desc">Name (Z-A)</option>
-                                    <option value="price_asc">Price (low to high)</option>
-                                    <option value="price_desc">Price (high to low)</option>
+                                    <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
+                                    </option>
+                                    <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
+                                        Best Seller
+                                    </option>
+                                    <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
+                                        (A-Z)
+                                    </option>
+                                    <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
+                                        (Z-A)
+                                    </option>
+                                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
+                                        (low to high)
+                                    </option>
+                                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
+                                        (high to low)
+                                    </option>
                                 </select>
                             </div>
                         </li>
                         <li>
                             <div class="col-auto">
-                                <select class="form-control mb-2" id="filter_by_brand" name="filter_by_brand">
+                                <select class="form-control" id="filter_by_brand" name="filter_by_brand">
                                     <option value="">Filter by Brand</option>
                                     {% for brand in brands %}
-                                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                        <option value="{{ brand.id }}" {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
                                     {% endfor %}
                                 </select>
+
                             </div>
                         </li>
                         <li>
                             <div class="col-auto">
-                                <select class="form-control mb-2" id="filter_by_category" name="filter_by_category">
+                                <select class="form-control" id="filter_by_category" name="filter_by_category">
                                     <option value="">Filter by Category</option>
                                     {% for category in categories %}
-                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                        <option value="{{ category.id }}" {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </li>
                         <li>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary mb-2">Apply</button>
+                                <button type="submit" class="btn btn-primary">Apply</button>
                             </div>
                         </li>
                     </ul>
@@ -99,18 +111,18 @@
                                     <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
                                     <ul class="action">
                                         <li>
-                                            <a href="/customer/add_to_wishlist/{{ product.id }}/{{ customer.id }}"><i
+                                            <a href="/customer/add_to_wishlist/{{ product.id }}/{{ customer.slug }}"><i
                                                     class="fa fa-heart" aria-hidden="true"></i></a>
                                             <span>Add to WishList</span>
                                         </li>
                                         <li>
-                                            <a href="/customer/add_to_cart/{{ product.id }}/"><i
+                                            <a href="/customer/add_to_cart/{{ product.slug }}/"><i
                                                     class="fa fa-shopping-cart" aria-hidden="true"></i></a>
                                             <span>Add to Cart</span>
                                         </li>
                                         <li>
-                                            <a href="/customer/product/details/{{ product.id }}"><i class="fa fa-eye"
-                                                                                                    aria-hidden="true"></i></a>
+                                            <a href="/customer/product/details/{{ product.slug }}"><i class="fa fa-eye"
+                                                                                                      aria-hidden="true"></i></a>
                                             <span>View Details</span>
                                         </li>
                                     </ul>
@@ -153,7 +165,8 @@
                     <p>Sorry, we couldn't find any product that matched your search. Please try again with some
                         different keywords.</p>
                     <hr>
-                    <p class="mb-0">If you think something is wrong, please <a href="/contact/">contact us</a>.</p>
+                    <p class="mb-0">If you think something is wrong, please <a href="/customer/feedback/">feedback
+                        us</a>.</p>
                 </div>
             </div>
         {% endif %}

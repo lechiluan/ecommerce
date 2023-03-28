@@ -36,7 +36,7 @@
                     <td>${{ cart_item.price }}</td>
                     <td>${{ cart_item.amount }}</td>
                     <td>
-                        <form action="{% url 'remove_from_cart' cart_item.product.id %}" method="post">
+                        <form action="/customer/remove_from_cart/{{ cart_item.product.slug }}/" method="post">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>

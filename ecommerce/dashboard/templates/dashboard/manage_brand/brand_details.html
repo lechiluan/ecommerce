@@ -30,36 +30,35 @@
 {% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="breadcrumb">
-            <a href="/dashboard/">Home</a>
-            <span> > </span>
-            <a href="/dashboard/brand/">Brand Management</a>
-            <span> > </span>
-            <a href="/dashboard/brand/details/{{ brand.id }}/">Brand Details</a>
-        </div>
-        <h1 class="h3 mb-2 text-gray-800">Brand Details</h1>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h2 class="font-weight-bold mt-3 form-title">Details about brand
-                    - "{{ brand.name }}"</h2>
-                <h5 class="card-title">Brand Logo:</h5>
-                <div class="img-details">
-                    <img class="img-display" src="{{ MEDIA_URL }}{{ brand.logo.url }}"
-                         alt="{{ brand.name }}" title="Logo Image of {{ brand.name }}">
-                </div>
-                <li class="form-display"><strong>ID</strong>: {{ brand.id }}</li>
-                <li class="form-display"><strong>Brand Name</strong>: {{ brand.name }}</li>
-
-                <div class="btn-form">
-                    <div class="btn-form-left">
-                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/brand/">Back</a>
-                        <a type="button" class="btn btn-danger btn-block"
-                           href="/dashboard/brand/delete/{{ brand.id }}?t={{ timestamp }}"
-                           onclick="return confirm('Are you sure?')">Delete</a>
-                        <a type="button" class="btn btn-success btn-block"
-                           href="/dashboard/brand/update/{{ brand.id }}?t={{ timestamp }}">Update</a>
-                    </div>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/brand/">Brand Management</a>
+        <span> > </span>
+        <a href="/dashboard/brand/details/{{ brand.id }}/">Brand Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Brand Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about brand
+                - "{{ brand.name }}"</h2>
+            <h5 class="card-title">Brand Logo:</h5>
+            <div class="img-details">
+                <img class="img-display" src="{{ MEDIA_URL }}{{ brand.logo.url }}"
+                     alt="{{ brand.name }}" title="Logo Image of {{ brand.name }}">
+            </div>
+            <li class="form-display"><strong>ID</strong>: {{ brand.id }}</li>
+            <li class="form-display"><strong>Brand Slug</strong>: {{ brand.slug }}</li>
+            <li class="form-display"><strong>Brand Name</strong>: {{ brand.name }}</li>
+            <li class="form-display"><strong>Brand Description</strong>: {{ brand.description }}</li>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/brand/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/brand/delete/{{ brand.id }}?t={{ timestamp }}"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/brand/update/{{ brand.id }}?t={{ timestamp }}">Update</a>
                 </div>
             </div>
         </div>

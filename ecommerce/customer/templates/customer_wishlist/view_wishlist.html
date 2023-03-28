@@ -38,7 +38,7 @@
                                      width="100px" height="100px"></td>
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.product.price }}</td>
-                            <td><a href="/customer/remove_from_wishlist/{{ item.product.id }}/">Remove</a></td>
+                            <td><a href="/customer/remove_from_wishlist/{{ item.product.slug }}/">Remove</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

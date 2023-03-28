@@ -1,0 +1,49 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Feedback details{% endblock %}
+{% block style %}
+    <style>
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/feedback/">Feedback Management</a>
+        <span> > </span>
+        <a href="/dashboard/feedback/details/{{ feedback.id }}/">Feedback Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Feedback Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about feedback of
+                - "{{ feedback.name }}"</h2>
+            <li class="form-display"><strong>ID</strong>: {{ feedback.id }}</li>
+            <li class="form-display"><strong>Name</strong>: {{ feedback.name }}</li>
+            <li class="form-display"><strong>Email</strong>: {{ feedback.email }}</li>
+            <li class="form-display"><strong>Mobile</strong>: {{ feedback.phone }}</li>
+            <li class="form-display"><strong>Subject</strong>: {{ feedback.subject }}</li>
+            <li class="form-display"><strong>Message</strong>:<br> {{ feedback.message }}</li>
+            <li class="form-display"><strong>Date Sent</strong>: {{ feedback.date_sent }}</li>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/feedback/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/feedback/delete/{{ feedback.id }}?t={{ timestamp }}"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

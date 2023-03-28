@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.admin_home, name='index'),
+    path('', views.dashboard, name='index'),
 
     # Administration URL
     path('profile/', views.update_profile, name='profile'),
@@ -62,4 +62,33 @@ urlpatterns = [
          name='delete_selected_coupon'),
     path('coupon/search/', views.search_coupon, name='search_coupon'),
 
+    # Order URL
+    path('order/', views.order_table, name='order_table'),
+    path('order/details/<int:order_id>/', views.order_details, name='order_details'),
+    # path('order/payment/<int:order_id>/', views.order_payment, name='order_payment'),
+
+    # Feedback URL
+    path('feedback/', views.feedback_table, name='feedback_table'),
+    path('feedback/details/<int:feedback_id>/', views.feedback_details, name='feedback_details'),
+    path('feedback/delete/<int:feedback_id>/', views.delete_feedback, name='delete_feedback'),
+    path('feedback/delete_selected/<str:feedback_ids>/', views.delete_selected_feedback,
+         name='delete_selected_feedback'),
+    path('feedback/search/', views.search_feedback, name='search_feedback'),
+
+
+    # Export URL
+    # path('export/customer/csv/', views.export_customer_csv, name='export_customer_csv'),
+    # path('export/customer/xls/', views.export_customer_xls, name='export_customer_xls'),
+    # path('export/category/csv/', views.export_category_csv, name='export_category_csv'),
+    # path('export/category/xls/', views.export_category_xls, name='export_category_xls'),
+    # path('export/brand/csv/', views.export_brand_csv, name='export_brand_csv'),
+    # path('export/brand/xls/', views.export_brand_xls, name='export_brand_xls'),
+    # path('export/product/csv/', views.export_product_csv, name='export_product_csv'),
+    # path('export/product/xls/', views.export_product_xls, name='export_product_xls'),
+    # path('export/coupon/csv/', views.export_coupon_csv, name='export_coupon_csv'),
+    # path('export/coupon/xls/', views.export_coupon_xls, name='export_coupon_xls'),
+    # path('export/order/csv/', views.export_order_csv, name='export_order_csv'),
+    # path('export/order/xls/', views.export_order_xls, name='export_order_xls'),
+    # path('export/feedback/csv/', views.export_feedback_csv, name='export_feedback_csv'),
+    # path('export/feedback/xls/', views.export_feedback_xls, name='export_feedback_xls'),
 ]

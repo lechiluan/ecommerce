@@ -1,23 +1,23 @@
 import datetime
 from django import forms
 from django.core.validators import RegexValidator
-from main.models import Category, Brand, Product, Coupon, Contact, DeliveryAddress, Payment, Orders, OrderDetails
+from main.models import Category, Brand, Product, Coupon, Feedback, DeliveryAddress, Payment, Orders, OrderDetails
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
 
 
-# Contact Form
-class ContactForm(forms.Form):
-    name = forms.CharField(required=True, max_length=100)
-    email = forms.EmailField(required=True, max_length=100)
+# Feedback Form
+class FeedbackForm(forms.Form):
+    name = forms.CharField(required=True, max_length=40)
+    email = forms.EmailField(required=True, max_length=50)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     subject = forms.CharField(required=True, max_length=100)
     message = forms.CharField(required=True, max_length=2000, widget=forms.Textarea)
 
     class Meta:
-        model = Contact
+        model = Feedback
         fields = ['name', 'email', 'mobile', 'subject', 'message']
 
     def clean(self):
@@ -27,21 +27,31 @@ class ContactForm(forms.Form):
         mobile = cleaned_data.get('mobile')
         subject = cleaned_data.get('subject')
         message = cleaned_data.get('message')
-        #  check a day just sent max 3 messages
-        if Contact.objects.filter(email=email, created_at__date=datetime.date.today()).count() >= 3:
-            self.add_error('email', 'You can only send 3 messages per day')
-        if Contact.objects.filter(mobile=mobile, created_at__date=datetime.date.today()).count() >= 3:
-            self.add_error('mobile', 'You can only send 3 messages per day')
+
+        if not name:
+            raise ValidationError(_('Please enter your name'))
+        if not email:
+            raise ValidationError(_('Please enter your email'))
+        if not mobile:
+            raise ValidationError(_('Please enter your mobile number'))
+        if not subject:
+            raise ValidationError(_('Please enter your subject'))
+        if not message:
+            raise ValidationError(_('Please enter your message'))
+
+        return cleaned_data
 
     def save(self):
-        name = self.cleaned_data.get('name')
-        email = self.cleaned_data.get('email')
-        mobile = self.cleaned_data.get('mobile')
-        subject = self.cleaned_data.get('subject')
-        message = self.cleaned_data.get('message')
-        contact = Contact(name=name, email=email, mobile=mobile, subject=subject, message=message)
-        contact.save()
-        return contact
+        feedback = Feedback(
+            name=self.cleaned_data['name'],
+            email=self.cleaned_data['email'],
+            mobile=self.cleaned_data['mobile'],
+            subject=self.cleaned_data['subject'],
+            message=self.cleaned_data['message'],
+        )
+        feedback.save()
+        return feedback
+
 
 
 # Checkout Form

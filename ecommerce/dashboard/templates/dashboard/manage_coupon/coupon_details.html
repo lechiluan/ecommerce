@@ -11,36 +11,34 @@
 {% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="breadcrumb">
-            <a href="/dashboard/">Home</a>
-            <span> > </span>
-            <a href="/dashboard/coupon/">Coupon Management</a>
-            <span> > </span>
-            <a href="/dashboard/coupon/details/{{ coupon.id }}/">Coupon Details</a>
-        </div>
-        <h1 class="h3 mb-2 text-gray-800">Coupon Details</h1>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h2 class="font-weight-bold mt-3 form-title">Details about coupon
-                    - "{{ coupon.code }}"</h2>
-                <li class="form-display"><strong>Coupon ID</strong>: {{ coupon.id }}</li>
-                <li class="form-display"><strong>Coupon Code</strong>: {{ coupon.code }}</li>
-                <li class="form-display"><strong>Coupon Discount</strong>: {{ coupon.discount }}</li>
-                <li class="form-display"><strong>Coupon Amount</strong>: {{ coupon.amount }}</li>
-                <li class="form-display"><strong>Coupon Start Date</strong>: {{ coupon.valid_from }}</li>
-                <li class="form-display"><strong>Coupon End Date</strong>: {{ coupon.valid_to }}</li>
-                <li class="form-display"><strong>Coupon Status</strong>: {{ coupon.active }}</li>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/coupon/">Coupon Management</a>
+        <span> > </span>
+        <a href="/dashboard/coupon/details/{{ coupon.id }}/">Coupon Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Coupon Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about coupon
+                - "{{ coupon.code }}"</h2>
+            <li class="form-display"><strong>Coupon ID</strong>: {{ coupon.id }}</li>
+            <li class="form-display"><strong>Coupon Code</strong>: {{ coupon.code }}</li>
+            <li class="form-display"><strong>Coupon Discount</strong>: {{ coupon.discount }}</li>
+            <li class="form-display"><strong>Coupon Amount</strong>: {{ coupon.amount }}</li>
+            <li class="form-display"><strong>Coupon Start Date</strong>: {{ coupon.valid_from }}</li>
+            <li class="form-display"><strong>Coupon End Date</strong>: {{ coupon.valid_to }}</li>
+            <li class="form-display"><strong>Coupon Status</strong>: {{ coupon.is_active }}</li>
 
-                <div class="btn-form">
-                    <div class="btn-form-left">
-                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/coupon/">Back</a>
-                        <a type="button" class="btn btn-danger btn-block"
-                           href="/dashboard/coupon/delete/{{ coupon.id }}?t={{ timestamp }}/"
-                           onclick="return confirm('Are you sure?')">Delete</a>
-                        <a type="button" class="btn btn-success btn-block"
-                           href="/dashboard/coupon/update/{{ coupon.id }}?t={{ timestamp }}/">Update</a>
-                    </div>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/coupon/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/coupon/delete/{{ coupon.id }}?t={{ timestamp }}/"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/coupon/update/{{ coupon.id }}?t={{ timestamp }}/">Update</a>
                 </div>
             </div>
         </div>

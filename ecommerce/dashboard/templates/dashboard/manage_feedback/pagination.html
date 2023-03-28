@@ -1,0 +1,39 @@
+<div class="pagination">
+    <div class="left">
+        Showing <strong>{{  feedbacks.object_list|length }}</strong> of <strong>{{ feedbacks.paginator.count }}</strong> entries
+    </div>
+    <div class="right">
+        {% if feedbacks.has_previous %}
+            {% if feedbacks.previous_page_number == 1 %}
+                <a href="?page={{ feedbacks.previous_page_number }}">Previous</a>
+            {% else %}
+                <a href="?page=1">First</a>
+                <a href="?page={{ feedbacks.previous_page_number }}">Previous</a>
+                <span class="dots">...</span>
+            {% endif %}
+        {% else %}
+            <span class="disabled">Previous</span>
+        {% endif %}
+
+        {% for i in feedbacks.paginator.page_range %}
+            {% if feedbacks.number == i %}
+                <span class="current">{{ i }}</span>
+            {% elif i > feedbacks.number|add:"-3" and i < feedbacks.number|add:"3" %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if feedbacks.has_next %}
+            {% if feedbacks.next_page_number == feedbacks.paginator.num_pages %}
+                <a href="?page={{ feedbacks.paginator.num_pages }}">Last</a>
+            {% else %}
+                <span class="dots">...</span>
+                <a href="?page={{ feedbacks.next_page_number }}">Next</a>
+                <a href="?page={{ feedbacks.paginator.num_pages }}">Last</a>
+            {% endif %}
+        {% else %}
+            <span class="disabled">Next</span>
+            <span class="disabled">Last</span>
+        {% endif %}
+    </div>
+</div>

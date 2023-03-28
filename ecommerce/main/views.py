@@ -17,7 +17,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
-from .models import Customer, Product, Category, Brand
+from .models import Customer, Product, Category, Brand, DeliveryAddress
 
 
 # Create your views here.
@@ -301,3 +301,4 @@ def password_reset_request(request):
         password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password/password_reset.html",
                   context={"password_reset_form": password_reset_form})
+

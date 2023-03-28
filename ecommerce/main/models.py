@@ -36,8 +36,9 @@ class Customer(models.Model):
 
 
 class Category(models.Model):
+    slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     name = models.CharField(max_length=40)
-    description = models.TextField(max_length=100)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -47,7 +48,9 @@ class Category(models.Model):
 
 
 class Brand(models.Model):
+    slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     name = models.CharField(max_length=40)
+    description = models.TextField(null=True, blank=True)
     logo = models.ImageField(upload_to='brand_logo/', null=True, blank=True)
 
     def __str__(self):
@@ -58,11 +61,12 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
+    slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     name = models.CharField(max_length=40)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE, null=True)
     price_original = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=1)
+    price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     old_price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     stock = models.PositiveIntegerField()
     description = models.TextField(null=True, blank=True)
@@ -80,11 +84,11 @@ class Product(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
-    discount = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=10, decimal_places=1)
     amount = models.PositiveIntegerField(default=1)
     valid_from = models.DateTimeField(blank=True, null=True)
     valid_to = models.DateTimeField(blank=True, null=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
@@ -124,6 +128,7 @@ class Orders(models.Model):
     order_date = models.DateField(auto_now_add=True, null=True)
     status = models.CharField(max_length=50, null=True, choices=STATUS)
     total_amount = models.PositiveIntegerField(null=True, blank=True)
+    coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.product.name
@@ -149,7 +154,6 @@ class OrderDetails(models.Model):
 
 class DeliveryAddress(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
-    order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=40, null=True)
     last_name = models.CharField(max_length=40, null=True)
     mobile = models.CharField(max_length=20, null=True)
@@ -160,30 +164,40 @@ class DeliveryAddress(models.Model):
     zip_code = models.CharField(max_length=20, null=True)
     country = models.CharField(max_length=40, null=True)
     date_added = models.DateField(auto_now_add=True, null=True)
+    is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return self.address
 
+    class Meta:
+        db_table = "DeliveryAddress"
+
 
 class Payment(models.Model):
-    METHOD = ('Cash on Delivery', 'Cash on Delivery'), \
-        ('Online Payment', 'Online Payment'), \
-        ('Bank Transfer', 'Bank Transfer'), \
-        ('Momo', 'Momo'), \
-        ('Paypal', 'Paypal'), \
-        ('Credit Card', 'Credit Card'), \
+    METHOD_CHOICES = (
+        ('Cash on Delivery', 'Cash on Delivery'),
+        ('Online Payment', 'Online Payment'),
+        ('Bank Transfer', 'Bank Transfer'),
+        ('Visa', 'Visa'),
+        ('Paypal', 'Paypal'),
+        ('Master Card', 'Master Card'),
+        ('Credit Card', 'Credit Card'),
         ('Debit Card', 'Debit Card')
-    PAYMENT = ('Pending', 'Pending'), \
+    )
+    PAYMENT_STATUS_CHOICES = (
+        ('Pending', 'Pending'),
         ('Paid', 'Paid')
+    )
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
     order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
-    payment_method = models.CharField(max_length=50, null=True, choices=METHOD)
+    payment_method = models.CharField(max_length=50, null=True, choices=METHOD_CHOICES)
     payment_date = models.DateField(auto_now_add=True, null=True)
-    payment_status = models.CharField(max_length=50, null=True, choices=PAYMENT)
+    payment_status = models.CharField(max_length=50, null=True, choices=PAYMENT_STATUS_CHOICES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    transaction_id = models.CharField(max_length=100, null=True)
 
     def __str__(self):
-        return self.product.name
+        return self.order.__str__()
 
     class Meta:
         db_table = "Payment"
@@ -194,6 +208,9 @@ class Review(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
     rate = models.PositiveIntegerField()
     message_review = models.CharField(max_length=500)
+    date_added = models.DateTimeField(auto_now_add=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, null=True)
+    review_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.product.name
@@ -205,6 +222,7 @@ class Review(models.Model):
 class Wishlist(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
+    date_added = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.product.name
@@ -213,16 +231,16 @@ class Wishlist(models.Model):
         db_table = "Wishlist"
 
 
-class Contact(models.Model):
+class Feedback(models.Model):
     name = models.CharField(max_length=40)
     email = models.CharField(max_length=50, null=True)
     mobile = models.CharField(max_length=20, null=True)
     subject = models.CharField(max_length=100, null=True)
     message = models.CharField(null=True, max_length=2000)
-    date_sent = models.DateField(auto_now_add=True, null=True)
+    date_sent = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table = "Contact"
+        db_table = "Feedback"

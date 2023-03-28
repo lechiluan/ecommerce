@@ -38,72 +38,70 @@
 {% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="breadcrumb">
-            <a href="/dashboard/">Home</a>
-            <span> > </span>
-            <a href="/dashboard/customer/">Customer Management</a>
-            <span> > </span>
-            <a href="/dashboard/customer/details/{{ user.id }}/">Customer Details</a>
-        </div>
-        <h1 class="h3 mb-2 text-gray-800">Customer Details</h1>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h2 class="font-weight-bold mt-3 form-title">Details about customer
-                    - "{{ customer.user.last_name }} {{ customer.user.first_name }}"</h2>
-                <h5 class="card-title">Customer Image:</h5>
-                <div class="img-details">
-                    <img class="img-display" src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
-                         alt="{{ customer.user.username }}" title="Customer Image of {{ customer.user.username }}">
-                </div>
-                <li class="form-display"><strong>ID</strong>: {{ user.id }}</li>
-                <li class="form-display"><strong>Username</strong>: {{ customer.user.username }}</li>
-                <li class="form-display"><strong>First Name</strong>: {{ customer.user.first_name }}</li>
-                <li class="form-display"><strong>Last Name</strong>: {{ customer.user.last_name }}</li>
-                <li class="form-display"><strong>Email</strong>: {{ customer.user.email }}</li>
-                <li class="form-display"><strong>Phone</strong>: {{ customer.phone }}</li>
-                <li class="form-display"><strong>Address</strong>: {{ customer.address }}</li>
-                <h5 class="card-title">Permissions:</h5>
-                {% if customer.user.is_active %}
-                    <li class="form-display"><strong>Active</strong>: <span class="badge badge-success">Yes</span></li>
-                    <p class="form-display">Designates whether this user should be treated as active. Unselect this
-                        instead of deleting
-                        accounts.</p>
-                {% else %}
-                    <li class="form-display"><strong>Active</strong>: <span class="badge badge-danger">No</span></li>
-                    <p class="form-display">Designates whether this user should be treated as active. Unselect this
-                        instead of deleting
-                        accounts.</p>
-                {% endif %}
-                {% if customer.user.is_staff %}
-                    <li class="form-display"><strong>Staff</strong>: <span class="badge badge-success">Yes</span></li>
-                    <p class="form-display">Designates whether the user can log into this admin site.</p>
-                {% else %}
-                    <li class="form-display"><strong>Staff</strong>: <span class="badge badge-danger">No</span></li>
-                    <p class="form-display">Designates whether the user can log into this admin site.</p>
-                {% endif %}
-                {% if customer.user.is_superuser %}
-                    <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-success">Yes</span>
-                    </li>
-                    <p class="form-display">Designates that this user has all permissions without explicitly assigning
-                        them.</p>
-                {% else %}
-                    <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-danger">No</span></li>
-                    <p class="form-display">Designates that this user has all permissions without explicitly assigning
-                        them.</p>
-                {% endif %}
-                <h5 class="card-title">Important dates:</h5>
-                <li class="form-display"><strong>Created</strong>: {{ customer.user.date_joined }}</li>
-                <li class="form-display"><strong>Last Login</strong>: {{ customer.user.last_login }}</li>
-                <div class="btn-form">
-                    <div class="btn-form-left">
-                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/customer/">Back</a>
-                        <a type="button" class="btn btn-danger btn-block"
-                           href="/dashboard/customer/delete/{{ user.id }}?t={{ timestamp }}"
-                           onclick="return confirm('Are you sure?')">Delete</a>
-                        <a type="button" class="btn btn-success btn-block"
-                           href="/dashboard/customer/update/{{ user.id }}?t={{ timestamp }}">Update</a>
-                    </div>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/customer/">Customer Management</a>
+        <span> > </span>
+        <a href="/dashboard/customer/details/{{ user.id }}/">Customer Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Customer Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about customer
+                - "{{ customer.user.last_name }} {{ customer.user.first_name }}"</h2>
+            <h5 class="card-title">Customer Image:</h5>
+            <div class="img-details">
+                <img class="img-display" src="{{ MEDIA_URL }}{{ customer.customer_image.url }}"
+                     alt="{{ customer.user.username }}" title="Customer Image of {{ customer.user.username }}">
+            </div>
+            <li class="form-display"><strong>ID</strong>: {{ user.id }}</li>
+            <li class="form-display"><strong>Username</strong>: {{ customer.user.username }}</li>
+            <li class="form-display"><strong>First Name</strong>: {{ customer.user.first_name }}</li>
+            <li class="form-display"><strong>Last Name</strong>: {{ customer.user.last_name }}</li>
+            <li class="form-display"><strong>Email</strong>: {{ customer.user.email }}</li>
+            <li class="form-display"><strong>Phone</strong>: {{ customer.phone }}</li>
+            <li class="form-display"><strong>Address</strong>: {{ customer.address }}</li>
+            <h5 class="card-title">Permissions:</h5>
+            {% if customer.user.is_active %}
+                <li class="form-display"><strong>Active</strong>: <span class="badge badge-success">Yes</span></li>
+                <p class="form-display">Designates whether this user should be treated as active. Unselect this
+                    instead of deleting
+                    accounts.</p>
+            {% else %}
+                <li class="form-display"><strong>Active</strong>: <span class="badge badge-danger">No</span></li>
+                <p class="form-display">Designates whether this user should be treated as active. Unselect this
+                    instead of deleting
+                    accounts.</p>
+            {% endif %}
+            {% if customer.user.is_staff %}
+                <li class="form-display"><strong>Staff</strong>: <span class="badge badge-success">Yes</span></li>
+                <p class="form-display">Designates whether the user can log into this admin site.</p>
+            {% else %}
+                <li class="form-display"><strong>Staff</strong>: <span class="badge badge-danger">No</span></li>
+                <p class="form-display">Designates whether the user can log into this admin site.</p>
+            {% endif %}
+            {% if customer.user.is_superuser %}
+                <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-success">Yes</span>
+                </li>
+                <p class="form-display">Designates that this user has all permissions without explicitly assigning
+                    them.</p>
+            {% else %}
+                <li class="form-display"><strong>Superuser</strong>: <span class="badge badge-danger">No</span></li>
+                <p class="form-display">Designates that this user has all permissions without explicitly assigning
+                    them.</p>
+            {% endif %}
+            <h5 class="card-title">Important dates:</h5>
+            <li class="form-display"><strong>Created</strong>: {{ customer.user.date_joined }}</li>
+            <li class="form-display"><strong>Last Login</strong>: {{ customer.user.last_login }}</li>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/customer/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/customer/delete/{{ user.id }}?t={{ timestamp }}"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/customer/update/{{ user.id }}?t={{ timestamp }}">Update</a>
                 </div>
             </div>
         </div>

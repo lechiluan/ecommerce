@@ -5,7 +5,7 @@
         }
 
         .nav-link:hover {
-            color: #28a745 !important;
+            color: #1253cc !important;
         }
 
         .image-logo {
@@ -48,10 +48,10 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {% for category in categories %}
                             <a class="dropdown-item"
-                               href="/customer/product/category/{{ category.id }}/">{{ category.name }}</a>
+                               href="/customer/product/category/{{ category.slug }}/">{{ category.name }}</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/category/0/">All products</a>
+                        <a class="dropdown-item" href="/customer/product/category/all/">All products</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -61,10 +61,10 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {% for brand in brands %}
                             <a class="dropdown-item"
-                               href="/customer/product/brand/{{ brand.id }}/">{{ brand.name }}</a>
+                               href="/customer/product/brand/{{ brand.slug }}/">{{ brand.name }}</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/brand/0/">All products</a>
+                        <a class="dropdown-item" href="/customer/product/brand/all/">All products</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -74,13 +74,10 @@
                     <a class="nav-link" href="/customer/about/">About us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact us</a>
+                    <a class="nav-link" href="/customer/feedback/">Feedback</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">FQA</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Feedback</a>
                 </li>
             </ul>
 
@@ -129,6 +126,9 @@
                                                                                       aria-hidden="true"></i>&nbsp;
                                 &nbsp;Change
                                 Password</a>
+                            <a class="dropdown-item" href="/auth/address/"><i class="fa fa-map"
+                                                                              aria-hidden="true"></i>&nbsp;&nbsp;Address
+                                Book</a>
                             <a class="dropdown-item" href="/auth/track_orders/"><i class="fa fa-history"
                                                                                    aria-hidden="true"></i>&nbsp;&nbsp;Track
                                 Orders</a>
@@ -144,8 +144,7 @@
                             Register</a>
                     </li>
                     <li class="nav-item">
-                        <a type=button class="btn btn-success button-login" href="/auth/login/"><i class="fa fa-sign-in"
-                                                                                                   aria-hidden="true"></i>
+                        <a class="nav-link" href="/auth/login/"><i class="fa fa-sign-in" aria-hidden="true"></i>
                             Login</a>
                     </li>
                 {% endif %}

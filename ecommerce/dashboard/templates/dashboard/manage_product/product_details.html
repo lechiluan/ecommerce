@@ -46,49 +46,48 @@
 {% load static %}
 
 {% block content %}
-    <div class="container-fluid">
-        <div class="breadcrumb">
-            <a href="/dashboard/">Home</a>
-            <span> > </span>
-            <a href="/dashboard/product/">Product Management</a>
-            <span> > </span>
-            <a href="/dashboard/customer/details/{{ product.id }}/">Product Details</a>
-        </div>
-        <h1 class="h3 mb-2 text-gray-800">Product Details</h1>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h2 class="font-weight-bold mt-3 form-title">Details about product
-                    - "{{ product.name }}"</h2>
-                <h5 class="card-title">Product Image:</h5>
-                <div class="img-details">
-                    <img class="img-display" src="{{ MEDIA_URL }}{{ product.product_image.url }}"
-                         alt="{{ product.name }}" title="{{ product.name }}">
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/product/">Product Management</a>
+        <span> > </span>
+        <a href="/dashboard/customer/details/{{ product.id }}/">Product Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Product Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about product
+                - "{{ product.name }}"</h2>
+            <h5 class="card-title">Product Image:</h5>
+            <div class="img-details">
+                <img class="img-display" src="{{ MEDIA_URL }}{{ product.product_image.url }}"
+                     alt="{{ product.name }}" title="{{ product.name }}">
+            </div>
+            <li class="form-display"><strong>ID</strong>: {{ product.id }}</li>
+            <li class="form-display"><strong>Product Slug</strong>: {{ product.slug }}</li>
+            <li class="form-display"><strong>Product Name</strong>: {{ product.name }}</li>
+            <li class="form-display"><strong>Product Price Original</strong>: {{ product.price_original }}</li>
+            <li class="form-display"><strong>Product Price</strong>: {{ product.price }}</li>
+            <li class="form-display"><strong>Product Old Price</strong>: {{ product.old_price }}</li>
+            <li class="form-display"><strong>Product Category</strong>: {{ product.category }}</li>
+            <li class="form-display"><strong>Product Brand</strong>: {{ product.brand }}</li>
+            <li class="form-display"><strong>Product Stock</strong>: {{ product.stock }}</li>
+            <li class="form-display"><strong>Product Sold</strong>: {{ product.sold }}</li>
+            <li class="form-display"><strong>Product Created Date</strong>: {{ product.created_date }}</li>
+            <li class="form-display"><strong>Product Updated Date</strong>: {{ product.updated_date }}</li>
+            <li class="form-display"><strong>Product Description</strong>:
+                <div id="product-description" class="form-display-description">
+                    {{ product.description }}
                 </div>
-                <li class="form-display"><strong>ID</strong>: {{ product.id }}</li>
-                <li class="form-display"><strong>Product Name</strong>: {{ product.name }}</li>
-                <li class="form-display"><strong>Product Price Original</strong>: {{ product.price_original }}</li>
-                <li class="form-display"><strong>Product Price</strong>: {{ product.price }}</li>
-                <li class="form-display"><strong>Product Old Price</strong>: {{ product.old_price }}</li>
-                <li class="form-display"><strong>Product Category</strong>: {{ product.category }}</li>
-                <li class="form-display"><strong>Product Brand</strong>: {{ product.brand }}</li>
-                <li class="form-display"><strong>Product Stock</strong>: {{ product.stock }}</li>
-                <li class="form-display"><strong>Product Sold</strong>: {{ product.sold }}</li>
-                <li class="form-display"><strong>Product Created Date</strong>: {{ product.created_date }}</li>
-                <li class="form-display"><strong>Product Updated Date</strong>: {{ product.updated_date }}</li>
-                <li class="form-display"><strong>Product Description</strong>:
-                    <div id="product-description" class="form-display-description">
-                        {{ product.description }}
-                    </div>
-                </li>
-                <div class="btn-form">
-                    <div class="btn-form-left">
-                        <a type="button" class="btn btn-dark btn-block" href="/dashboard/product/">Back</a>
-                        <a type="button" class="btn btn-danger btn-block"
-                           href="/dashboard/product/delete/{{ product.id }}?t={{ timestamp }}"
-                           onclick="return confirm('Are you sure?')">Delete</a>
-                        <a type="button" class="btn btn-success btn-block"
-                           href="/dashboard/product/update/{{ product.id }}?t={{ timestamp }}">Update</a>
-                    </div>
+            </li>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/product/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/product/delete/{{ product.id }}?t={{ timestamp }}"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/product/update/{{ product.id }}?t={{ timestamp }}">Update</a>
                 </div>
             </div>
         </div>

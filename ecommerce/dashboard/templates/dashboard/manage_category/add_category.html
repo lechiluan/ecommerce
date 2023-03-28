@@ -23,7 +23,7 @@
         <h2 class="font-weight-bold mt-3 form-title">Add new category</h2>
         <form method="post" class="form-group" action="" enctype="multipart/form-data">
             {% csrf_token %}
-            {#            <div class="form-input">{{ form|crispy }}</div>#}
+            <div class="form-input">{{ form.slug|as_crispy_field }}</div>
             <div class="form-input">{{ form.name|as_crispy_field }}</div>
             <div class="form-input">{{ form.description|as_crispy_field }}</div>
             <div class="btn-form">

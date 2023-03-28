@@ -76,8 +76,10 @@
                             <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
+                            <th scope="col">Slug</th>
                             <th scope="col">Logo</th>
                             <th scope="col">Brand Name</th>
+                            <th scope="col">Description</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -88,6 +90,7 @@
                                            value="{{ brand.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ brand.id }}</td>
+                                <td>{{ brand.slug }}</td>
                                 <td>
                                     <div class="main-image-table">
                                         {% if brand.logo %}
@@ -104,6 +107,7 @@
                                     </div>
                                 </td>
                                 <td>{{ brand.name }}</td>
+                                <td>{{ brand.description }}</td>
                                 <td class="action">
                                     <a href="/dashboard/brand/details/{{ brand.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
@@ -157,10 +161,10 @@
                         if (confirmed) {
 
                             // Update the action attribute of the form
-                            let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                            let Ids = Array.from(checkboxes).map(function (checkbox) {
                                 return checkbox.value;
                             });
-                            form.action = "/dashboard/brand/delete_selected/" + customerIds.join("+") + "/";
+                            form.action = "/dashboard/brand/delete_selected/" + Ids.join("+") + "/";
                             // Submit the form
                             form.submit();
                         }
@@ -170,15 +174,15 @@
 
             // Listen for the click event on the select-all checkbox
             selectAllCheckbox.addEventListener("click", function () {
-                // Get all the customer checkboxes
-                let customerCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
                 // Set their checked property based on the select-all checkbox
-                customerCheckboxesAll.forEach(function (checkbox) {
+                objectCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
-                    let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
+                    let Ids = Array.from(objectCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/brand/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/brand/delete_selected/" + Ids.join("+") + "/";
                 });
             });
         });

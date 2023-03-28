@@ -22,4 +22,13 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(
              template_name='registration/password/password_reset_complete.html'),
          name='password_reset_complete'),
+
+    # Address Books
+    # path('address/', views.address_table, name='address_book'),
+    # path('address/add/', views.add_address, name='add_address'),
+    # path('address/edit/<int:id>/', views.update_address, name='edit_address'),
+    # path('address/delete/<int:id>/', views.delete_address, name='delete_address'),
+    # path('address/set_default/<int:id>/', views.set_default_address, name='set_default_address'),
+    # path('address/delete_default/', views.delete_default_address, name='delete_default_address'),
+    # path('address/delete_all/', views.delete_all_address, name='delete_all_address'),
 ]

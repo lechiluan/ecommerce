@@ -167,7 +167,9 @@
 
 .filter-form li {
     display: inline-block;
-    margin-right: 8px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .filter-form select {
@@ -194,6 +196,8 @@
     background-color: #ffffff;
     margin-top: 10px;
     margin-bottom: 10px;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 .product-card .card-header {
@@ -201,6 +205,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.product-card .card-header h2 {
+    color: #1253cc;
 }
 
 .card-main {
@@ -275,7 +283,7 @@
 
 .card-main .container .card .imgBx .action li:hover,
 .card-main .container .card .imgBx .action li:hover .fa {
-    background: #28a745;
+    background: #1253cc;
     color: #fff;
 }
 
@@ -474,6 +482,7 @@
 
 .form-title {
     padding-bottom: 10px;
+    color: #1253cc;
 }
 
 .form-input {
@@ -531,7 +540,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 14px;
     padding-top: 5px;
     padding-bottom: 10px;
@@ -574,6 +583,18 @@
     font-weight: bold;
 }
 
+.total-product {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
 /* Desktop (1048px) */
 @media only screen and (min-width: 1048px) {
     /* Form CSS */
@@ -587,6 +608,7 @@
     }
 
     .form-title {
+        color: #1253cc;
         padding-bottom: 10px;
     }
 
@@ -655,7 +677,7 @@
 
     .filter-form li {
         display: inline-block;
-        margin-right: 5px;
+        margin-right: 10px;
     }
 
     .filter-form .form-row .col-auto .btn {
@@ -715,7 +737,7 @@
 
     .filter-form li {
         display: inline-block;
-        margin-right: 5px;
+        margin-right: 0px;
         width: 100%;
     }
 
@@ -744,7 +766,7 @@
 
     .filter-form li {
         display: inline-block;
-        margin-right: 5px;
+        margin-right: 0px;
         width: 100%;
     }
 

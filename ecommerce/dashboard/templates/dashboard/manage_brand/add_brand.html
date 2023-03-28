@@ -28,7 +28,9 @@
                 <img id="avatar" class="img-display" src="{% static 'dashboard/images/dashboard/no_image.png' %}"
                      alt="Default Image" title="Default Image">
             </div>
+            <div class="form-input">{{ form.slug|as_crispy_field }}</div>
             <div class="form-input">{{ form.name|as_crispy_field }}</div>
+            <div class="form-input">{{ form.description|as_crispy_field }}</div>
             <div class="form-input">{{ form.logo|as_crispy_field }}</div>
 
             <div class="btn-form">

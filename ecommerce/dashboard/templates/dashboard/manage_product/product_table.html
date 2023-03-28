@@ -90,7 +90,7 @@
                         <tbody>
                         {% for product in products %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_customer"
+                                <td><input type="checkbox" class="select-checkbox" name="selected_product"
                                            value="{{ product.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ product.id }}</td>
@@ -168,10 +168,10 @@
                     let confirmed = confirm('Are you sure to delete this selected?');
                     if (confirmed) {
                         // Update the action attribute of the form
-                        let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                        let Ids = Array.from(checkboxes).map(function (checkbox) {
                             return checkbox.value;
                         });
-                        form.action = "/dashboard/product/delete_selected/" + customerIds.join("+") + "/";
+                        form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
                         // Submit the form
                         form.submit();
                     }
@@ -180,21 +180,21 @@
 
             // Listen for the click event on the select-all checkbox
             selectAllCheckbox.addEventListener("click", function () {
-                // Get all the customer checkboxes
-                let customerCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
                 // Set their checked property based on the select-all checkbox
-                customerCheckboxesAll.forEach(function (checkbox) {
+                objectCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
                 });
                 // Update the action attribute of the form
-                let customerIds = Array.from(customerCheckboxesAll)
+                let Ids = Array.from(objectCheckboxesAll)
                     .filter(function (checkbox) {
                         return checkbox.checked;
                     })
                     .map(function (checkbox) {
                         return checkbox.value;
                     });
-                form.action = "/dashboard/product/delete_selected/" + customerIds.join("+") + "/";
+                form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
             });
         });
     </script>

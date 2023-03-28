@@ -74,6 +74,7 @@
                             <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
+                            <th scope="col">Slug</th>
                             <th scope="col">Category Name</th>
                             <th scope="col">Category Description</th>
                             <th scope="col">Action</th>
@@ -82,10 +83,11 @@
                         <tbody>
                         {% for category in categories %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_customer"
+                                <td><input type="checkbox" class="select-checkbox" name="selected_categoy"
                                            value="{{ category.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ category.id }}</td>
+                                <td>{{ category.slug }}</td>
                                 <td>{{ category.name }}</td>
                                 <td>{{ category.description }}</td>
                                 <td class="action">
@@ -140,10 +142,10 @@
                         let confirmed = confirm('Are you sure to delete this selected?');
                         if (confirmed) {
                             // Update the action attribute of the form
-                            let customerIds = Array.from(checkboxes).map(function (checkbox) {
+                            let Ids = Array.from(checkboxes).map(function (checkbox) {
                                 return checkbox.value;
                             });
-                            form.action = "/dashboard/category/delete_selected/" + customerIds.join("+") + "/";
+                            form.action = "/dashboard/category/delete_selected/" + Ids.join("+") + "/";
                             // Submit the form
                             form.submit();
                         }
@@ -154,15 +156,15 @@
 
             // Listen for the click event on the select-all checkbox
             selectAllCheckbox.addEventListener("click", function () {
-                // Get all the customer checkboxes
-                let customerCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
                 // Set their checked property based on the select-all checkbox
-                customerCheckboxesAll.forEach(function (checkbox) {
+                objectCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
-                    let customerIds = Array.from(customerCheckboxesAll).map(function (checkbox) {
+                    let Ids = Array.from(objectCheckboxesAll).map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/category/delete_selected/" + customerIds.join("+") + "/";
+                    form.action = "/dashboard/category/delete_selected/" + Ids.join("+") + "/";
                 });
             });
         });

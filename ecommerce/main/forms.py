@@ -95,3 +95,16 @@ class ChangeEmailForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'new_email', 'current_password']
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        new_email = cleaned_data.get('new_email')
+        current_password = cleaned_data.get('current_password')
+        if User.objects.filter(email=new_email).exclude(id=self.instance.id).exists():
+            self.add_error('new_email', 'Email already exists')
+        if not self.instance.check_password(current_password):
+            self.add_error('current_password', 'Password is incorrect')
+
+

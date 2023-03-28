@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from main.models import Category, Brand, Product, Coupon, Contact, Payment
+from main.models import Category, Brand, Product, Coupon
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
@@ -162,52 +162,64 @@ class UpdateCustomerPasswordForm(forms.Form):
 
 # Category Forms
 class AddCategoryForm(forms.Form):
+    slug = forms.CharField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
-    description = forms.CharField(required=True, max_length=100)
+    description = forms.CharField(required=True)
 
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'slug']
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
         if Category.objects.filter(name=name).exists():
             self.add_error('name', 'Category already exists')
+        if Category.objects.filter(slug=slug).exists():
+            self.add_error('slug', 'Slug already exists')
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
         description = self.cleaned_data.get('description')
-        category = Category(name=name, description=description)
+        category = Category(name=name, description=description, slug=slug)
         category.save()
         return category
 
 
 class UpdateCategoryForm(forms.Form):
+    slug = forms.CharField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True, max_length=100)
 
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'slug']
 
     def __init__(self, *args, **kwargs):
         self.category = kwargs.pop('category')
         super().__init__(*args, **kwargs)
 
         if self.category:
+            self.fields['slug'].initial = self.category.slug
             self.fields['name'].initial = self.category.name
             self.fields['description'].initial = self.category.description
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
         if Category.objects.filter(name=name).exclude(id=self.category.id).exists():
             self.add_error('name', 'Category already exists')
+        if Category.objects.filter(slug=slug).exclude(id=self.category.id).exists():
+            self.add_error('slug', 'Slug already exists')
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
         description = self.cleaned_data.get('description')
+        self.category.slug = slug
         self.category.name = name
         self.category.description = description
         self.category.save()
@@ -215,68 +227,89 @@ class UpdateCategoryForm(forms.Form):
 
 
 class AddBrandForm(forms.Form):
+    slug = forms.CharField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
+    description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload logo', widget=forms.FileInput,
                             help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
-        fields = ['name', 'logo']
+        fields = ['slug', 'name', 'logo', 'description']
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
         logo = cleaned_data.get('logo')
+        description = cleaned_data.get('description')
         if Brand.objects.filter(name=name).exists():
             self.add_error('name', 'Brand already exists')
+        if Brand.objects.filter(slug=slug).exists():
+            self.add_error('slug', 'Slug already exists')
         if logo:
             validate_image_size(logo)
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
         logo = self.cleaned_data.get('logo')
-        brand = Brand(name=name, logo=logo)
+        description = self.cleaned_data.get('description')
+        brand = Brand(name=name, logo=logo, slug=slug, description=description)
         brand.save()
         return brand
 
 
 class UpdateBrandForm(forms.Form):
+    slug = forms.CharField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
+    description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload new logo', widget=forms.FileInput,
                             help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
-        fields = ['name', 'logo']
+        fields = ['slug', 'name', 'logo', 'description']
 
     def __init__(self, *args, **kwargs):
         self.brand = kwargs.pop('brand')
         super().__init__(*args, **kwargs)
 
         if self.brand:
+            self.fields['slug'].initial = self.brand.slug
             self.fields['name'].initial = self.brand.name
             self.fields['logo'].initial = self.brand.logo
+            self.fields['description'].initial = self.brand.description
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
+        description = cleaned_data.get('description')
         logo = cleaned_data.get('logo')
         if Brand.objects.filter(name=name).exclude(id=self.brand.id).exists():
             self.add_error('name', 'Brand already exists')
+        if Brand.objects.filter(slug=slug).exclude(id=self.brand.id).exists():
+            self.add_error('slug', 'Slug already exists')
         if logo:
             validate_image_size(logo)
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
+        description = self.cleaned_data.get('description')
         logo = self.cleaned_data.get('logo')
+        self.brand.slug = slug
         self.brand.name = name
         self.brand.logo = logo
+        self.brand.description = description
         self.brand.save()
         return self.brand
 
 
 # Product Forms
 class AddProductForm(forms.Form):
+    slug = forms.SlugField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
@@ -290,11 +323,12 @@ class AddProductForm(forms.Form):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
+        fields = ['slug', 'name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
                   'product_image']
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
         category = cleaned_data.get('category')
         brand = cleaned_data.get('brand')
@@ -306,10 +340,13 @@ class AddProductForm(forms.Form):
         product_image = cleaned_data.get('product_image')
         if Product.objects.filter(name=name).exists():
             self.add_error('name', 'Product already exists')
+        if Product.objects.filter(slug=slug).exists():
+            self.add_error('slug', 'Slug already exists')
         if product_image:
             validate_image_size(product_image)
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
         category = self.cleaned_data.get('category')
         brand = self.cleaned_data.get('brand')
@@ -319,16 +356,18 @@ class AddProductForm(forms.Form):
         stock = self.cleaned_data.get('stock')
         description = self.cleaned_data.get('description')
         product_image = self.cleaned_data.get('product_image')
-        product = Product(name=name, category=category, brand=brand, price=price, old_price=old_price, stock=stock,
-                          description=description, product_image=product_image, price_original=price_original)
+        product = Product(slug=slug, name=name, category=category, brand=brand, price=price, old_price=old_price,
+                          stock=stock, description=description, product_image=product_image,
+                          price_original=price_original)
         product.save()
         return product
 
 
 class UpdateProductForm(forms.Form):
+    slug = forms.SlugField(required=True, max_length=50)
     name = forms.CharField(required=True, max_length=40)
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
-    brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
+    brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
     price_original = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
@@ -339,7 +378,7 @@ class UpdateProductForm(forms.Form):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
+        fields = ['slug', 'name', 'category', 'brand', 'price_original', 'price', 'old_price', 'stock', 'description',
                   'product_image']
 
     def __init__(self, *args, **kwargs):
@@ -347,6 +386,7 @@ class UpdateProductForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         if self.product:
+            self.fields['slug'].initial = self.product.slug
             self.fields['name'].initial = self.product.name
             self.fields['category'].initial = self.product.category
             self.fields['brand'].initial = self.product.brand
@@ -359,6 +399,7 @@ class UpdateProductForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        slug = cleaned_data.get('slug')
         name = cleaned_data.get('name')
         category = cleaned_data.get('category')
         brand = cleaned_data.get('brand')
@@ -370,10 +411,13 @@ class UpdateProductForm(forms.Form):
         product_image = cleaned_data.get('product_image')
         if Product.objects.filter(name=name).exclude(id=self.product.id).exists():
             self.add_error('name', 'Product already exists')
+        if Product.objects.filter(slug=slug).exclude(id=self.product.id).exists():
+            self.add_error('slug', 'Slug already exists')
         if product_image:
             validate_image_size(product_image)
 
     def save(self):
+        slug = self.cleaned_data.get('slug')
         name = self.cleaned_data.get('name')
         category = self.cleaned_data.get('category')
         brand = self.cleaned_data.get('brand')
@@ -383,6 +427,7 @@ class UpdateProductForm(forms.Form):
         stock = self.cleaned_data.get('stock')
         description = self.cleaned_data.get('description')
         product_image = self.cleaned_data.get('product_image')
+        self.product.slug = slug
         self.product.name = name
         self.product.category = category
         self.product.brand = brand
@@ -404,11 +449,11 @@ class AddCouponForm(forms.Form):
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-    active = forms.BooleanField(required=False, initial=True)
+    is_active = forms.BooleanField(required=False, initial=True)
 
     class Meta:
         model = Coupon
-        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'active']
+        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'is_active']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -417,7 +462,7 @@ class AddCouponForm(forms.Form):
         amount = cleaned_data.get('amount')
         valid_from = cleaned_data.get('valid_from')
         valid_to = cleaned_data.get('valid_to')
-        active = cleaned_data.get('active')
+        is_active = cleaned_data.get('active')
         if Coupon.objects.filter(code=code).exists():
             self.add_error('code', 'Coupon already exists')
         if valid_from > valid_to:
@@ -431,9 +476,9 @@ class AddCouponForm(forms.Form):
         amount = self.cleaned_data.get('amount')
         valid_from = self.cleaned_data.get('valid_from')
         valid_to = self.cleaned_data.get('valid_to')
-        active = self.cleaned_data.get('active')
+        is_active = self.cleaned_data.get('active')
         coupon = Coupon(code=code, discount=discount, amount=amount, valid_from=valid_from, valid_to=valid_to,
-                        active=active)
+                        active=is_active)
         coupon.save()
         return coupon
 
@@ -444,11 +489,11 @@ class UpdateCouponForm(forms.Form):
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
-    active = forms.BooleanField(required=False, initial=True)
+    is_active = forms.BooleanField(required=False, initial=True)
 
     class Meta:
         model = Coupon
-        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'active']
+        fields = ['code', 'discount', 'amount', 'valid_from', 'valid_to', 'is_active']
 
     def __init__(self, *args, **kwargs):
         self.coupon = kwargs.pop('coupon')
@@ -460,7 +505,7 @@ class UpdateCouponForm(forms.Form):
             self.fields['amount'].initial = self.coupon.amount
             self.fields['valid_from'].initial = self.coupon.valid_from
             self.fields['valid_to'].initial = self.coupon.valid_to
-            self.fields['active'].initial = self.coupon.active
+            self.fields['is_active'].initial = self.coupon.is_active
 
     def clean(self):
         cleaned_data = super().clean()
@@ -469,7 +514,7 @@ class UpdateCouponForm(forms.Form):
         amount = cleaned_data.get('amount')
         valid_from = cleaned_data.get('valid_from')
         valid_to = cleaned_data.get('valid_to')
-        active = cleaned_data.get('active')
+        is_active = cleaned_data.get('active')
         if Coupon.objects.filter(code=code).exclude(id=self.coupon.id).exists():
             self.add_error('code', 'Coupon already exists')
         if valid_from > valid_to:
@@ -483,36 +528,14 @@ class UpdateCouponForm(forms.Form):
         amount = self.cleaned_data.get('amount')
         valid_from = self.cleaned_data.get('valid_from')
         valid_to = self.cleaned_data.get('valid_to')
-        active = self.cleaned_data.get('active')
+        is_active = self.cleaned_data.get('active')
         self.coupon.code = code
         self.coupon.discount = discount
         self.coupon.amount = amount
         self.coupon.valid_from = valid_from
         self.coupon.valid_to = valid_to
-        self.coupon.active = active
+        self.coupon.is_active = is_active
         self.coupon.save()
         return self.coupon
 
-
 # Payment Forms
-class AddPaymentForm(forms.Form):
-    name = forms.CharField(required=True, max_length=20)
-    active = forms.BooleanField(required=False, initial=True)
-
-    class Meta:
-        model = Payment
-        fields = ['name', 'active']
-
-    def clean(self):
-        cleaned_data = super().clean()
-        name = cleaned_data.get('name')
-        active = cleaned_data.get('active')
-        if Payment.objects.filter(name=name).exists():
-            self.add_error('name', 'Payment already exists')
-
-    def save(self):
-        name = self.cleaned_data.get('name')
-        active = self.cleaned_data.get('active')
-        payment = Payment(name=name, active=active)
-        payment.save()
-        return payment

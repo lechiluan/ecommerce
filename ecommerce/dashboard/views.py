@@ -20,7 +20,7 @@ from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
     UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm, \
     AddCouponForm, UpdateCouponForm
-from main.models import Customer, Category, Brand, Product, Coupon, Contact, Orders, OrderDetails, Payment
+from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment
 
 
 # Create your views here.
@@ -30,11 +30,28 @@ def is_admin(user):
 
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
-def admin_home(request):
+def dashboard(request):
     return render(request, 'dashboard/base/ad_base.html')
 
 
+# Pagination function
+def paginator(request, objects):
+    # Set the number of items per page
+    per_page = 5
+
+    # Create a Paginator object with the customers queryset and the per_page value
+    page = Paginator(objects, per_page)
+
+    # Get the current page number from the request's GET parameters
+    page_number = request.GET.get('page')
+
+    # Get the current page object from the Paginator object
+    page_obj = page.get_page(page_number)
+    return page_obj
+
+
 # Administration Account
+# Change email address
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def change_email(request):
@@ -65,6 +82,7 @@ def change_email(request):
     return render(request, "dashboard/account/change_email.html", {"form": form})
 
 
+# send email to verify new email
 def send_verify_new_email(request, user):
     current_site = get_current_site(request)
     mail_subject = 'Update your account.'
@@ -82,7 +100,8 @@ def send_verify_new_email(request, user):
     email.send()
 
 
-def activate_new_email_admin (request, uidb64, token):
+# activate new email
+def activate_new_email_admin(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -99,6 +118,7 @@ def activate_new_email_admin (request, uidb64, token):
         return render(request, 'dashboard/account/verify_new_email_invalid.html')
 
 
+# Update profile
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_profile(request):
@@ -126,6 +146,7 @@ def update_profile(request):
     return render(request, 'dashboard/account/update_profile.html', {'form': form})
 
 
+# Change password
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def change_password(request):
@@ -146,6 +167,7 @@ def change_password(request):
     return render(request, 'dashboard/account/change_password.html', {'form': form})
 
 
+# Logout
 def logout(request):
     auth_logout(request)
     messages.success(request, "You have logged out. See you again. Administrator!")
@@ -153,6 +175,7 @@ def logout(request):
 
 
 # Customer Management
+# Customer table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def customer_table(request):
@@ -166,21 +189,7 @@ def customer_table(request):
     return render(request, 'dashboard/manage_customer/customer_table.html', context)
 
 
-def paginator(request, objects):
-    # Set the number of items per page
-    per_page = 5
-
-    # Create a Paginator object with the customers queryset and the per_page value
-    page = Paginator(objects, per_page)
-
-    # Get the current page number from the request's GET parameters
-    page_number = request.GET.get('page')
-
-    # Get the current page object from the Paginator object
-    page_obj = page.get_page(page_number)
-    return page_obj
-
-
+# Add customer
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def add_customer(request):
@@ -211,6 +220,7 @@ def add_customer(request):
     return render(request, 'dashboard/manage_customer/add_customer.html', context)
 
 
+# Update customer
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_customer(request, user_id):
@@ -246,6 +256,7 @@ def update_customer(request, user_id):
     return render(request, 'dashboard/manage_customer/update_customer.html', context)
 
 
+# Update password for customer
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_customer_password(request, user_id):
@@ -270,6 +281,7 @@ def update_customer_password(request, user_id):
     return render(request, 'dashboard/manage_customer/update_password_customer.html', context)
 
 
+# Delete customer
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_customer(request, user_id):
@@ -295,6 +307,7 @@ def delete_customer(request, user_id):
     return redirect('/dashboard/customer/')
 
 
+# Delete selected customers
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_customer(request, customer_ids):
@@ -328,6 +341,7 @@ def delete_selected_customer(request, customer_ids):
     return redirect('/dashboard/customer/')
 
 
+# Customer details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def customer_details(request, user_id):
@@ -337,6 +351,7 @@ def customer_details(request, user_id):
     return render(request, 'dashboard/manage_customer/customer_details.html', context)
 
 
+# Search customer
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_customer(request):
@@ -366,6 +381,7 @@ def search_customer(request):
 
 
 # Category Management
+# Category table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def category_table(request):
@@ -376,6 +392,7 @@ def category_table(request):
     return render(request, 'dashboard/manage_category/category_table.html', context)
 
 
+# Add category
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def add_category(request):
@@ -396,6 +413,7 @@ def add_category(request):
     return render(request, 'dashboard/manage_category/add_category.html', context)
 
 
+# Update category
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_category(request, category_id):
@@ -418,6 +436,7 @@ def update_category(request, category_id):
     return render(request, 'dashboard/manage_category/update_category.html', context)
 
 
+# Delete category
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_category(request, category_id):
@@ -432,6 +451,7 @@ def delete_category(request, category_id):
     return redirect('/dashboard/category/')
 
 
+# Delete selected categories
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_category(request, category_ids):
@@ -453,6 +473,7 @@ def delete_selected_category(request, category_ids):
     return redirect('/dashboard/category/')
 
 
+# Category details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def category_details(request, category_id):
@@ -461,6 +482,7 @@ def category_details(request, category_id):
     return render(request, 'dashboard/manage_category/category_details.html', context)
 
 
+# Search category
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_category(request):
@@ -483,6 +505,7 @@ def search_category(request):
 
 
 # Brand Management
+# Brand table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def brand_table(request):
@@ -493,6 +516,7 @@ def brand_table(request):
     return render(request, 'dashboard/manage_brand/brand_table.html', context)
 
 
+# Add brand
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def add_brand(request):
@@ -513,6 +537,7 @@ def add_brand(request):
     return render(request, 'dashboard/manage_brand/add_brand.html', context)
 
 
+# Update brand
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_brand(request, brand_id):
@@ -535,6 +560,7 @@ def update_brand(request, brand_id):
     return render(request, 'dashboard/manage_brand/update_brand.html', context)
 
 
+# Delete brand
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_brand(request, brand_id):
@@ -547,6 +573,7 @@ def delete_brand(request, brand_id):
     messages.success(request, 'Brand {} deleted successfully!'.format(brand.name))
 
 
+# Delete selected brands
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_brand(request, brand_ids):
@@ -568,6 +595,7 @@ def delete_selected_brand(request, brand_ids):
     return redirect('/dashboard/brand/')
 
 
+# Brand details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def brand_details(request, brand_id):
@@ -576,6 +604,7 @@ def brand_details(request, brand_id):
     return render(request, 'dashboard/manage_brand/brand_details.html', context)
 
 
+# Search brand
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_brand(request):
@@ -598,6 +627,7 @@ def search_brand(request):
 
 
 # Product Management
+# Product table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def product_table(request):
@@ -608,6 +638,7 @@ def product_table(request):
     return render(request, 'dashboard/manage_product/product_table.html', context)
 
 
+# Add product
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def add_product(request):
@@ -628,6 +659,7 @@ def add_product(request):
     return render(request, 'dashboard/manage_product/add_product.html', context)
 
 
+# Update product
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_product(request, product_id):
@@ -650,6 +682,7 @@ def update_product(request, product_id):
     return render(request, 'dashboard/manage_product/update_product.html', context)
 
 
+# Delete product
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_product(request, product_id):
@@ -662,6 +695,7 @@ def delete_product(request, product_id):
     messages.success(request, 'Product {} deleted successfully!'.format(product.name))
 
 
+# Delete selected products
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_product(request, product_ids):
@@ -683,6 +717,7 @@ def delete_selected_product(request, product_ids):
     return redirect('/dashboard/product/')
 
 
+# Product details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def product_details(request, product_id):
@@ -691,6 +726,7 @@ def product_details(request, product_id):
     return render(request, 'dashboard/manage_product/product_details.html', context)
 
 
+# Search product
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_product(request):
@@ -713,6 +749,7 @@ def search_product(request):
 
 
 # Coupon Management
+# Coupon table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def coupon_table(request):
@@ -723,6 +760,7 @@ def coupon_table(request):
     return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
 
 
+# Add coupon
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def add_coupon(request):
@@ -743,6 +781,7 @@ def add_coupon(request):
     return render(request, 'dashboard/manage_coupon/add_coupon.html', context)
 
 
+# Update coupon
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def update_coupon(request, coupon_id):
@@ -765,6 +804,7 @@ def update_coupon(request, coupon_id):
     return render(request, 'dashboard/manage_coupon/update_coupon.html', context)
 
 
+# Delete coupon
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_coupon(request, coupon_id):
@@ -777,6 +817,7 @@ def delete_coupon(request, coupon_id):
     messages.success(request, 'Coupon {} deleted successfully!'.format(coupon.code))
 
 
+# Delete selected coupons
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_coupon(request, coupon_ids):
@@ -798,6 +839,7 @@ def delete_selected_coupon(request, coupon_ids):
     return redirect('/dashboard/coupon/')
 
 
+# Coupon details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def coupon_details(request, coupon_id):
@@ -806,6 +848,7 @@ def coupon_details(request, coupon_id):
     return render(request, 'dashboard/manage_coupon/coupon_details.html', context)
 
 
+# Search coupon
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_coupon(request):
@@ -830,86 +873,11 @@ def search_coupon(request):
     return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
 
 
-# Contact Management
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def contact_table(request):
-    # Get all contacts
-    contacts = Contact.objects.all().order_by('id')
-    page_object = paginator(request, contacts)
-    context = {'contacts': page_object}
-    return render(request, 'dashboard/manage_contact/contact_table.html', context)
-
-
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def contact_details(request, contact_id):
-    contact = Contact.objects.get(id=contact_id)
-    context = {'contact': contact}
-    return render(request, 'dashboard/manage_contact/contact_details.html', context)
-
-
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def delete_contact(request, contact_id):
-    try:
-        contact = Contact.objects.get(id=contact_id)
-    except ObjectDoesNotExist:
-        messages.warning(request, 'The contact {} you are trying to delete does not exist!'.format(contact_id))
-        return redirect('/dashboard/contact/')
-    contact.delete()
-    messages.success(request, 'Contact {} deleted successfully!'.format(contact.name))
-
-
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def delete_selected_contact(request, contact_ids):
-    if request.method == 'POST':
-        # Get a list of contact IDs to delete
-        contact_ids = contact_ids.split("+")
-        # Delete the contacts
-        if contact_ids:
-            for contact_id in contact_ids:
-                try:
-                    contact = Contact.objects.get(id=contact_id)
-                    contact.delete()
-                    messages.success(request, 'Contact deleted successfully!')
-                except ObjectDoesNotExist:
-                    messages.warning(request, f'The contact with ID {contact_id} does not exist!')
-            return redirect('/dashboard/contact/')
-        else:
-            messages.warning(request, 'Please select at least one contact to delete!')
-    return redirect('/dashboard/contact/')
-
-
-@user_passes_test(is_admin, login_url='/auth/login/')
-@login_required(login_url='/auth/login/')
-def search_contact(request):
-    if request.method == 'POST':
-        search_query = request.POST.get('search', '')
-        if search_query == '':
-            messages.warning(request, 'Please enter a search term!')
-            return redirect('/dashboard/contact/')
-        else:
-            contacts = Contact.objects.filter(
-                name__icontains=search_query) | Contact.objects.filter(
-                email__icontains=search_query) | Contact.objects.filter(
-                subject__icontains=search_query) | Contact.objects.filter(
-                message__icontains=search_query)
-            page_object = paginator(request, contacts)
-        if not contacts:
-            messages.success(request, 'No contacts found {} !'.format(search_query))
-    else:
-        contacts = Contact.objects.all()
-        page_object = paginator(request, contacts)
-    context = {'contacts': page_object}
-    return render(request, 'dashboard/manage_contact/contact_table.html', context)
-
-
 # Payement Management
 
 
 # Order Management
+# Order table
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def order_table(request):
@@ -920,6 +888,7 @@ def order_table(request):
     return render(request, 'dashboard/manage_order/order_table.html', context)
 
 
+# Order details
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def order_details(request, order_id):
@@ -931,6 +900,7 @@ def order_details(request, order_id):
     return render(request, 'dashboard/manage_order/order_details.html', context)
 
 
+# Delete order
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_order(request, order_id):
@@ -943,6 +913,7 @@ def delete_order(request, order_id):
     messages.success(request, 'Order {} deleted successfully!'.format(order_id))
 
 
+# Delete selected orders
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def delete_selected_order(request, order_ids):
@@ -964,6 +935,7 @@ def delete_selected_order(request, order_ids):
     return redirect('/dashboard/order/')
 
 
+# Search order
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_order(request):
@@ -996,3 +968,89 @@ def search_order(request):
         page_object = paginator(request, orders)
     context = {'orders': page_object}
     return render(request, 'dashboard/manage_order/order_table.html', context)
+
+
+# Feedback Management
+# Feedback table
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def feedback_table(request):
+    # Get all feedbacks
+    feedbacks = Feedback.objects.all().order_by('id')
+    page_object = paginator(request, feedbacks)
+    context = {'feedbacks': page_object}
+    return render(request, 'dashboard/manage_feedback/feedback_table.html', context)
+
+
+# Feedback details
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def feedback_details(request, feedback_id):
+    # Get data from feedbacks and feedback_details
+    feedback = Feedback.objects.get(id=feedback_id)
+    context = {'feedback': feedback}
+    return render(request, 'dashboard/manage_feedback/feedback_details.html', context)
+
+
+# Delete feedback
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_feedback(request, feedback_id):
+    try:
+        feedback = Feedback.objects.get(id=feedback_id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The feedback {} you are trying to delete does not exist!'.format(feedback_id))
+        return redirect('/dashboard/feedback/')
+    feedback.delete()
+    messages.success(request, 'Feedback {} deleted successfully!'.format(feedback_id))
+    return redirect('/dashboard/feedback/')
+
+
+# Delete selected feedbacks
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_feedback(request, feedback_ids):
+    if request.method == 'POST':
+        # Get a list of feedback IDs to delete
+        feedback_ids = feedback_ids.split("+")
+        # Delete the feedbacks
+        if feedback_ids:
+            for feedback_id in feedback_ids:
+                try:
+                    feedback = Feedback.objects.get(id=feedback_id)
+                    feedback.delete()
+                    messages.success(request, 'Feedback deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The feedback with ID {feedback_id} does not exist!')
+            return redirect('/dashboard/feedback/')
+        else:
+            messages.warning(request, 'Please select at least one feedback to delete!')
+    return redirect('/dashboard/feedback/')
+
+
+# Search feedback
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_feedback(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/feedback/')
+        else:
+            feedbacks = Feedback.objects.filter(
+                id__icontains=search_query) | Feedback.objects.filter(
+                name__icontains=search_query) | Feedback.objects.filter(
+                email__icontains=search_query) | Feedback.objects.filter(
+                subject__icontains=search_query) | Feedback.objects.filter(
+                message__icontains=search_query) | Feedback.objects.filter(
+                mobile__icontains=search_query) | Feedback.objects.filter(
+                date_sent__icontains=search_query)
+            page_object = paginator(request, feedbacks)
+        if not feedbacks:
+            messages.success(request, 'No feedbacks found {} !'.format(search_query))
+    else:
+        feedbacks = Feedback.objects.all()
+        page_object = paginator(request, feedbacks)
+    context = {'feedbacks': page_object}
+    return render(request, 'dashboard/manage_feedback/feedback_table.html', context)

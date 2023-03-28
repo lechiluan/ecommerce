@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from main.models import Category, Contact, Coupon, Customer, Product, Review, Payment, Orders, \
+from main.models import Category, Feedback, Coupon, Customer, Product, Review, Payment, Orders, \
     OrderDetails, CartItem, Brand
 
 # Register your models here.
@@ -16,7 +16,7 @@ admin.site.register(Review)
 admin.site.register(Payment)
 admin.site.register(OrderDetails)
 admin.site.register(CartItem)
-admin.site.register(Contact)
+admin.site.register(Feedback)
 admin.site.register(Coupon)
 admin.site.register(Category)
 admin.site.register(Brand)
