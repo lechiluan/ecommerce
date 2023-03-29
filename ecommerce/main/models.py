@@ -161,8 +161,8 @@ class DeliveryAddress(models.Model):
     address = models.CharField(max_length=500, null=True)
     city = models.CharField(max_length=40, null=True)
     state = models.CharField(max_length=40, null=True)
-    zip_code = models.CharField(max_length=20, null=True)
     country = models.CharField(max_length=40, null=True)
+    zip_code = models.CharField(max_length=20, null=True)
     date_added = models.DateField(auto_now_add=True, null=True)
     is_default = models.BooleanField(default=False)
 

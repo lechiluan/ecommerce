@@ -6,9 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.query_utils import Q
 from django.contrib import messages
 from django.template.loader import render_to_string
-from .forms import FeedbackForm, CheckoutForm
+from .forms import FeedbackForm, CheckoutForm, DeliveryAddressForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
-    OrderDetails, Wishlist
+    OrderDetails, Wishlist, Payment
 from django.contrib.auth.models import User
 
 
@@ -95,20 +95,14 @@ def product_search(request):
         # apply brand filter if selected
         if filter_by_brand and filter_by_category:
             products = products.filter(brand__id=filter_by_brand, category__id=filter_by_category)
-            brand_name = Brand.objects.get(id=filter_by_brand).name
-            category_name = Category.objects.get(id=filter_by_category).name
-            messages.success(request, 'Filtered by brand: "' + brand_name + '" and category: "' + category_name + '"')
-
+            page_obj = paginator(request, products)
         elif filter_by_brand:
             products = products.filter(brand__id=filter_by_brand)
-            brand_name = Brand.objects.get(id=filter_by_brand).name
-            messages.success(request, 'Filtered by brand: "' + brand_name + '"')
+            page_obj = paginator(request, products)
         # apply category filter if selected
         elif filter_by_category:
             products = products.filter(category__id=filter_by_category)
-            category_name = Category.objects.get(id=filter_by_category).name
-            messages.success(request, 'Filtered by category: "' + category_name + '"')
-
+            page_obj = paginator(request, products)
         # apply search filter if search query exists
         if search_query:
             products = products.filter(
@@ -116,34 +110,25 @@ def product_search(request):
                     category__name__icontains=search_query) | Q(
                     brand__name__icontains=search_query) | Q(slug__icontains=search_query)
             )
-            messages.success(request, 'Search results for: ' + search_query)
-
+            page_obj = paginator(request, products)
         # apply sorting based on selected option
         if sort_by == 'newest':
             products = products.order_by('-created_date')
-            messages.success(request, 'Sorted by newest')
         elif sort_by == 'best_seller':
             products = products.order_by('-updated_date')
-            messages.success(request, 'Sorted by best seller')
         elif sort_by == 'name_asc':
             products = products.order_by('name')
-            messages.success(request, 'Sorted by name ascending')
         elif sort_by == 'name_desc':
             products = products.order_by('-name')
-            messages.success(request, 'Sorted by name descending')
         elif sort_by == 'price_asc':
             products = products.order_by('price')
-            messages.success(request, 'Sorted by price ascending')
         elif sort_by == 'price_desc':
             products = products.order_by('-price')
-            messages.success(request, 'Sorted by price descending')
-        page_obj = paginator(request, products)
-        # messages.success(request, 'Found ' + str(page_obj.paginator.count) + ' products')
-        # Convert filter_by_brand and filter_by_category to int
         if filter_by_brand:
             filter_by_brand = int(filter_by_brand)
         if filter_by_category:
             filter_by_category = int(filter_by_category)
+        page_obj = paginator(request, products)
         context = {
             'products': page_obj,
             'search_query': search_query,
@@ -192,7 +177,6 @@ def product_list_brand(request, slug):
     else:
         brand = Brand.objects.get(slug=slug)
         products = Product.objects.filter(brand=brand)
-        categories = Category.objects.all()
         page_object = paginator(request, products)
         context = {
             'products': page_object,
@@ -272,29 +256,6 @@ def update_cart_quantity(request, slug):
     cart_item.save()
     messages.success(request, 'Product quantity updated successfully')
     return render(request, 'customer_cart/view_cart.html')
-
-
-@login_required(login_url='/auth/login/')
-def checkout(request):
-    customer = request.user.customer
-    cart_items = CartItem.objects.filter(customer=customer)
-    total = sum([cart_item.amount for cart_item in cart_items])
-    if request.method == 'POST':
-        form = CheckoutForm(request.POST)
-        if form.is_valid():
-            delivery_address = form.save(commit=False)
-            delivery_address.customer = customer
-            delivery_address.save()
-            messages.success(request, 'Delivery address saved successfully')
-            return redirect('/customer/payment/')
-    else:
-        form = CheckoutForm()
-    context = {
-        'cart_items': cart_items,
-        'total': total,
-        'form': form,
-    }
-    return render(request, 'customer_cart/checkout.html', context)
 
 
 # add to wishlist function for customer
@@ -395,3 +356,40 @@ def add_selected_products_from_wishlist(request):
             cart_item.save()
     messages.success(request, 'All products added to cart successfully')
     render(request, 'customer_cart/view_cart.html')
+
+
+# checkout function for customer
+@login_required(login_url='/auth/login/')
+def checkout(request):
+    user = request.user
+    customer = user.customer
+    deliver_address = DeliveryAddress.objects.filter(customer=customer)
+    cart_items = CartItem.objects.filter(customer=customer)
+    total = sum([cart_item.amount for cart_item in cart_items])
+    payment = Payment.objects.all()
+
+    if request.method == 'POST':
+        payment_method = request.POST.get('payment_method')
+        payment = Payment.objects.get(method=payment_method)
+        delivery_address = request.POST.get('delivery_address')
+        address = DeliveryAddress.objects.get(address=delivery_address)
+        order = Orders.objects.create(customer=customer, payment=payment, delivery_address=address)
+        for cart_item in cart_items:
+            order_item = OrderDetails.objects.create(
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.price,
+                amount=cart_item.amount,
+                order=order,
+            )
+            cart_item.delete()
+        messages.success(request, 'Order placed successfully')
+        return redirect('/customer/orders/')
+
+    context = {
+        'deliver_address': deliver_address,
+        'cart_items': cart_items,
+        'total': total,
+        'payment': payment,
+    }
+    return render(request, 'customer_checkout/checkout.html', context)

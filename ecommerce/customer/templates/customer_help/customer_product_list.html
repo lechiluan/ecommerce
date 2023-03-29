@@ -19,13 +19,14 @@
                 <div class="input-group search-manage">
                     <input type="text" class="form-control border-0 small search-manage-input"
                            placeholder="Search for Product ..."
-                           aria-label="Search" aria-describedby="basic-addon2" name="search">
+                           aria-label="Search" aria-describedby="basic-addon2" name="search"
+                           {% if search_query %}value="{{ search_query }}"{% endif %}>
                     <input type="hidden" name="t" value="{{ timestamp }}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search fa-sm"></i>
                         </button>
-                        <a type="button" class="btn btn-danger" id="clear-btn" href="/">
+                        <a type="button" class="btn btn-danger" id="clear-btn" href="/customer/product/search/">
                             <i class="fas fa-times fa-sm"></i>
                         </a>
                     </div>
@@ -69,7 +70,8 @@
                                 <select class="form-control" id="filter_by_brand" name="filter_by_brand">
                                     <option value="">Filter by Brand</option>
                                     {% for brand in brands %}
-                                        <option value="{{ brand.id }}" {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                                        <option value="{{ brand.id }}"
+                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
                                     {% endfor %}
                                 </select>
 
@@ -80,7 +82,8 @@
                                 <select class="form-control" id="filter_by_category" name="filter_by_category">
                                     <option value="">Filter by Category</option>
                                     {% for category in categories %}
-                                        <option value="{{ category.id }}" {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                        <option value="{{ category.id }}"
+                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -88,6 +91,11 @@
                         <li>
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <a href="/customer/product/search/" type="button" class="btn btn-danger">Clear</a>
                             </div>
                         </li>
                     </ul>

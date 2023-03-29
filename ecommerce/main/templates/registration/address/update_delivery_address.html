@@ -1,0 +1,46 @@
+{% extends "main/base/base.html" %}
+
+{% block title %}Update Address{% endblock %}
+{% block style %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/auth/delivery_address/">Delivery Address</a>
+        <span> > </span>
+        <a href="/auth/delivery_address/update/{{ delivery_address.id }}">Update Delivery Address</a>
+    </div>
+    <div class="form-main">
+        <h2 class="font-weight-bold mt-3 form-title">Update Delivery Address</h2>
+        <form method="post" class="form-group" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-input">{{ form.first_name|as_crispy_field }}</div>
+            <div class="form-input">{{ form.last_name|as_crispy_field }}</div>
+            <div class="form-input">{{ form.mobile|as_crispy_field }}</div>
+            <div class="form-input">{{ form.email|as_crispy_field }}</div>
+            <div class="form-input">{{ form.address|as_crispy_field }}</div>
+            <div class="form-input">{{ form.city|as_crispy_field }}</div>
+            <div class="form-input">{{ form.state|as_crispy_field }}</div>
+            <div class="form-input">{{ form.country|as_crispy_field }}</div>
+            <div class="form-input">{{ form.zip_code|as_crispy_field }}</div>
+            <div class="text-checkbox">{{ form.is_default|as_crispy_field }}</div>
+            <div class="btn-form">
+                <button type="submit" class="btn btn-default form-button">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+    </script>
+{% endblock %}

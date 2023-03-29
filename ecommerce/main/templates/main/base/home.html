@@ -5,7 +5,6 @@
             height: 100%;
             position: relative;
             margin: 0 auto;
-            padding: 10px 0;
             border-radius: 0 0 5px 5px;
         }
 
@@ -26,8 +25,6 @@
             width: 100%;
             object-fit: cover;
         }
-
-
     </style>
 {% endblock %}
 {% load static %}
@@ -90,7 +87,8 @@
                 <div class="input-group search-manage">
                     <input type="text" class="form-control border-0 small search-manage-input"
                            placeholder="Search for Product ..."
-                           aria-label="Search" aria-describedby="basic-addon2" name="search">
+                           aria-label="Search" aria-describedby="basic-addon2" name="search"
+                           {% if search_query %}value="{{ search_query }}"{% endif %}>
                     <input type="hidden" name="t" value="{{ timestamp }}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
@@ -162,6 +160,11 @@
                                 <button type="submit" class="btn btn-primary">Apply</button>
                             </div>
                         </li>
+                        <li>
+                            <div class="col-auto">
+                                <a href="/customer/product/search/" type="button" class="btn btn-danger">Clear</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <input type="hidden" name="search" value="{{ request.GET.search }}">
@@ -178,7 +181,7 @@
             <div class="card-categories">
                 <ul>
                     {% for category in categories %}
-                        <li><a href="/customer/product/category/{{ category.id }}/">{{ category.name }}</a></li>
+                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -240,6 +243,50 @@
         </div>
         {# End of Product Card #}
     </div>
+    <!-- Start Shop Services Area  -->
+    <section class="shop-services section home">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Start Single Service -->
+                    <div class="single-service">
+                        <i class="fa fa-truck" aria-hidden="true"></i>
+                        <h4>Free shiping</h4>
+                        <p>Orders over $100</p>
+                    </div>
+                    <!-- End Single Service -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Start Single Service -->
+                    <div class="single-service">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        <h4>Free Return</h4>
+                        <p>Within 30 days returns</p>
+                    </div>
+                    <!-- End Single Service -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Start Single Service -->
+                    <div class="single-service">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <h4>Sucure Payment</h4>
+                        <p>100% secure payment</p>
+                    </div>
+                    <!-- End Single Service -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Start Single Service -->
+                    <div class="single-service">
+                        <i class="fa fa-money" aria-hidden="true"></i>
+                        <h4>Best Peice</h4>
+                        <p>Guaranteed price</p>
+                    </div>
+                    <!-- End Single Service -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Shop Services -->
 
 {% endblock %}
 

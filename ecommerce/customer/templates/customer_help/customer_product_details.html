@@ -4,53 +4,67 @@
 {% block style %}
     <style>
         .product-details {
-            padding-top: 100px;
-            padding-bottom: 50px;
-            background: #ffffff;
-
+            padding: 50px 0;
+            background-color: #ffffff;
         }
 
-        img {
+        .product-details img {
             max-width: 100%;
             height: auto;
         }
 
-        .product-details {
-            padding: 50px 0;
-        }
-
         .product-details h1 {
-            font-size: 32px;
+            font-size: 2.5rem;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-top: 0;
         }
 
         .product-details p {
-            font-size: 18px;
+            font-size: 1.2rem;
             line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .product-details .rating {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .product-details .rating i {
+            color: #ffc107;
+        }
+
+        .product-details .rating .grey {
+            color: #c4c4c4;
         }
 
         .product-details .form-group label {
+            font-size: 1.2rem;
             font-weight: bold;
-            display: block;
             margin-bottom: 10px;
         }
 
         .product-details .form-group input {
-            width: 100px;
-            display: inline-block;
+            width: 70px;
+            height: 40px;
+            font-size: 1.2rem;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             margin-right: 10px;
         }
 
-        @media only screen and (max-width: 768px) {
-            .product-details .col-md-6 {
-                width: 100%;
-                margin-bottom: 30px;
-            }
+        .product-details .btn-primary {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 30px;
+            margin-top: 20px;
+            transition: all 0.3s ease-in-out;
+        }
 
-            .product-details .form-group input {
-                width: 70px;
-            }
+        .product-details .btn-primary:hover {
+            background-color: #ffc107;
+            border-color: #ffc107;
         }
 
     </style>
@@ -64,8 +78,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="{{ product.name }}" title="{{ product.name }}"
-                                           class="img-fluid">
+                    <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="{{ product.name }}"
+                         title="{{ product.name }}"
+                         class="img-fluid">
                 </div>
                 <div class="col-md-6">
                     <h1>{{ product.name }}</h1>

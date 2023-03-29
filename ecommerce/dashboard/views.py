@@ -20,7 +20,8 @@ from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
     UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm, \
     AddCouponForm, UpdateCouponForm
-from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment
+from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, \
+    DeliveryAddress
 
 
 # Create your views here.
@@ -355,8 +356,8 @@ def customer_details(request, user_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_customer(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/customer/')
@@ -376,7 +377,8 @@ def search_customer(request):
         customers = Customer.objects.all()
         page_object = paginator(request, users)
     context = {'users': page_object,
-               'customers': customers}
+               'customers': customers,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_customer/customer_table.html', context)
 
 
@@ -486,8 +488,8 @@ def category_details(request, category_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_category(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/category/')
@@ -500,7 +502,8 @@ def search_category(request):
     else:
         categories = Category.objects.all()
         page_object = paginator(request, categories)
-    context = {'categories': page_object}
+    context = {'categories': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_category/category_table.html', context)
 
 
@@ -608,8 +611,8 @@ def brand_details(request, brand_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_brand(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/brand/')
@@ -622,7 +625,8 @@ def search_brand(request):
     else:
         brands = Brand.objects.all()
         page_object = paginator(request, brands)
-    context = {'brands': page_object}
+    context = {'brands': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_brand/brand_table.html', context)
 
 
@@ -730,8 +734,8 @@ def product_details(request, product_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_product(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/product/')
@@ -744,7 +748,8 @@ def search_product(request):
     else:
         products = Product.objects.all()
         page_object = paginator(request, products)
-    context = {'products': page_object}
+    context = {'products': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_product/product_table.html', context)
 
 
@@ -852,8 +857,8 @@ def coupon_details(request, coupon_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_coupon(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/coupon/')
@@ -869,7 +874,8 @@ def search_coupon(request):
     else:
         coupons = Coupon.objects.all()
         page_object = paginator(request, coupons)
-    context = {'coupons': page_object}
+    context = {'coupons': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
 
 
@@ -939,8 +945,8 @@ def delete_selected_order(request, order_ids):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_order(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/order/')
@@ -966,7 +972,8 @@ def search_order(request):
     else:
         orders = Orders.objects.all()
         page_object = paginator(request, orders)
-    context = {'orders': page_object}
+    context = {'orders': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_order/order_table.html', context)
 
 
@@ -1032,8 +1039,8 @@ def delete_selected_feedback(request, feedback_ids):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_feedback(request):
+    search_query = request.POST.get('search', '')
     if request.method == 'POST':
-        search_query = request.POST.get('search', '')
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
             return redirect('/dashboard/feedback/')
@@ -1052,5 +1059,7 @@ def search_feedback(request):
     else:
         feedbacks = Feedback.objects.all()
         page_object = paginator(request, feedbacks)
-    context = {'feedbacks': page_object}
+    context = {'feedbacks': page_object,
+               'search_query': search_query}
     return render(request, 'dashboard/manage_feedback/feedback_table.html', context)
+

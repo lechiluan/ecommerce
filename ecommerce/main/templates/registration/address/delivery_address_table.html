@@ -1,0 +1,177 @@
+{% extends "main/base/base.html" %}
+
+{% block title %}Delivery Address{% endblock %}
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/styles.css' %}">
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block content %}
+    <div class="container-main">
+        <div class="container">
+            <h2 class="font-weight-bold form-title-address">Your Delivery Address</h2>
+
+            {# Searchbox bar right here#}
+            <div class="search-form-address">
+                <form action="/auth/delivery_address/search/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group search-manage">
+                        <input type="text" class="form-control border-0 small search-manage-input"
+                               placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2" name="search"
+                               {% if search_query %}value="{{ search_query }}"{% endif %}>
+                        <input type="hidden" name="t" value="{{ timestamp }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                            <a type="button" class="btn btn-danger" id="clear-btn" href="/auth/delivery_address/">
+                                <i class="fas fa-times fa-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {# End of searchbox bar#}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <a type="button" class="btn btn-primary btn-md float-right btn-block"
+                       href="/auth/delivery_address/add/"
+                       title="Add New"><img
+                            src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
+                            title="Add New"> Add New
+                    </a>
+                    <form id="delete-form" method="post" action="/auth/delivery_address/delete_selected/">
+                        {% csrf_token %}
+                        <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
+                                title="Delete Selected" name="delete_selected" data-submit-form><img
+                                src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon"
+                                alt="Delete Selected"
+                                title="Delete Selected">Delete Selected
+                        </button>
+                    </form>
+                </div>
+                {% if delivery_addresses %}
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-auto table-style">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select-all"></th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">No.</th>
+                                    <th scope="col">FullName</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Set Default</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for delivery in delivery_addresses %}
+                                    <tr>
+                                        <td><input type="checkbox" class="select-checkbox" name="selected_delivery"
+                                                   value="{{ delivery.id }}"></td>
+                                        {% if delivery.is_default %}
+                                            <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}"
+                                                     alt="True"
+                                                     style="width:20px;height: 20px;"
+                                                     title="True"></td>
+                                        {% else %}
+                                            <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}"
+                                                     alt="False"
+                                                     style="width:20px;height: 20px;"
+                                                     title="False"></td>
+                                        {% endif %}
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ delivery.first_name }} {{ delivery.last_name }}</td>
+                                        <td>{{ delivery.mobile }}</td>
+                                        <td>{{ delivery.email }}</td>
+                                        <td>{{ delivery.address }}</td>
+                                        <td>
+                                            <a type="button" class="btn btn-success"
+                                               href="/auth/delivery_address/set_default/{{ delivery.id }}/"
+                                               onclick="return confirm('Are you sure?')">Set Default</a>
+                                        </td>
+                                        <td class="action">
+                                            <a href="/auth/delivery_address/update/{{ delivery.id }}/"><img
+                                                    src="{% static 'dashboard/images/icons/edit.png' %}"
+                                                    alt="Edit"
+                                                    title="Edit"></a>
+                                            <a href="/auth/delivery_address/delete/{{ delivery.id }}?t={{ timestamp }}/"
+                                               onclick="return confirm('Are you sure?')"><img
+                                                    src="{% static 'dashboard/images/icons/delete.png' %}"
+                                                    alt="Delete"
+                                                    title="Delete"></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% include 'registration/address/pagination.html' %}
+                    </div>
+                {% else %}
+                    {% include 'registration/address/404.html' %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Delete selected function
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the form and the delete selected button
+            let form = document.getElementById("delete-form");
+            let deleteBtn = document.querySelector("[data-submit-form]");
+            let selectAllCheckbox = document.getElementById("select-all");
+
+            // Listen for the click event on the delete selected button
+            deleteBtn.addEventListener("click", function (event) {
+                    // Get the selected checkboxes
+                    let checkboxes = document.querySelectorAll(".select-checkbox:checked");
+                    // If no checkboxes are selected, prevent the form submission
+                    if (checkboxes.length === 0) {
+                        event.preventDefault();
+                        alert("Please select at least one delivery address to delete.");
+                    } else {
+                        // Show confirm dialog and proceed only if OK is clicked
+                        let confirmed = confirm('Are you sure to delete this selected?');
+                        if (confirmed) {
+
+                            // Update the action attribute of the form
+                            let Ids = Array.from(checkboxes).map(function (checkbox) {
+                                return checkbox.value;
+                            });
+                            form.action = "/auth/delivery_address/delete_selected/" + Ids.join("+") + "/";
+                            // Submit the form
+                            form.submit();
+                        }
+                    }
+                }
+            );
+
+            // Listen for the click event on the select-all checkbox
+            selectAllCheckbox.addEventListener("click", function () {
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Set their checked property based on the select-all checkbox
+                objectCheckboxesAll.forEach(function (checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                    let Ids = Array.from(objectCheckboxesAll).map(function (checkbox) {
+                        return checkbox.value;
+                    });
+                    form.action = "/auth/delivery_address/delete_selected/" + Ids.join("+") + "/";
+                });
+            });
+        });
+    </script>
+{% endblock %}

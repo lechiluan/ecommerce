@@ -26,7 +26,8 @@
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
                        aria-label="Search" aria-describedby="basic-addon2" name="search">
-                <input type="hidden" name="t" value="{{ timestamp }}">
+                <input type="hidden" name="t" value="{{ timestamp }}"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
@@ -92,9 +93,9 @@
                                 <td>{{ feedback.subject }}</td>
                                 <td class="action">
                                     <a href="/dashboard/feedback/details/{{ feedback.id }}/"><img
-                                        src="{% static 'dashboard/images/icons/detail.png' %}"
-                                        alt="Details"
-                                        title="Details"></a>
+                                            src="{% static 'dashboard/images/icons/detail.png' %}"
+                                            alt="Details"
+                                            title="Details"></a>
                                 </td>
                                 <td>{{ feedback.date_sent }}</td>
                                 <td class="action">

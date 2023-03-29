@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -24,11 +24,13 @@ urlpatterns = [
          name='password_reset_complete'),
 
     # Address Books
-    # path('address/', views.address_table, name='address_book'),
-    # path('address/add/', views.add_address, name='add_address'),
-    # path('address/edit/<int:id>/', views.update_address, name='edit_address'),
-    # path('address/delete/<int:id>/', views.delete_address, name='delete_address'),
-    # path('address/set_default/<int:id>/', views.set_default_address, name='set_default_address'),
-    # path('address/delete_default/', views.delete_default_address, name='delete_default_address'),
-    # path('address/delete_all/', views.delete_all_address, name='delete_all_address'),
+    path('delivery_address/', views.delivery_address_table, name='address_book'),
+    path('delivery_address/add/', views.add_delivery_address, name='add_address'),
+    path('delivery_address/update/<int:delivery_address_id>/', views.update_delivery_address, name='update_address'),
+    path('delivery_address/delete/<int:delivery_address_id>', views.delete_delivery_address, name='delete_address'),
+    path('delivery_address/delete_selected/<str:delivery_address_ids>', views.delete_selected_delivery_address,
+         name='delete_selected_address'),
+    path('delivery_address/set_default/<int:delivery_address_id>/', views.set_default_delivery_address,
+         name='set_default_address'),
+    path('delivery_address/search/', views.search_delivery_address, name='address_search'),
 ]

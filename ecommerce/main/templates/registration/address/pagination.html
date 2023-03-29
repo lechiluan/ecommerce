@@ -1,0 +1,39 @@
+<div class="pagination">
+    <div class="left">
+        Showing <strong>{{  delivery_addresses.object_list|length }}</strong> of <strong>{{ delivery_addresses.paginator.count }}</strong> entries
+    </div>
+    <div class="right">
+        {% if delivery_addresses.has_previous %}
+            {% if delivery_addresses.previous_page_number == 1 %}
+                <a href="?page={{ delivery_addresses.previous_page_number }}">Previous</a>
+            {% else %}
+                <a href="?page=1">First</a>
+                <a href="?page={{ delivery_addresses.previous_page_number }}">Previous</a>
+                <span class="dots">...</span>
+            {% endif %}
+        {% else %}
+            <span class="disabled">Previous</span>
+        {% endif %}
+
+        {% for i in delivery_addresses.paginator.page_range %}
+            {% if delivery_addresses.number == i %}
+                <span class="current">{{ i }}</span>
+            {% elif i > delivery_addresses.number|add:"-3" and i < delivery_addresses.number|add:"3" %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if delivery_addresses.has_next %}
+            {% if delivery_addresses.next_page_number == delivery_addresses.paginator.num_pages %}
+                <a href="?page={{ delivery_addresses.paginator.num_pages }}">Last</a>
+            {% else %}
+                <span class="dots">...</span>
+                <a href="?page={{ delivery_addresses.next_page_number }}">Next</a>
+                <a href="?page={{ delivery_addresses.paginator.num_pages }}">Last</a>
+            {% endif %}
+        {% else %}
+            <span class="disabled">Next</span>
+            <span class="disabled">Last</span>
+        {% endif %}
+    </div>
+</div>

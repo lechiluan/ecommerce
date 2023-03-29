@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 # from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm
+from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm, \
+    AddDeliveryAddressForm, UpdateDeliveryAddressForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 # Password Reset Imports
@@ -302,3 +304,134 @@ def password_reset_request(request):
     return render(request=request, template_name="registration/password/password_reset.html",
                   context={"password_reset_form": password_reset_form})
 
+
+# Delivery Address Management
+# Delivery Address table
+@login_required(login_url='/auth/login/')
+def delivery_address_table(request):
+    # Get all delivery addresses
+    customer = Customer.objects.filter(user=request.user).first()
+    delivery_addresses = DeliveryAddress.objects.all().order_by('id')
+    page_object = paginator(request, delivery_addresses)
+    context = {'delivery_addresses': page_object,
+               'customer': customer}
+    return render(request, 'registration/address/delivery_address_table.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def add_delivery_address(request):
+    customer = Customer.objects.filter(user=request.user).first()
+    if request.method == 'POST':
+        form = AddDeliveryAddressForm(request.POST)
+        if form.is_valid():
+            delivery_address = form.save(commit=False)
+            delivery_address.customer = customer
+            delivery_address.save()
+            messages.success(request, 'Delivery address added successfully!')
+            return redirect('/auth/delivery_address/')
+    else:
+        form = AddDeliveryAddressForm()
+    context = {'form': form}
+    return render(request, 'registration/address/add_delivery_address.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def update_delivery_address(request, delivery_address_id):
+    # Get the delivery address
+    customer = Customer.objects.filter(user=request.user).first()
+    delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+    if request.method == 'POST':
+        form = UpdateDeliveryAddressForm(request.POST, instance=delivery_address)
+        if form.is_valid():
+            delivery_address = form.save(commit=False)
+            delivery_address.customer = customer
+            delivery_address.save()
+            messages.success(request, 'Delivery address updated successfully!')
+            return redirect('/auth/delivery_address/')
+    else:
+        form = UpdateDeliveryAddressForm(instance=delivery_address)
+    context = {'form': form}
+    return render(request, 'registration/address/update_delivery_address.html', context)
+
+
+# Delete delivery address
+@login_required(login_url='/auth/login/')
+def delete_delivery_address(request, delivery_address_id):
+    try:
+        delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+    except ObjectDoesNotExist:
+        messages.warning(request,
+                         'The delivery address {} you are trying to delete does not exist!'.format(delivery_address_id))
+        return redirect('/auth/delivery_address/')
+    delivery_address.delete()
+    messages.success(request, 'Delivery address {} deleted successfully!'.format(delivery_address_id))
+    return redirect('/auth/delivery_address/')
+
+
+# Delete selected delivery addresses
+@login_required(login_url='/auth/login/')
+def delete_selected_delivery_address(request, delivery_address_ids):
+    if request.method == 'POST':
+        # Get a list of delivery address IDs to delete
+        delivery_address_ids = delivery_address_ids.split("+")
+        # Delete the delivery addresses
+        if delivery_address_ids:
+            for delivery_address_id in delivery_address_ids:
+                try:
+                    delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+                    delivery_address.delete()
+                    messages.success(request, 'Delivery address deleted successfully!')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'The delivery address with ID {delivery_address_id} does not exist!')
+            return redirect('/dashboard/delivery_address/')
+        else:
+            messages.warning(request, 'Please select at least one delivery address to delete!')
+    return redirect('/dashboard/delivery_address/')
+
+
+# Search delivery address
+@login_required(login_url='/auth/login/')
+def search_delivery_address(request):
+    search_query = request.POST.get('search', '')
+    if request.method == 'POST':
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/delivery_address/')
+        else:
+            delivery_addresses = DeliveryAddress.objects.filter(
+                id__icontains=search_query) | DeliveryAddress.objects.filter(
+                first_name__icontains=search_query) | DeliveryAddress.objects.filter(
+                email__icontains=search_query) | DeliveryAddress.objects.filter(
+                address__icontains=search_query) | DeliveryAddress.objects.filter(
+                city__icontains=search_query) | DeliveryAddress.objects.filter(
+                state__icontains=search_query) | DeliveryAddress.objects.filter(
+                zip_code__icontains=search_query) | DeliveryAddress.objects.filter(
+                mobile__icontains=search_query) | DeliveryAddress.objects.filter(
+                date_added__icontains=search_query) | DeliveryAddress.objects.filter(
+                last_name__icontains=search_query)
+            page_object = paginator(request, delivery_addresses)
+        if not delivery_addresses:
+            messages.success(request, 'No delivery addresses found {} !'.format(search_query))
+    else:
+        delivery_addresses = DeliveryAddress.objects.all()
+        page_object = paginator(request, delivery_addresses)
+    context = {'delivery_addresses': page_object,
+               'search_query': search_query}
+    return render(request, 'registration/address/delivery_address_table.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def set_default_delivery_address(request, delivery_address_id):
+    # Get the delivery address
+    delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+    if delivery_address.is_default:
+        messages.warning(request, 'Delivery address is already set as default!')
+        return redirect('/auth/delivery_address/')
+    else:
+        # Set all delivery addresses to not default
+        DeliveryAddress.objects.all().update(is_default=False)
+        # Set the selected delivery address to default
+        delivery_address.is_default = True
+        delivery_address.save()
+        messages.success(request, 'Delivery address set as default successfully!')
+        return redirect('/auth/delivery_address/')

@@ -18,7 +18,7 @@
                     {{ form| crispy }}
                 </div>
                 <div class="btn-form">
-                    <button type="submit" class="btn btn-default form-button">Continue Payment</button>
+                    <button type="submit" class="btn btn-default form-button">Continue to Payment</button>
                 </div>
             </form>
         </div>
@@ -26,17 +26,6 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        const avatarInput = document.querySelector('#id_customer_image');
-        const avatarImg = document.querySelector('#avatar');
-        avatarInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            const reader = new FileReader();
 
-            reader.addEventListener('load', (event) => {
-                avatarImg.src = event.target.result;
-            });
-
-            reader.readAsDataURL(file);
-        });
     </script>
 {% endblock %}

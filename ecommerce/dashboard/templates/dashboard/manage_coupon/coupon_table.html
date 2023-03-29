@@ -24,7 +24,8 @@
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
-                       aria-label="Search" aria-describedby="basic-addon2" name="search">
+                       aria-label="Search" aria-describedby="basic-addon2" name="search"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
                 <input type="hidden" name="t" value="{{ timestamp }}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">
@@ -96,10 +97,12 @@
                                 <td>{{ coupon.valid_from }}</td>
                                 <td>{{ coupon.valid_to }}</td>
                                 {% if coupon.is_active %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
+                                             style="width:20px;height: 20px;"
                                              title="True"></td>
                                 {% else %}
-                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False" style="width:20px;height: 20px;"
+                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
+                                             style="width:20px;height: 20px;"
                                              title="False"></td>
                                 {% endif %}
                                 <td class="action">

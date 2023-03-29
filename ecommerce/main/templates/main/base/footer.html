@@ -29,7 +29,7 @@
 <footer class="site-footer">
     <div class="container">
         <div class="newsletter-form">
-            <h3>Register for Our Newsletter</h3>
+            <h3>Register for Our Newsletter And Get 10% Off Your First Purchase</h3>
             <form action="/customer/send_email_newsletter/" method="post">
                 <div>
                     {% csrf_token %}
@@ -80,18 +80,17 @@
                 <h6>Categories</h6>
                 <ul class="footer-links">
                     {% for category in categories %}
-                        <li><a href="/customer/product/category/{{ category.id }}/">{{ category.name }}</a></li>
+                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }}</a></li>
                     {% endfor %}
-                    <li><a href="/customer/product/category/0/">All Products</a></li>
+                    <li><a href="/customer/product/category/all/">All Products</a></li>
                 </ul>
             </div>
 
             <div class="col-xs-6 col-md-3">
                 <h6>Services</h6>
                 <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Contribute</a></li>
+                    <li><a href="/customer/about/">About Us</a></li>
+                    <li><a href="/customer/feedback/">Feedback</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Sitemap</a></li>
                 </ul>

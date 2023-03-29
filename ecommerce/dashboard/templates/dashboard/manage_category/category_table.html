@@ -24,7 +24,8 @@
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
-                       aria-label="Search" aria-describedby="basic-addon2" name="search">
+                       aria-label="Search" aria-describedby="basic-addon2" name="search"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
                 <input type="hidden" name="t" value="{{ timestamp }}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">

@@ -460,7 +460,7 @@ td.action {
 .form-main {
     width: 100%;
     min-width: 300px;
-    padding: 20px;
+    padding: 10px;
     border: 2px solid #ccc;
     border-radius: 5px;
     align-content: center;
@@ -486,6 +486,10 @@ td.action {
     align-content: center;
 }
 
+.form-input label {
+    font-size: 18px;
+    font-weight: bold;
+}
 .form-button {
     border-radius: 10px;
     background-color: #1253cc;

@@ -53,51 +53,147 @@ class FeedbackForm(forms.Form):
         return feedback
 
 
-
 # Checkout Form
 class CheckoutForm(forms.Form):
-    first_name = forms.CharField(required=True, max_length=100)
-    last_name = forms.CharField(required=True, max_length=100)
-    email = forms.EmailField(required=True, max_length=100)
-    mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    address = forms.CharField(required=True, max_length=200)
-    city = forms.CharField(required=True, max_length=100)
-    state = forms.CharField(required=True, max_length=100)
-    zip_code = forms.CharField(required=True, max_length=100)
-    country = forms.CharField(required=True, max_length=100)
-    payment_method = forms.CharField(required=True, max_length=100)
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name'}), required=True,
+                                 max_length=40)
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name'}), required=True,
+                                max_length=40)
+    mobile = forms.CharField(max_length=20, validators=[phone_regex], required=True,
+                             widget=forms.TextInput(attrs={'placeholder': 'Mobile'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Email'}), required=True, max_length=50)
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Address'}), required=True, max_length=500)
+    city = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'City'}), required=True, max_length=40)
+    state = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'State'}), required=True, max_length=40)
+    zip_code = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Zip Code'}), required=True, max_length=10)
+    country = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Country'}), required=True, max_length=40)
+    is_default = forms.BooleanField(required=False, label='Set as default address')
 
     class Meta:
         model = DeliveryAddress
-        fields = ['first_name', 'last_name', 'email', 'mobile', 'address', 'city', 'state', 'zip_code', 'country',
-                  'payment_method']
+        fields = ['first_name', 'last_name', 'mobile', 'email', 'address', 'city', 'state', 'zip_code', 'country',
+                  'is_default']
 
     def clean(self):
         cleaned_data = super().clean()
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
         email = cleaned_data.get('email')
         mobile = cleaned_data.get('mobile')
-        address = cleaned_data.get('address')
-        city = cleaned_data.get('city')
-        state = cleaned_data.get('state')
-        zip_code = cleaned_data.get('zip_code')
-        country = cleaned_data.get('country')
-        payment_method = cleaned_data.get('payment_method')
+        is_default = cleaned_data.get('is_default')
+        if DeliveryAddress.objects.filter(email=email).exists():
+            self.add_error('email', 'Email already exists')
+        if DeliveryAddress.objects.filter(mobile=mobile).exists():
+            self.add_error('mobile', 'Mobile already exists')
+        if is_default:
+            if DeliveryAddress.objects.filter(is_default=True).exists():
+                self.add_error('is_default', 'Default address already exists')
+            else:
+                self.cleaned_data['is_default'] = True
+        return cleaned_data
 
     def save(self):
-        first_name = self.cleaned_data.get('first_name')
-        last_name = self.cleaned_data.get('last_name')
-        email = self.cleaned_data.get('email')
-        mobile = self.cleaned_data.get('mobile')
-        address = self.cleaned_data.get('address')
-        city = self.cleaned_data.get('city')
-        state = self.cleaned_data.get('state')
-        zip_code = self.cleaned_data.get('zip_code')
-        country = self.cleaned_data.get('country')
-        payment_method = self.cleaned_data.get('payment_method')
-        delivery_address = DeliveryAddress(first_name=first_name, last_name=last_name, email=email, mobile=mobile,
-                                           address=address, city=city, state=state, zip_code=zip_code, country=country,
-                                           payment_method=payment_method)
+        delivery_address = DeliveryAddress(
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            mobile=self.cleaned_data['mobile'],
+            email=self.cleaned_data['email'],
+            address=self.cleaned_data['address'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            zip_code=self.cleaned_data['zip_code'],
+            country=self.cleaned_data['country'],
+            is_default=self.cleaned_data['is_default'],
+        )
+        delivery_address.save()
+        return delivery_address
+
+
+class DeliveryAddressForm(forms.ModelForm):
+    class Meta:
+        model = DeliveryAddress
+        fields = ['first_name', 'last_name', 'mobile', 'email', 'address', 'city', 'state', 'zip_code', 'country',
+                  'is_default']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        mobile = cleaned_data.get('mobile')
+        is_default = cleaned_data.get('is_default')
+        if DeliveryAddress.objects.filter(email=email).exists():
+            self.add_error('email', 'Email already exists')
+        if DeliveryAddress.objects.filter(mobile=mobile).exists():
+            self.add_error('mobile', 'Mobile already exists')
+        if is_default:
+            if DeliveryAddress.objects.filter(is_default=True).exists():
+                self.add_error('is_default', 'Default address already exists')
+            else:
+                self.cleaned_data['is_default'] = True
+        return cleaned_data
+
+    def save(self, **kwargs):
+        delivery_address = DeliveryAddress(
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            mobile=self.cleaned_data['mobile'],
+            email=self.cleaned_data['email'],
+            address=self.cleaned_data['address'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            zip_code=self.cleaned_data['zip_code'],
+            country=self.cleaned_data['country'],
+            is_default=self.cleaned_data['is_default'],
+        )
+        delivery_address.save()
+        return delivery_address
+
+
+class CheckoutForm(forms.Form):
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name'}), required=True,
+                                 max_length=40)
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name'}), required=True,
+                                max_length=40)
+    mobile = forms.CharField(max_length=20, validators=[phone_regex], required=True,
+                             widget=forms.TextInput(attrs={'placeholder': 'Mobile'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Email'}), required=True, max_length=50)
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Address'}), required=True, max_length=500)
+    city = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'City'}), required=True, max_length=40)
+    state = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'State'}), required=True, max_length=40)
+    zip_code = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Zip Code'}), required=True, max_length=10)
+    country = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Country'}), required=True, max_length=40)
+    is_default = forms.BooleanField(required=False, label='Set as default address')
+
+    class Meta:
+        model = DeliveryAddress
+        fields = ['first_name', 'last_name', 'mobile', 'email', 'address', 'city', 'state', 'zip_code', 'country',
+                  'is_default']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        mobile = cleaned_data.get('mobile')
+        is_default = cleaned_data.get('is_default')
+        if DeliveryAddress.objects.filter(email=email).exists():
+            self.add_error('email', 'Email already exists')
+        if DeliveryAddress.objects.filter(mobile=mobile).exists():
+            self.add_error('mobile', 'Mobile already exists')
+        if is_default:
+            if DeliveryAddress.objects.filter(is_default=True).exists():
+                self.add_error('is_default', 'Default address already exists')
+            else:
+                self.cleaned_data['is_default'] = True
+        return cleaned_data
+
+    def save(self):
+        delivery_address = DeliveryAddress(
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            mobile=self.cleaned_data['mobile'],
+            email=self.cleaned_data['email'],
+            address=self.cleaned_data['address'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            zip_code=self.cleaned_data['zip_code'],
+            country=self.cleaned_data['country'],
+            is_default=self.cleaned_data['is_default'],
+        )
         delivery_address.save()
         return delivery_address
