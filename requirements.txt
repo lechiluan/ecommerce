@@ -33,3 +33,5 @@ tzdata==2022.7
 users==1.0.dev0
 Werkzeug==2.2.3
 wheel==0.38.4
+python-dotenv==1.0.0
+django-tinymce==3.6.1
