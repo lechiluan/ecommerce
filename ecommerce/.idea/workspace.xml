@@ -5,36 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3f6a78-2664-43fa-9ba9-71d4f9ad7bf5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/address/404.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/address/delivery_address_table.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/address/pagination.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/templates/registration/address/update_delivery_address.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer_cart/checkout.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer_cart/view_cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_cart/view_cart.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer_help/customer_product_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_help/customer_product_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer_help/customer_product_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_help/customer_product_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/static/dashboard/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_brand/brand_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_category/category_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_coupon/coupon_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_customer/customer_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_feedback/feedback_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_feedback/feedback_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/templates/dashboard/manage_product/product_table.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/static/main/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/main/static/main/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/footer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/main/base/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/main/base/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/templates/main/base/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/main/base/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/add_address.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer_checkout/checkout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/templates/registration/profile/address_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/address/add_delivery_address.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/templates/registration/address/delivery_address_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/main/templates/registration/address/delivery_address_table.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +67,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "js.last.introduce.type": "LET",
-    "last_opened_file_path": "E:/GitHub/E-Commerce-System/ecommerce/main/templates/registration/address",
+    "last_opened_file_path": "E:/GitHub/VoltaScrape",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -213,7 +189,7 @@
       <workItem from="1679491410762" duration="11464000" />
       <workItem from="1679568804019" duration="1245000" />
       <workItem from="1679570734395" duration="10282000" />
-      <workItem from="1679713348979" duration="132317000" />
+      <workItem from="1679713348979" duration="138807000" />
     </task>
     <servers />
   </component>

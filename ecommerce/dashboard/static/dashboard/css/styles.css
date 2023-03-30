@@ -448,13 +448,14 @@ td.action {
     border-radius: 10px;
 }
 
+.table-style thead tr th {
+    white-space: nowrap;
+}
+
 .search-manage-input {
     background-color: #fff;
 }
 
-.table-style thead tr th {
-    white-space: nowrap;
-}
 
 /*Form CSS*/
 .form-main {
@@ -490,6 +491,7 @@ td.action {
     font-size: 18px;
     font-weight: bold;
 }
+
 .form-button {
     border-radius: 10px;
     background-color: #1253cc;
@@ -820,6 +822,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 
     .card-header {
         flex-direction: column;
+        padding: 10px;
     }
 
     .btn-block {
@@ -937,6 +940,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     /* Pagination */
     .pagination {
         flex-direction: column;
+        padding: 10px;
     }
 
     .pagination .left {

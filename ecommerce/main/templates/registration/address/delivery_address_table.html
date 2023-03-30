@@ -2,8 +2,201 @@
 
 {% block title %}Delivery Address{% endblock %}
 {% block style %}
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/styles.css' %}">
+    <style>
+        .card-header {
+            background-color: #fff;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Table */
+        .action img {
+            width: 25px;
+            height: 25px;
+            margin-right: 3px;
+            margin-left: 3px;
+        }
+
+        td.action {
+            white-space: nowrap;
+            align-items: center;
+        }
+
+        .add-icon {
+            width: 25px;
+            height: 25px;
+            margin-right: 5px;
+        }
+
+        .search-manage {
+            background-color: #fff;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .table-style thead tr th {
+            white-space: nowrap;
+        }
+
+        .btn-block {
+            display: inline-block;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        /*pagination*/
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .pagination .left {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin: 0 3px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #ccc;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+            color: #fff;
+            background-color: #7da6f8;
+        }
+
+        .pagination .disabled {
+            color: #999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .pagination .dots {
+            margin: 0 6px;
+            font-weight: bold;
+        }
+
+
+        /* Make Responsive */
+        @media (max-width: 1024px) {
+            .btn-block {
+                display: inline-block;
+                width: auto;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cardHeader h2 {
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .card-header {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .btn-block {
+                display: block;
+                width: 100%;
+                margin: 0.5rem auto;
+                float: none;
+            }
+
+            .float-right {
+                float: none;
+            }
+
+            /* Pagination */
+            .pagination {
+                flex-direction: column;
+            }
+
+            .pagination .left {
+                order: 2;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .pagination .right {
+                order: 3;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .pagination a,
+            .pagination span {
+                margin: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .details .recentOrders {
+                overflow-x: auto;
+            }
+
+            .details .recentOrders table {
+                width: 600px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .btn-block {
+                display: block;
+                width: 100%;
+                margin: 0.5rem auto;
+                float: none;
+            }
+
+            .float-right {
+                float: none;
+            }
+
+            /* Pagination */
+            .pagination {
+                flex-direction: column;
+            }
+
+            .pagination .left {
+                order: 2;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .pagination .right {
+                order: 3;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .pagination a,
+            .pagination span {
+                margin: 5px;
+            }
+        }
+
+
+    </style>
 {% endblock %}
 
 {% load crispy_forms_tags %}
