@@ -383,10 +383,10 @@ def delete_selected_delivery_address(request, delivery_address_ids):
                     messages.success(request, 'Delivery address deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The delivery address with ID {delivery_address_id} does not exist!')
-            return redirect('/dashboard/delivery_address/')
+            return redirect('/auth/delivery_address/')
         else:
             messages.warning(request, 'Please select at least one delivery address to delete!')
-    return redirect('/dashboard/delivery_address/')
+    return redirect('/auth/delivery_address/')
 
 
 # Search delivery address
@@ -396,7 +396,7 @@ def search_delivery_address(request):
     if request.method == 'POST':
         if search_query == '':
             messages.warning(request, 'Please enter a search term!')
-            return redirect('/dashboard/delivery_address/')
+            return redirect('/auth/delivery_address/')
         else:
             delivery_addresses = DeliveryAddress.objects.filter(
                 id__icontains=search_query) | DeliveryAddress.objects.filter(
