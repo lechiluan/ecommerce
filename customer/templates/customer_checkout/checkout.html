@@ -2,6 +2,109 @@
 {% block title %}Checkout{% endblock %}
 {% block style %}
     <style>
+        .checkout-container {
+            width: 100%;
+            padding: 50px 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .checkout-container .container {
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .checkout-container .container form {
+            padding: 20px;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-container .container form .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .checkout-container .container form .row .col {
+            flex: 1 1 250px;
+        }
+
+        .checkout-container .container form .row .col .title {
+            font-size: 25px;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .checkout-container .container form .row .col .inputBox {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .checkout-container .container form .row .col .inputBox .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            text-transform: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-bottom: 2px solid #0366d6;
+        }
+
+        .checkout-container .container form .row .col .flex {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .checkout-container .container form .row .col .flex .inputBox {
+            margin-top: 5px;
+        }
+
+        .checkout-container .container form .row .col .inputBox img {
+            height: 45px;
+            filter: drop-shadow(0 0 1px #000);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1253cc;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #004b8f;
+        }
     </style>
 {% endblock %}
 
@@ -9,20 +112,121 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-    <div class="container-main">
-        <div class="form-main">
-            <h2 class="font-weight-bold mt-3 form-title">Check Out</h2>
-            <form method="POST" class="form-group" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-input">
-                    {{ form| crispy }}
+    <div class="checkout-container">
+        <h2 class="font-weight-bold form-title">Checkout</h2>
+        <div class="container">
+            <form method="post" enctype="multipart/form-data">
+
+                <div class="row">
+                    <div class="col">
+                        <h3 class="title">Billing Address</h3>
+                        <div class="inputBox">
+                            {#                            List Address from address book#}
+                            <span class="label">Address*</span>
+                            <select name="Address" id="Address" required>
+                                <option value="0">Select Address</option>
+                                <option value="1">Default Address</option>
+                                <option value="2">Address 2</option>
+                                <option value="3">Address 3</option>
+                            </select>
+                        </div>
+                        <div class="inputBox">
+                            <span class="label">Full Name*</span>
+                            <input type="text" name="name" required placeholder="Brain Lee">
+                        </div>
+
+                        <div class="inputBox">
+                            <span class="label">Email*</span>
+                            <input type="email" name="name" required placeholder="example@example.com">
+                        </div>
+
+                        <div class="inputBox">
+                            <span class="label">Address*</span>
+                            <input type="text" name="name" required placeholder="room - street - locality">
+                        </div>
+                        <div class="inputBox">
+                            <span class="label">City*</span>
+                            <input type="text" name="name" required placeholder="London">
+                        </div>
+                        <div class="flex">
+                            <div class="inputBox">
+                                <span class="label">State*</span>
+                                <input type="text" name="name" required placeholder="United Kingdom">
+                            </div>
+                            <div class="inputBox">
+                                <span class="label">Zip Code*</span>
+                                <input type="text" name="name" required placeholder="123 456">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <h3 class="title">Payment</h3>
+                        <div class="inputBox">
+                            <span class="label">Payment Method*</span>
+                            <select name="payment" required>
+                                <option value="0">Select Payment Method</option>
+                                <option value="cash">Cash on Delivery</option>
+                                <option value="paypal">Paypal</option>
+                                <option value="card">Card</option>
+                            </select>
+                        </div>
+                        <div class="inputBox">
+                            <span class="label">Card Accepted:</span>
+                            {% load static %}<img src="{% static 'main/images/payments/payment-method.png' %}"
+                                                  alt="payment method">
+
+                        </div>
+
+                        <div class="inputBox">
+                            <span class="label">Card Type*</span>
+                            <select name="card" required>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="amex">American Express</option>
+                            </select>
+                        </div>
+
+                        <div class="inputBox">
+                            <span class="label">Name on Card*</span>
+                            <input type="text" name="name" required placeholder="Brain Lee">
+                        </div>
+
+                        <div class="inputBox">
+                            <span class="label">Card Number*</span>
+                            <input type="number" name="name" required placeholder="1234 5678 9012 3456">
+                        </div>
+
+                        <div class="flex">
+                            <div class="inputBox">
+                                <span class="label">Expiry Date*</span>
+                                <input type="text" name="expiryDate" required placeholder="MM/YY">
+                            </div>
+                            <div class="inputBox">
+                                <span class="label">CVV*</span>
+                                <input type="number" name="CVV" required placeholder="123">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="btn-form">
-                    <button type="submit" class="btn btn-default form-button">Continue to Payment</button>
-                </div>
+                <input type="submit" value="Proceed to Checkout" class="submit-btn">
             </form>
         </div>
     </div>
+    {#    <div class="container-main">#}
+    {#        <div class="form-main">#}
+    {#            <h2 class="font-weight-bold mt-3 form-title">Check Out</h2>#}
+    {#            <form method="POST" class="form-group" enctype="multipart/form-data">#}
+    {#                {% csrf_token %}#}
+    {#                <div class="form-input">#}
+    {#                    {{ form| crispy }}#}
+    {#                </div>#}
+    {#                <div class="btn-form">#}
+    {#                    <button type="submit" class="btn btn-default form-button">Continue to Payment</button>#}
+    {#                </div>#}
+    {#            </form>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}
 {% block scripts %}
     <script>

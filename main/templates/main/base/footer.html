@@ -29,7 +29,7 @@
 <footer class="site-footer">
     <div class="container">
         <div class="newsletter-form">
-            <h3>Register for Our Newsletter And Get 10% Off Your First Purchase</h3>
+            <h3>Register for Our Newsletter</h3>
             <form action="/customer/send_email_newsletter/" method="post">
                 <div>
                     {% csrf_token %}
@@ -133,7 +133,7 @@
     .newsletter-form h3 {
         font-size: 24px;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     .newsletter-form form {
@@ -169,8 +169,29 @@
         background-color: #003366;
     }
 
+    @media (max-width:480px) {
+
+        .newsletter-form input[type="email"] {
+            width: 100%;
+        }
+
+        .newsletter-form button[type="submit"] {
+            width: 100%;
+        }
+
+        .newsletter-form form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .newsletter-form form input[type="email"] {
+            margin-bottom: 10px;
+        }
+    }
+
     .footer-contact-us {
-        margin-top: 10px;
         font-size: 16px;
         line-height: 1.5;
         margin-bottom: 10px;

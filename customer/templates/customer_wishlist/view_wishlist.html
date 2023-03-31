@@ -3,6 +3,170 @@
 
 {% block style %}
     <style>
+        .cart-container {
+            background: #ffffff;
+            padding: 20px;
+            font-size: 17px;
+        }
+
+        .cart-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-main thead {
+            background: #f5f5f5;
+        }
+
+        .table-main thead th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tbody td {
+            padding: 10px;
+        }
+
+        .table-main tbody td img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .table-main tbody td .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .table-main tbody td .delete-btn {
+            width: 100%;
+        }
+
+        .table-main tfoot {
+            background: #f5f5f5;
+        }
+
+        .table-main tfoot th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tfoot td {
+            padding: 10px;
+        }
+
+        .table-main tfoot td .btn {
+            width: 100%;
+        }
+
+        /* Make the table rows alternate colors for better readability */
+        .table-main tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+
+        /* Style the plus/minus buttons and quantity input */
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 5px;
+            font-size: 16px;
+            height: 37px;
+        }
+
+        .minus-btn,
+        .plus-btn {
+            width: 37px;
+            height: 37px;
+            background-color: #1253cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .minus-btn:hover,
+        .plus-btn:hover {
+            background-color: #aaa;
+        }
+
+        .quantity {
+            white-space: nowrap;
+        }
+
+        .quantity form {
+            display: inline-block;
+        }
+
+        /* Style the checkout button */
+
+        .row {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+
+        .table-title tr th {
+            color: #fff;
+            padding: 10px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .table-coupon .form-control {
+            display: inline-block;
+            width: 65%;
+            margin-right: 10px;
+        }
+
+        .table-coupon .btn-primary {
+            display: inline-block;
+            width: 30%;
+        }
+
+        .table-cart {
+            margin-top: 10px;
+        }
+
+        .table-cart .img-cart {
+            width: 80px;
+            height: 80px;
+            display: flex;
+        }
+
+        .table-cart .price {
+            color: #ff0000;
+            font-weight: 500;
+        }
+
+        .table-total .price {
+            color: #ff0000;
+            font-weight: 500;
+        }
+
+        .action .btn-primary {
+            font-size: 20px;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .action .btn-success {
+            font-size: 20px;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .action .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+        .btn-primary:focus,
+        .btn-success:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+        }
 
     </style>
 {% endblock %}
@@ -11,46 +175,61 @@
 {% load crispy_forms_filters %}
 {% load static %}
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>My Wishlist</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Remove</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in wishlists %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><img class="img-thumbnail"
-                                     src="{{ MEDIA_URL }}{{ item.product.product_image.url }}" alt=""
-                                     width="100px" height="100px"></td>
-                            <td>{{ item.product.name }}</td>
-                            <td>{{ item.product.price }}</td>
-                            <td><a href="/customer/remove_from_wishlist/{{ item.product.slug }}/">Remove</a></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <div class="row">
-                    <div class="col-md-12">
-                        {% if wishlists %}
-                            <a href="/customer/add_all_to_cart_from_wishlist/" class="btn btn-primary">Add All To
-                                Cart</a>
-                        {% endif %}
-                    </div>
+    <div class="cart-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2 class="font-weight-bold form-title">My Wishlist</h2>
+                    {% if wishlists %}
+                        <div class="table-responsive table-cart">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Product Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in wishlists %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><img class="img-thumbnail img-cart"
+                                                 src="{{ MEDIA_URL }}{{ item.product.product_image.url }}"
+                                                 alt="{{ item.product.name }}"></td>
+                                        <td>{{ item.product.name }}</td>
+                                        <td class="price">${{ item.product.price }}</td>
+                                        <td><a type="button" class="btn btn-sm btn-danger delete-btn"
+                                               href="/customer/remove_from_wishlist/{{ item.product.slug }}/">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if wishlists %}
+                                    <div class="action">
+                                        <a href="/customer/add_all_to_cart_from_wishlist/" class="btn btn-primary">Add
+                                            All To Cart</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="action">
+                                    <a href="//" class="btn btn-success">Continue
+                                        Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% include 'customer_wishlist/404.html' %}
+                    {% endif %}
                 </div>
+
             </div>
         </div>
     </div>

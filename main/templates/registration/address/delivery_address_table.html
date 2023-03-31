@@ -261,7 +261,7 @@
                                     <th><input type="checkbox" id="select-all"></th>
                                     <th scope="col">Default</th>
                                     <th scope="col">No.</th>
-                                    <th scope="col">FullName</th>
+                                    <th scope="col">Full Name</th>
                                     <th scope="col">Mobile</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Address</th>
@@ -293,7 +293,7 @@
                                         <td>
                                             <a type="button" class="btn btn-success"
                                                href="/auth/delivery_address/set_default/{{ delivery.id }}/"
-                                               onclick="return confirm('Are you sure?')">Set Default</a>
+                                               onclick="return confirm('Are you sure to set default delivery address?')">Set Default</a>
                                         </td>
                                         <td class="action">
                                             <a href="/auth/delivery_address/update/{{ delivery.id }}/"><img
@@ -301,7 +301,7 @@
                                                     alt="Edit"
                                                     title="Edit"></a>
                                             <a href="/auth/delivery_address/delete/{{ delivery.id }}?t={{ timestamp }}/"
-                                               onclick="return confirm('Are you sure?')"><img
+                                               onclick="return confirm('Are you sure to delete?')"><img
                                                     src="{% static 'dashboard/images/icons/delete.png' %}"
                                                     alt="Delete"
                                                     title="Delete"></a>
