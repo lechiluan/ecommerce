@@ -22,7 +22,7 @@ class Customer(models.Model):
 
     @property
     def cart_items_count(self):
-        return self.cartitem_set.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return self.cartitem_set.count() or 0
 
     @property
     def wishlist_items_count(self):

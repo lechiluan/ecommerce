@@ -217,7 +217,6 @@ def add_to_cart(request, slug):
     else:
         cart_item.quantity += quantity
         cart_item.sub_total += product.price * quantity
-        cart_item.total += cart_item.sub_total
         cart_item.save()
         messages.success(request, 'Product quantity updated successfully')
 
