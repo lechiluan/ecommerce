@@ -279,10 +279,11 @@
                                         <td>{{ cart_item.product.name }}</td>
                                         <td class="quantity">
                                             <form action="/customer/update_quantity/{{ cart_item.product.slug }}/"
-                                                  method="post">
+                                                  method="post" onsubmit="return checkQuantity(this);">
                                                 {% csrf_token %}
                                                 <a href="/customer/remove_quantity/{{ cart_item.product.slug }}/"
-                                                   class="btn btn-sm btn-secondary minus-btn">-</a>
+                                                   class="btn btn-sm btn-secondary minus-btn"
+                                                   onclick="confirmRemove(event, {{ cart_item.quantity }})">-</a>
                                                 <input type="hidden" name="product_id"
                                                        value="{{ cart_item.product.id }}">
                                                 <input type="number" class="quantity-input" name="quantity"
@@ -387,6 +388,29 @@
 
 {% block scripts %}
     <script type="text/javascript">
+        function confirmRemove(event, quantity) {
+            if (quantity <= 1) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to remove this product from the cart?')) {
+                    window.location.href = event.target.href;
+                }
+            } else {
+                quantity--;
+                event.target.parentNode.querySelector('.quantity-input').value = quantity;
+            }
+        }
 
+        function checkQuantity(form) {
+            let quantityInput = form.querySelector('.quantity-input');
+            let quantity = quantityInput.value;
+            if (quantity === '0') {
+                let confirmed = confirm('Are you sure to delete this product?');
+                if (!confirmed) {
+                    quantityInput.value = quantityInput.defaultValue;
+                    return false;
+                }
+            }
+            return true;
+        }
     </script>
 {% endblock %}

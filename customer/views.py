@@ -336,7 +336,7 @@ def remove_quantity(request, slug):
         if cart_item.coupon_applied is True and cart_item.coupon is not None:
             # restore amount to coupon
             coupon = cart_item.coupon
-            coupon.amount = coupon.amount - cart_item.quantity
+            coupon.amount = coupon.amount - cart_item.quantity + 1
             coupon.save()
         if cart_item.discount > 0:
             cart_item.discount = cart_item.coupon.discount * cart_item.quantity
@@ -370,7 +370,7 @@ def update_quantity(request, slug):
             if cart_item.coupon_applied is True and cart_item.coupon is not None:
                 # restore amount to coupon
                 coupon = cart_item.coupon
-                coupon.amount = coupon.amount + cart_item.quantity
+                coupon.amount = coupon.amount + cart_item.quantity - 1
                 coupon.save()
             cart_item.delete()
             messages.success(request, 'Product removed from cart successfully')
@@ -383,7 +383,7 @@ def update_quantity(request, slug):
                 if cart_item.coupon_applied is True and cart_item.coupon is not None:
                     # restore amount to coupon
                     coupon = cart_item.coupon
-                    coupon.amount = coupon.amount + cart_item.quantity
+                    coupon.amount = coupon.amount + cart_item.quantity - quantity
                     coupon.save()
                 cart_item.quantity = quantity
                 if cart_item.discount > 0:
