@@ -84,6 +84,7 @@
         }
 
         .checkout-container .container form .row .col .inputBox img {
+            max-width: 100%;
             height: 45px;
             filter: drop-shadow(0 0 1px #000);
         }
@@ -100,11 +101,14 @@
             font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
 
         .submit-btn:hover {
-            background-color: #004b8f;
+            background-color: #0066cc;
         }
+
+
     </style>
 {% endblock %}
 
@@ -116,13 +120,12 @@
         <h2 class="font-weight-bold form-title">Checkout</h2>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
-
                 <div class="row">
                     <div class="col">
                         <h3 class="title">Billing Address</h3>
                         <div class="inputBox">
                             {#                            List Address from address book#}
-                            <span class="label">Address*</span>
+                            <span class="label">Select Address*</span>
                             <select name="Address" id="Address" required>
                                 <option value="0">Select Address</option>
                                 <option value="1">Default Address</option>

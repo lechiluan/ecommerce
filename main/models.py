@@ -84,11 +84,11 @@ class Product(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
-    discount = models.DecimalField(max_digits=10, decimal_places=1)
+    discount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     amount = models.PositiveIntegerField(default=1)
     valid_from = models.DateTimeField(blank=True, null=True)
     valid_to = models.DateTimeField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, null=True, blank=True)
 
     def __str__(self):
         return self.code
@@ -101,13 +101,39 @@ class CartItem(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField(null=True, blank=True)
-    price = models.PositiveIntegerField(null=True, blank=True)
-    amount = models.PositiveIntegerField(null=True, blank=True)
-    date_added = models.DateField(auto_now_add=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    sub_total = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    discount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True, null=True)
+    coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, null=True, blank=True, default=None)
+    coupon_applied = models.BooleanField(default=False, null=True, blank=True)
 
     @property
-    def total(self):
-        return self.quantity * self.price
+    def get_total_amount_without_coupon(self):
+        total = self.product.price * self.quantity
+        return total
+
+    @property
+    def get_discount(self):
+        return self.coupon.discount
+
+    @property
+    def get_total_amount_with_coupon(self):
+        total = self.product.price * self.quantity
+        if self.coupon_applied:
+            return total - self.coupon.discount
+        else:
+            return total
+
+    def update_subtotal_total(self):
+        self.sub_total = self.quantity * self.price
+        if self.coupon:
+            self.total = self.sub_total - self.coupon.discount
+            self.coupon_applied = True
+        else:
+            self.total = self.sub_total
+            self.coupon_applied = False
+        self.save()
 
     def __str__(self):
         return self.product.name
@@ -125,9 +151,9 @@ class Orders(models.Model):
     )
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
-    order_date = models.DateField(auto_now_add=True, null=True)
+    order_date = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=50, null=True, choices=STATUS)
-    total_amount = models.PositiveIntegerField(null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
@@ -141,8 +167,8 @@ class OrderDetails(models.Model):
     order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField()
-    price = models.PositiveIntegerField()
-    amount = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     delivery_address = models.ForeignKey('DeliveryAddress', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -163,7 +189,7 @@ class DeliveryAddress(models.Model):
     state = models.CharField(max_length=40, null=True)
     country = models.CharField(max_length=40, null=True)
     zip_code = models.CharField(max_length=20, null=True)
-    date_added = models.DateField(auto_now_add=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True, null=True)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
@@ -191,10 +217,10 @@ class Payment(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
     payment_method = models.CharField(max_length=50, null=True, choices=METHOD_CHOICES)
-    payment_date = models.DateField(auto_now_add=True, null=True)
     payment_status = models.CharField(max_length=50, null=True, choices=PAYMENT_STATUS_CHOICES)
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     transaction_id = models.CharField(max_length=100, null=True)
+    payment_date = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.order.__str__()

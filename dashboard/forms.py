@@ -445,7 +445,7 @@ class UpdateProductForm(forms.Form):
 # Coupon Forms
 class AddCouponForm(forms.Form):
     code = forms.CharField(required=True, max_length=20)
-    discount = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    discount = forms.DecimalField(required=True, label='Discount ($)', max_digits=10, decimal_places=1)
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
@@ -462,7 +462,7 @@ class AddCouponForm(forms.Form):
         amount = cleaned_data.get('amount')
         valid_from = cleaned_data.get('valid_from')
         valid_to = cleaned_data.get('valid_to')
-        is_active = cleaned_data.get('active')
+        is_active = cleaned_data.get('is_active')
         if Coupon.objects.filter(code=code).exists():
             self.add_error('code', 'Coupon already exists')
         if valid_from > valid_to:
@@ -476,16 +476,16 @@ class AddCouponForm(forms.Form):
         amount = self.cleaned_data.get('amount')
         valid_from = self.cleaned_data.get('valid_from')
         valid_to = self.cleaned_data.get('valid_to')
-        is_active = self.cleaned_data.get('active')
+        is_active = self.cleaned_data.get('is_active')
         coupon = Coupon(code=code, discount=discount, amount=amount, valid_from=valid_from, valid_to=valid_to,
-                        active=is_active)
+                        is_active=is_active)
         coupon.save()
         return coupon
 
 
 class UpdateCouponForm(forms.Form):
     code = forms.CharField(required=True, max_length=20)
-    discount = forms.DecimalField(required=True, max_digits=10, decimal_places=2)
+    discount = forms.DecimalField(required=True, label='Discount ($)', max_digits=10, decimal_places=1)
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     valid_to = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
@@ -514,7 +514,7 @@ class UpdateCouponForm(forms.Form):
         amount = cleaned_data.get('amount')
         valid_from = cleaned_data.get('valid_from')
         valid_to = cleaned_data.get('valid_to')
-        is_active = cleaned_data.get('active')
+        is_active = cleaned_data.get('is_active')
         if Coupon.objects.filter(code=code).exclude(id=self.coupon.id).exists():
             self.add_error('code', 'Coupon already exists')
         if valid_from > valid_to:
@@ -528,7 +528,7 @@ class UpdateCouponForm(forms.Form):
         amount = self.cleaned_data.get('amount')
         valid_from = self.cleaned_data.get('valid_from')
         valid_to = self.cleaned_data.get('valid_to')
-        is_active = self.cleaned_data.get('active')
+        is_active = self.cleaned_data.get('is_active')
         self.coupon.code = code
         self.coupon.discount = discount
         self.coupon.amount = amount

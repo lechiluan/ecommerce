@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-6 col-md-3">
+            <div class="col-xs-6 col-md-2">
                 <h6>Categories</h6>
                 <ul class="footer-links">
                     {% for category in categories %}
@@ -86,7 +86,16 @@
                 </ul>
             </div>
 
-            <div class="col-xs-6 col-md-3">
+            <div class="col-xs-6 col-md-2">
+                <h6>Brands</h6>
+                <ul class="footer-links">
+                    {% for brand in brands %}
+                        <li><a href="/customer/product/category/{{ brand.slug }}/">{{ brand.name }}</a></li>
+                    {% endfor %}
+                    <li><a href="/customer/product/brand/all/">All Products</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-6 col-md-2">
                 <h6>Services</h6>
                 <ul class="footer-links">
                     <li><a href="/customer/about/">About Us</a></li>
@@ -141,6 +150,7 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
+        padding-top: 10px;
     }
 
     .newsletter-form input[type="email"] {
@@ -158,7 +168,7 @@
         padding: 0 20px;
         border: none;
         border-radius: 5px;
-        background-color: #0066CC;
+        background-color: #1253cc;
         color: #fff;
         font-size: 16px;
         font-weight: bold;
@@ -166,10 +176,11 @@
     }
 
     .newsletter-form button[type="submit"]:hover {
-        background-color: #003366;
+        background-color: #0062cc;
+        border-color: #0062cc;
     }
 
-    @media (max-width:480px) {
+    @media (max-width: 480px) {
 
         .newsletter-form input[type="email"] {
             width: 100%;

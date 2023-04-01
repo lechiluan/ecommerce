@@ -165,10 +165,11 @@
                     {% include 'main/base/pagination.html' %}
                 </div>
             </div>
-            </div>
+
         {% else %}
             <div class="homepage" id="product">
                 <div class="alert alert-danger" role="alert">
+                    <i class="fa fa-search" aria-hidden="true"></i>
                     <h4 class="alert-heading">No Product Found!</h4>
                     <p>Sorry, we couldn't find any product that matched your search. Please try again with some
                         different keywords.</p>
@@ -178,7 +179,7 @@
                 </div>
             </div>
         {% endif %}
-
+    </div>
 
 {% endblock %}
 

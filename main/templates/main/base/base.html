@@ -23,22 +23,22 @@
     <!-- Custom CSS -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'main/css/styles.css' %}">
-
     {% block style %}
         <!-- Custom CSS Here-->
     {% endblock %}
-    {#    <script type="text/javascript">window.$crisp = [];#}
-    {#    window.CRISP_WEBSITE_ID = "1da3abc4-c88c-42b1-a9ab-852c00998bc4";#}
-    {#    (function () {#}
-    {#        d = document;#}
-    {#        s = d.createElement("script");#}
-    {#        s.src = "https://client.crisp.chat/l.js";#}
-    {#        s.async = 1;#}
-    {#        d.getElementsByTagName("head")[0].appendChild(s);#}
-    {#    })();</script>#}
+    <script type="text/javascript">window.$crisp = [];
+    window.CRISP_WEBSITE_ID = "1da3abc4-c88c-42b1-a9ab-852c00998bc4";
+    (function () {
+        d = document;
+        s = d.createElement("script");
+        s.src = "https://client.crisp.chat/l.js";
+        s.async = 1;
+        d.getElementsByTagName("head")[0].appendChild(s);
+    })();</script>
 </head>
 
-<body>
+<body data-pace-options='{ "ajax": false }'>
+
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
 {% load static %}
@@ -63,6 +63,13 @@
 <!-- Javascript Code-->
 {% load static %}
 <script src="{% static 'main/js/script.js' %}"></script>
+
+<!-- Include the Pace.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<!-- Set the theme and style of the progress bar -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/green/pace-theme-minimal.min.css"/>
 
 <!-- Javascript in bootstrap -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

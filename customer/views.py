@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
@@ -10,6 +11,7 @@ from .forms import FeedbackForm, CheckoutForm, DeliveryAddressForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist, Payment
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 
 # Send email newsletter
@@ -185,46 +187,58 @@ def product_list_brand(request, slug):
 
 
 @login_required(login_url='/auth/login')
-# add to cart function for customer
 def add_to_cart(request, slug):
-    # get the product from the database
-    product = Product.objects.get(slug=slug)
-    price = product.price
-    quantity = 1
-    amount = price * quantity
-    # check if the user is authenticated
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        # check if the product is already in the cart
-        cart_item, created = CartItem.objects.get_or_create(customer=customer, product=product)
-        if created:
-            cart_item.quantity = quantity
-            cart_item.price = price
-            cart_item.amount = amount
-            cart_item.save()
-            messages.success(request, 'Product added to cart successfully')
-            return redirect('/customer/cart/')
-        else:
-            cart_item.quantity += quantity
-            cart_item.price = price
-            cart_item.amount += amount
-            cart_item.save()
-            messages.success(request, 'Product quantity updated successfully')
-            return redirect('/customer/cart/')
+    if request.method == 'POST':
+        product = Product.objects.get(slug=slug)
+        quantity = int(request.POST.get('quantity'))
+        if quantity > product.stock:
+            messages.warning(request, 'Product stock is not available')
+            return redirect('/customer/product/details/' + slug)
     else:
-        messages.success(request, 'Please login to add to cart')
-        return redirect('/auth/login/')
+        product = Product.objects.get(slug=slug)
+        quantity = 1
+        if quantity > product.stock:
+            messages.warning(request, 'Product stock is not available')
+            return redirect('/customer/product/details/' + slug)
+
+    customer = request.user.customer if request.user.is_authenticated else None
+
+    try:
+        cart_item = CartItem.objects.get(customer=customer, product=product)
+    except CartItem.DoesNotExist:
+        cart_item = None
+
+    if cart_item is None:
+        sub_total = product.price * quantity
+        cart_item = CartItem(customer=customer, product=product, quantity=quantity,
+                             price=product.price, sub_total=sub_total)
+        cart_item.save()
+        messages.success(request, 'Product added to cart successfully')
+    else:
+        cart_item.quantity += quantity
+        cart_item.sub_total += product.price * quantity
+        cart_item.total += cart_item.sub_total
+        cart_item.save()
+        messages.success(request, 'Product quantity updated successfully')
+
+    return redirect('/customer/cart/')
 
 
 # view cart function for customer
 def view_cart(request):
     if request.user.is_authenticated:
         customer = request.user.customer
-        cart_items = CartItem.objects.filter(customer=customer)
-        total = sum([cart_item.amount for cart_item in cart_items])
+        cart_items = CartItem.objects.filter(customer=customer).order_by('-date_added')
+        total = sum(item.sub_total for item in cart_items)
+        total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in cart_items)
+        total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in cart_items)
+        discount = total_amount_without_coupon - total_amount_with_coupon
         context = {
             'cart_items': cart_items,
             'total': total,
+            'discount': discount,
+            'total_amount_without_coupon': total_amount_without_coupon,
+            'total_amount_with_coupon': total_amount_with_coupon,
         }
         return render(request, 'customer_cart/view_cart.html', context)
     else:
@@ -232,30 +246,134 @@ def view_cart(request):
         return redirect('/auth/login/')
 
 
+@login_required(login_url='/auth/login')
 def remove_from_cart(request, slug):
-    # get the product from the database
+    # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
     customer = request.user.customer
+
+    # Get the cart item for the product and customer, and delete it
     cart_item = CartItem.objects.get(customer=customer, product=product)
+    if cart_item.coupon_applied:
+        # restore amount to coupon
+        coupon = cart_item.coupon
+        coupon.amount = coupon.amount + 1
+        coupon.save()
     cart_item.delete()
+
+    # Show success message and redirect to cart page
     messages.success(request, 'Product removed from cart successfully')
     return redirect('/customer/cart/')
 
 
-def update_cart_quantity(request, slug):
-    # get the product from the database
+@login_required(login_url='/auth/login')
+def add_quantity(request, slug):
+    # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
-    price = product.price
     customer = request.user.customer
+
+    # Get the cart item for the product and customer
     cart_item = CartItem.objects.get(customer=customer, product=product)
-    quantity = request.POST.get('quantity')
-    amount = price * int(quantity)
-    cart_item.quantity = quantity
-    cart_item.price = price
-    cart_item.amount = amount
-    cart_item.save()
-    messages.success(request, 'Product quantity updated successfully')
-    return render(request, 'customer_cart/view_cart.html')
+
+    # Check if the quantity can be increased, and update the cart item
+    if cart_item.quantity < product.stock:
+        cart_item.quantity += 1
+        cart_item.sub_total += cart_item.price
+        cart_item.save()
+        messages.success(request, 'Product quantity updated successfully')
+    else:
+        messages.success(request, 'Product out of stock')
+
+    # Redirect to cart page
+    return redirect('/customer/cart/')
+
+
+@login_required(login_url='/auth/login')
+def remove_quantity(request, slug):
+    # Get the product and customer from the database
+    product = Product.objects.get(slug=slug)
+    customer = request.user.customer
+
+    # Get the cart item for the product and customer
+    cart_item = CartItem.objects.get(customer=customer, product=product)
+
+    # Check if the quantity can be decreased, and update the cart item or delete it
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.sub_total -= cart_item.price
+        cart_item.save()
+        messages.success(request, 'Product quantity updated successfully')
+    else:
+        cart_item.delete()
+        messages.success(request, 'Product removed from cart successfully')
+
+    # Redirect to cart page
+    return redirect('/customer/cart/')
+
+
+@login_required(login_url='/auth/login')
+def update_quantity(request, slug):
+    # Get the product and customer from the database
+    product = Product.objects.get(slug=slug)
+    customer = request.user.customer
+
+    # Get the cart item for the product and customer
+    cart_item = CartItem.objects.get(customer=customer, product=product)
+
+    # If the form is submitted
+    if request.method == "POST":
+        # Get the new quantity value from the form
+        quantity = int(request.POST.get('quantity'))
+
+        # Update or delete the cart item based on the new quantity
+        if quantity == 0:
+            cart_item.delete()
+            messages.success(request, 'Product removed from cart successfully')
+        elif quantity < 0:
+            messages.success(request, 'Quantity cannot be less than 0')
+        else:
+            if quantity > product.stock:
+                messages.success(request, 'Quantity cannot be greater than stock')
+            else:
+                cart_item.quantity = quantity
+                cart_item.sub_total = quantity * cart_item.price
+                cart_item.total = cart_item.sub_total
+                cart_item.save()
+                messages.success(request, 'Product quantity updated successfully')
+
+    # Redirect to cart page
+    return redirect('/customer/cart/')
+
+
+def apply_coupon(request):
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+        try:
+            coupon = Coupon.objects.get(code=coupon_code)  # get coupon
+            customer = request.user.customer  # get customer
+            cart_items = CartItem.objects.filter(customer=customer)  # get cart items
+            subtotal = sum(cart_items.sub_total)  # get subtotal of cart items
+            total = subtotal
+            if coupon.amount <= subtotal:
+                discount_rate = coupon.discount / 100
+                discount_amount = subtotal * discount_rate
+                total -= discount_amount
+                for cart_item in cart_items:
+                    cart_item.discount = Decimal(0)
+                    cart_item.coupon_applied = True
+                    cart_item.save()
+                messages.success(request,
+                                 f'Coupon {coupon.code} applied successfully. You saved {coupon.discount}% (${discount_amount})')
+                return redirect('/customer/cart/')
+            else:
+                messages.warning(request, 'Coupon is not applicable for this order')
+                return redirect('/customer/cart/')
+        except Coupon.DoesNotExist:
+            messages.warning(request, 'Invalid coupon code')
+            return redirect('/customer/cart/')
+    else:
+        messages.warning(request, 'Invalid request')
+        return redirect('/customer/cart/')
 
 
 # add to wishlist function for customer
@@ -282,7 +400,7 @@ def add_to_wishlist(request, slug):
 def view_wishlist(request):
     if request.user.is_authenticated:
         customer = request.user.customer
-        wishlists = Wishlist.objects.filter(customer=customer)
+        wishlists = Wishlist.objects.filter(customer=customer).order_by('-date_added')
         context = {
             'wishlists': wishlists,
         }
@@ -314,19 +432,19 @@ def add_all_to_cart_form_wishlist(request):
         product = item.product
         price = product.price
         quantity = 1
-        amount = price * quantity
+        sub_total = price * quantity
         # check if the product is already in the cart
         cart_item, created = CartItem.objects.get_or_create(customer=customer, product=product)
         if created:
             cart_item.quantity = quantity
             cart_item.price = price
-            cart_item.amount = amount
+            cart_item.sub_total = sub_total
             cart_item.save()
             wishlists.delete()
         else:
             cart_item.quantity += quantity
             cart_item.price = price
-            cart_item.amount += amount
+            cart_item.sub_total += sub_total
             cart_item.save()
             wishlists.delete()
     messages.success(request, 'All products added to cart successfully')
@@ -334,28 +452,30 @@ def add_all_to_cart_form_wishlist(request):
 
 
 # add list selected products to cart from wishlist function for customer
-def add_selected_products_from_wishlist(request):
-    customer = request.user.customer
-    wishlist = customer.wishlist_set.all()
-    for item in wishlist:
-        product = item.product
-        price = product.price
-        quantity = 1
-        amount = price * quantity
-        # check if the product is already in the cart
-        cart_item, created = CartItem.objects.get_or_create(customer=customer, product=product)
-        if created:
-            cart_item.quantity = quantity
-            cart_item.price = price
-            cart_item.amount = amount
-            cart_item.save()
-        else:
-            cart_item.quantity += quantity
-            cart_item.price = price
-            cart_item.amount += amount
-            cart_item.save()
-    messages.success(request, 'All products added to cart successfully')
-    render(request, 'customer_cart/view_cart.html')
+# def add_selected_products_from_wishlist(request):
+#     customer = request.user.customer
+#     wishlist = customer.wishlist_set.all()
+#     for item in wishlist:
+#         product = item.product
+#         price = product.price
+#         quantity = 1
+#         sub_total = price * quantity
+#         total = sum([cart_item.sub_total for cart_item in CartItem.objects.filter(customer=customer)])
+#         cart_item, created = CartItem.objects.get_or_create(customer=customer, product=product)
+#         if created:
+#             cart_item.quantity = quantity
+#             cart_item.price = price
+#             cart_item.sub_total = sub_total
+#             cart_item.total = total
+#             cart_item.save()
+#         else:
+#             cart_item.quantity += quantity
+#             cart_item.price = price
+#             cart_item.sub_total += sub_total
+#             cart_item.total = total
+#             cart_item.save()
+#     messages.success(request, 'All products added to cart successfully')
+#     render(request, 'customer_cart/view_cart.html')
 
 
 # checkout function for customer
@@ -365,7 +485,7 @@ def checkout(request):
     customer = user.customer
     deliver_address = DeliveryAddress.objects.filter(customer=customer)
     cart_items = CartItem.objects.filter(customer=customer)
-    total = sum([cart_item.amount for cart_item in cart_items])
+    total = sum([cart_item.sub_total for cart_item in cart_items])
     payment = Payment.objects.all()
 
     if request.method == 'POST':
@@ -379,7 +499,7 @@ def checkout(request):
                 product=cart_item.product,
                 quantity=cart_item.quantity,
                 price=cart_item.price,
-                amount=cart_item.amount,
+                sub_total=cart_item.sub_total,
                 order=order,
             )
             cart_item.delete()

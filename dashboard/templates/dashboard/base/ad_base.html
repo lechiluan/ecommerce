@@ -34,7 +34,7 @@
     {% endblock %}
 </head>
 
-<body>
+<body data-pace-options='{ "ajax": false }'>
 
 {% include "dashboard/base/ad_header.html" %}
 
@@ -59,6 +59,13 @@
 
 {% load static %}
 <script src="{% static 'dashboard/js/script.js' %}"></script>
+
+<!-- Include the Pace.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<!-- Set the theme and style of the progress bar -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/green/pace-theme-minimal.min.css"/>
 
 <!-- Javascript in bootstrap -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

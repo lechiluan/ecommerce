@@ -96,12 +96,19 @@
                         <i class="fa fa-star grey" aria-hidden="true"></i>
                     </div>
                     <p class="font-weight-bold">Price: $ {{ product.price }}</p>
-                    <p class="font-weight-bold">Old Price: {{ product.oldPrice }}</p>
+                    <p class="font-weight-bold">Old Price: {{ product.old_price }}</p>
+                    <p class="font-weight-bold">Stock: {{ product.stock }}</p>
                     <div class="form-group">
                         <label for="quantity">Quantity:</label>
-                        <input type="number" class="form-control" id="quantity" value="1" min="1">
+                        <form action="/customer/add_to_cart/{{ product.slug }}/" enctype="multipart/form-data"
+                              method="post">
+                            {% csrf_token %}
+                            <input type="number" class="quantity-input" name="quantity"
+                                   value="1" min="1" pattern="[0-9]*"
+                                   onkeydown="if (event.keyCode === 109 || event.keyCode === 189 || event.keyCode === 187 || event.keyCode === 107) return false;">
+                            <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                        </form>
                     </div>
-                    <button class="btn btn-primary btn-lg">Add to Cart</button>
                 </div>
             </div>
             <div class="row">
