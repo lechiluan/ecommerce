@@ -84,8 +84,10 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,  # for templates folder
+        'DIRS': [(BASE_DIR / 'templates'),
+                 (BASE_DIR / 'main/templates'),
+                 (BASE_DIR / 'dashboard/templates'),
+                 (BASE_DIR / 'customer/templates')],  # for templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,10 +151,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [(BASE_DIR / 'main/static'),
+STATICFILES_DIRS = [(BASE_DIR / 'static'),
+                    (BASE_DIR / 'main/static'),
                     (BASE_DIR / 'dashboard/static'),
-                    (BASE_DIR / 'customer/static'),
-                    (BASE_DIR / 'static')]  # use to find static files
+                    (BASE_DIR / 'customer/static')]  # use to find static files
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
 
 MEDIA_URL = '/media/'
