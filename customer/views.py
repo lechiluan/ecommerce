@@ -231,10 +231,19 @@ def view_cart(request):
         total = sum(item.sub_total for item in cart_items)
         total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in cart_items)
         total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in cart_items)
-        discount = total_amount_without_coupon - total_amount_with_coupon
+        #  check if any coupon is applied
+        if cart_items.filter(coupon_applied=True).exists():
+            code = cart_items[0].coupon.code if cart_items[0].coupon_applied is True else None
+        else:
+            code = None
+        if code:
+            discount = sum(item.get_discount for item in cart_items)
+        else:
+            discount = 0
         context = {
             'cart_items': cart_items,
             'total': total,
+            'code': code,
             'discount': discount,
             'total_amount_without_coupon': total_amount_without_coupon,
             'total_amount_with_coupon': total_amount_with_coupon,
@@ -253,7 +262,7 @@ def remove_from_cart(request, slug):
 
     # Get the cart item for the product and customer, and delete it
     cart_item = CartItem.objects.get(customer=customer, product=product)
-    if cart_item.coupon_applied:
+    if cart_item.coupon_applied is True and cart_item.coupon is not None:
         # restore amount to coupon
         coupon = cart_item.coupon
         coupon.amount = coupon.amount + 1
@@ -332,7 +341,7 @@ def update_quantity(request, slug):
             messages.success(request, 'Quantity cannot be less than 0')
         else:
             if quantity > product.stock:
-                messages.success(request, 'Quantity cannot be greater than stock')
+                messages.success(request, 'Product stock is not available')
             else:
                 cart_item.quantity = quantity
                 cart_item.sub_total = quantity * cart_item.price
@@ -351,18 +360,25 @@ def apply_coupon(request):
             coupon = Coupon.objects.get(code=coupon_code)  # get coupon
             customer = request.user.customer  # get customer
             cart_items = CartItem.objects.filter(customer=customer)  # get cart items
-            subtotal = sum(cart_items.sub_total)  # get subtotal of cart items
-            total = subtotal
+            subtotal = sum(item.sub_total for item in cart_items)  # get subtotal
+
+            # Check if coupon is applicable
             if coupon.amount <= subtotal:
-                discount_rate = coupon.discount / 100
-                discount_amount = subtotal * discount_rate
-                total -= discount_amount
+                # Check if coupon has already been applied to the cart items
+                if any(cart_item.coupon_applied for cart_item in cart_items):
+                    messages.warning(request, 'Coupon has already been applied')
+                    return redirect('/customer/cart/')
+
+                total_discount = 0
                 for cart_item in cart_items:
-                    cart_item.discount = Decimal(0)
+                    cart_item.discount = coupon.discount
+                    cart_item.sub_total = cart_item.get_total_amount_with_coupon
+                    cart_item.coupon = coupon
                     cart_item.coupon_applied = True
                     cart_item.save()
-                messages.success(request,
-                                 f'Coupon {coupon.code} applied successfully. You saved {coupon.discount}% (${discount_amount})')
+                    total_discount += coupon.discount
+
+                messages.success(request, f'Coupon {coupon.code} applied successfully. You saved (${total_discount})')
                 return redirect('/customer/cart/')
             else:
                 messages.warning(request, 'Coupon is not applicable for this order')
@@ -448,33 +464,6 @@ def add_all_to_cart_form_wishlist(request):
             wishlists.delete()
     messages.success(request, 'All products added to cart successfully')
     return redirect('/customer/cart/')
-
-
-# add list selected products to cart from wishlist function for customer
-# def add_selected_products_from_wishlist(request):
-#     customer = request.user.customer
-#     wishlist = customer.wishlist_set.all()
-#     for item in wishlist:
-#         product = item.product
-#         price = product.price
-#         quantity = 1
-#         sub_total = price * quantity
-#         total = sum([cart_item.sub_total for cart_item in CartItem.objects.filter(customer=customer)])
-#         cart_item, created = CartItem.objects.get_or_create(customer=customer, product=product)
-#         if created:
-#             cart_item.quantity = quantity
-#             cart_item.price = price
-#             cart_item.sub_total = sub_total
-#             cart_item.total = total
-#             cart_item.save()
-#         else:
-#             cart_item.quantity += quantity
-#             cart_item.price = price
-#             cart_item.sub_total += sub_total
-#             cart_item.total = total
-#             cart_item.save()
-#     messages.success(request, 'All products added to cart successfully')
-#     render(request, 'customer_cart/view_cart.html')
 
 
 # checkout function for customer

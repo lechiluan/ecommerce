@@ -323,7 +323,7 @@
                                     <tbody>
                                     <tr>
                                         <td colspan="2">
-                                            <form class="form-control" action="/customer/apply_coupon/" method="post">
+                                            <form action="/customer/apply_coupon/" method="post">
                                                 {% csrf_token %}
                                                 <label for="coupon_code">Enter your coupon code if you have one.</label>
                                                 <input type="text" name="coupon_code" class="form-control"
@@ -352,18 +352,15 @@
                                         <td><strong>Shipping</strong></td>
                                         <td class="price">Free</td>
                                     </tr>
-                                    {% for cart_item in cart_items %}
-                                        <tr>
-                                            {% if cart_item.coupon_applied %}
-                                                <td><strong>Discount ({{ cart_item.coupon.code }})</strong></td>
-                                                <td class="price">-${{ cart_item.coupon.discount }}</td>
-                                            {% else %}
-                                                <td><strong>Discount (If any)</strong></td>
-                                                <td class="price">$0.00</td>
-                                            {% endif %}
-                                        </tr>
-                                    {% endfor %}
 
+                                    <tr>
+                                        <td><strong>Discount ({{ code }})</strong></td>
+                                        {% if discount != 0 %}
+                                            <td class="price">-${{ discount }}</td>
+                                        {% else %}
+                                            <td class="price">$0.0</td>
+                                        {% endif %}
+                                    </tr>
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td class="price">${{ total_amount_with_coupon }}</td>

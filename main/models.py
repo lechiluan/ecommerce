@@ -120,8 +120,8 @@ class CartItem(models.Model):
     @property
     def get_total_amount_with_coupon(self):
         total = self.product.price * self.quantity
-        if self.coupon_applied:
-            return total - self.coupon.discount
+        if self.coupon_applied and self.coupon is not None:
+            return total - self.discount
         else:
             return total
 
