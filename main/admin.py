@@ -5,9 +5,11 @@ from main.models import Category, Feedback, Coupon, Customer, Product, Review, P
 
 # Register your models here.
 admin.site.register(Permission)
-admin.site.site_header = 'Ecommerce Admin Dashboard'
-admin.site.site_title = 'Ecommerce Admin Dashboard'
-admin.site.index_title = 'Welcome to Ecommerce Admin Dashboard'
+admin.site.site_header = 'LCL Shop Admin Dashboard'
+admin.site.site_title = 'LCL Shop Admin Dashboard'
+admin.site.index_title = 'LCL Shop Admin Dashboard'
+admin.site.empty_value_display = '**Empty**'
+
 
 admin.site.register(Customer)
 admin.site.register(Product)

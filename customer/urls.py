@@ -28,4 +28,5 @@ urlpatterns = [
     path('update_quantity/<str:slug>/', views.update_quantity, name='update_cart'),
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
+    path('track_orders/', views.track_orders, name='track_orders'),
 ]

@@ -151,7 +151,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [(BASE_DIR / 'main/static'),
                     (BASE_DIR / 'dashboard/static'),
-                    (BASE_DIR / 'customer/static')]  # use to find static files
+                    (BASE_DIR / 'customer/static'),
+                    (BASE_DIR / 'static')]  # use to find static files
 # STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
 
 MEDIA_URL = '/media/'

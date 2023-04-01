@@ -31,7 +31,7 @@ handler404 = 'ecommerce.urls.error_404'
 
 urlpatterns = [
     path('', main_views.home, name='index'),
-    path('admin/ecommerce/', admin.site.urls),  # admin site of django
+    path('admin/lclshop/', admin.site.urls),  # admin site of django
     path('dashboard/', include('dashboard.urls')),  # dashboard admin site custom
     path('auth/', include('main.urls')),  # auth site custom to process authentication
     path('customer/', include('customer.urls')),  # customer site custom to process customer data order, cart.

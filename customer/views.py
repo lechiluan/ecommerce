@@ -562,3 +562,13 @@ def checkout(request):
         'payment': payment,
     }
     return render(request, 'customer_checkout/checkout.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def track_orders(request):
+    customer = request.user.customer
+    orders = Orders.objects.filter(customer=customer)
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'customer_orders/track_orders.html', context)
