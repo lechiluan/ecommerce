@@ -354,10 +354,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td><strong>Discount ({{ code }})</strong></td>
-                                        {% if discount != 0 %}
+                                        {% if discount > 0 %}
+                                            <td><strong>Discount ({{ code }}) <a
+                                                    href="/customer/remove_coupon/">Remove</a></strong></td>
                                             <td class="price">-${{ discount }}</td>
                                         {% else %}
+                                            <td><strong>Discount (None)</strong></td>
                                             <td class="price">$0.0</td>
                                         {% endif %}
                                     </tr>

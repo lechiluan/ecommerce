@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
@@ -7,11 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.query_utils import Q
 from django.contrib import messages
 from django.template.loader import render_to_string
+from django.utils import timezone
+
 from .forms import FeedbackForm, CheckoutForm, DeliveryAddressForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist, Payment
 from django.contrib.auth.models import User
-from decimal import Decimal
 
 
 # Send email newsletter
@@ -208,16 +210,33 @@ def add_to_cart(request, slug):
     except CartItem.DoesNotExist:
         cart_item = None
 
+    # Check if coupon is already applied to any of the cart items
+    cart_items = CartItem.objects.filter(customer=customer)
+    coupon_applied = any(cart_item.coupon_applied for cart_item in cart_items)
+
     if cart_item is None:
         sub_total = product.price * quantity
         cart_item = CartItem(customer=customer, product=product, quantity=quantity,
                              price=product.price, sub_total=sub_total)
-        cart_item.save()
-        messages.success(request, 'Product added to cart successfully')
     else:
         cart_item.quantity += quantity
         cart_item.sub_total += product.price * quantity
-        cart_item.save()
+
+    # Update coupon code if a coupon is already applied to the cart
+    if coupon_applied:
+        applied_coupon = CartItem.objects.filter(customer=customer, coupon_applied=True).first().coupon
+        cart_item.discount = applied_coupon.discount * cart_item.quantity
+        cart_item.coupon = applied_coupon
+        cart_item.coupon.amount = cart_item.coupon.amount - quantity
+        cart_item.coupon.save()
+        cart_item.coupon_applied = True
+        cart_item.sub_total = cart_item.get_total_amount_with_coupon
+
+    cart_item.save()
+
+    if cart_item.quantity == quantity:
+        messages.success(request, 'Product added to cart successfully')
+    else:
         messages.success(request, 'Product quantity updated successfully')
 
     return redirect('/customer/cart/')
@@ -234,12 +253,11 @@ def view_cart(request):
         #  check if any coupon is applied
         if cart_items.filter(coupon_applied=True).exists():
             code = cart_items[0].coupon.code if cart_items[0].coupon_applied is True else None
-        else:
-            code = None
-        if code:
             discount = sum(item.get_discount for item in cart_items)
         else:
+            code = None
             discount = 0
+
         context = {
             'cart_items': cart_items,
             'total': total,
@@ -265,7 +283,7 @@ def remove_from_cart(request, slug):
     if cart_item.coupon_applied is True and cart_item.coupon is not None:
         # restore amount to coupon
         coupon = cart_item.coupon
-        coupon.amount = coupon.amount + 1
+        coupon.amount = coupon.amount + cart_item.quantity
         coupon.save()
     cart_item.delete()
 
@@ -285,7 +303,14 @@ def add_quantity(request, slug):
 
     # Check if the quantity can be increased, and update the cart item
     if cart_item.quantity < product.stock:
+        if cart_item.coupon_applied is True and cart_item.coupon is not None:
+            # restore amount to coupon
+            coupon = cart_item.coupon
+            coupon.amount = coupon.amount + 1
+            coupon.save()
         cart_item.quantity += 1
+        if cart_item.discount > 0:
+            cart_item.discount = cart_item.coupon.discount * cart_item.quantity
         cart_item.sub_total += cart_item.price
         cart_item.save()
         messages.success(request, 'Product quantity updated successfully')
@@ -308,6 +333,13 @@ def remove_quantity(request, slug):
     # Check if the quantity can be decreased, and update the cart item or delete it
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
+        if cart_item.coupon_applied is True and cart_item.coupon is not None:
+            # restore amount to coupon
+            coupon = cart_item.coupon
+            coupon.amount = coupon.amount - cart_item.quantity
+            coupon.save()
+        if cart_item.discount > 0:
+            cart_item.discount = cart_item.coupon.discount * cart_item.quantity
         cart_item.sub_total -= cart_item.price
         cart_item.save()
         messages.success(request, 'Product quantity updated successfully')
@@ -335,6 +367,11 @@ def update_quantity(request, slug):
 
         # Update or delete the cart item based on the new quantity
         if quantity == 0:
+            if cart_item.coupon_applied is True and cart_item.coupon is not None:
+                # restore amount to coupon
+                coupon = cart_item.coupon
+                coupon.amount = coupon.amount + cart_item.quantity
+                coupon.save()
             cart_item.delete()
             messages.success(request, 'Product removed from cart successfully')
         elif quantity < 0:
@@ -343,7 +380,14 @@ def update_quantity(request, slug):
             if quantity > product.stock:
                 messages.success(request, 'Product stock is not available')
             else:
+                if cart_item.coupon_applied is True and cart_item.coupon is not None:
+                    # restore amount to coupon
+                    coupon = cart_item.coupon
+                    coupon.amount = coupon.amount + cart_item.quantity
+                    coupon.save()
                 cart_item.quantity = quantity
+                if cart_item.discount > 0:
+                    cart_item.discount = cart_item.coupon.discount * cart_item.quantity
                 cart_item.sub_total = quantity * cart_item.price
                 cart_item.total = cart_item.sub_total
                 cart_item.save()
@@ -357,7 +401,9 @@ def apply_coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
         try:
-            coupon = Coupon.objects.get(code=coupon_code)  # get coupon
+            # get coupon with condition that it is active and datetime is less than current datetime
+            coupon = Coupon.objects.get(code=coupon_code, is_active=True, valid_from__lte=datetime.now(),
+                                        valid_to__gte=datetime.now())
             customer = request.user.customer  # get customer
             cart_items = CartItem.objects.filter(customer=customer)  # get cart items
             subtotal = sum(item.sub_total for item in cart_items)  # get subtotal
@@ -371,12 +417,12 @@ def apply_coupon(request):
 
                 total_discount = 0
                 for cart_item in cart_items:
-                    cart_item.discount = coupon.discount
+                    cart_item.discount = coupon.discount * cart_item.quantity
                     cart_item.sub_total = cart_item.get_total_amount_with_coupon
                     cart_item.coupon = coupon
                     cart_item.coupon_applied = True
                     cart_item.save()
-                    total_discount += coupon.discount
+                    total_discount += coupon.discount * cart_item.quantity
 
                 messages.success(request, f'Coupon {coupon.code} applied successfully. You saved (${total_discount})')
                 return redirect('/customer/cart/')
@@ -389,6 +435,21 @@ def apply_coupon(request):
     else:
         messages.warning(request, 'Invalid request')
         return redirect('/customer/cart/')
+
+
+def remove_coupon(request):
+    customer = request.user.customer
+    cart_items = CartItem.objects.filter(customer=customer)
+
+    for cart_item in cart_items:
+        cart_item.discount = 0
+        cart_item.sub_total = cart_item.get_total_amount_without_coupon
+        cart_item.coupon = None
+        cart_item.coupon_applied = False
+        cart_item.save()
+
+    messages.success(request, 'Coupon removed successfully')
+    return redirect('/customer/cart/')
 
 
 # add to wishlist function for customer

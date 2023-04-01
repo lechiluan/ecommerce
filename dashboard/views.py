@@ -867,7 +867,7 @@ def search_coupon(request):
                 code__icontains=search_query) | Coupon.objects.filter(
                 discount__icontains=search_query) | Coupon.objects.filter(
                 amount__icontains=search_query) | Coupon.objects.filter(
-                active__icontains=search_query)
+                is_active__icontains=search_query)
             page_object = paginator(request, coupons)
         if not coupons:
             messages.success(request, 'No coupons found {} !'.format(search_query))
