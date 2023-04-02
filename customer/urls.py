@@ -29,4 +29,5 @@ urlpatterns = [
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('track_orders/', views.track_orders, name='track_orders'),
+    path('get_address/<int:address_id>/', views.get_address, name='get_address'),
 ]

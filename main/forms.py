@@ -48,7 +48,7 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-    rememberMe = forms.BooleanField(required=False, label='Remember me', initial=False)
+    rememberMe = forms.BooleanField(required=False, label='Remember me', initial=True)
 
     class Meta:
         model = User
@@ -132,23 +132,27 @@ class AddDeliveryAddressForm(forms.Form):
         fields = ['first_name', 'last_name', 'mobile', 'email', 'address', 'city', 'state', 'zip_code', 'country',
                   'is_default']
 
+    def __init__(self, customer, *args, **kwargs):
+        self.customer = customer
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
         mobile = cleaned_data.get('mobile')
         is_default = cleaned_data.get('is_default')
-        if DeliveryAddress.objects.filter(email=email).exists():
+        if DeliveryAddress.objects.filter(customer=self.customer, email=email).exists():
             self.add_error('email', 'Email already exists')
-        if DeliveryAddress.objects.filter(mobile=mobile).exists():
+        if DeliveryAddress.objects.filter(customer=self.customer, mobile=mobile).exists():
             self.add_error('mobile', 'Mobile already exists')
-        if is_default:
-            if DeliveryAddress.objects.filter(is_default=True).exists():
-                self.add_error('is_default', 'Default address already exists')
-            else:
-                self.cleaned_data['is_default'] = True
+        if is_default and DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exists():
+            self.add_error('is_default', 'Default address already exists')
+        else:
+            self.cleaned_data['is_default'] = is_default
 
     def save(self, commit=True):
         delivery_address = DeliveryAddress(
+            customer=self.customer,
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
             mobile=self.cleaned_data['mobile'],
@@ -185,23 +189,39 @@ class UpdateDeliveryAddressForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'mobile', 'email', 'address', 'city', 'state', 'zip_code', 'country',
                   'is_default']
 
+    def __init__(self, customer, *args, **kwargs):
+        self.customer = customer
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
         mobile = cleaned_data.get('mobile')
         is_default = cleaned_data.get('is_default')
-        if DeliveryAddress.objects.filter(email=email).exclude(id=self.instance.id).exists():
+        if DeliveryAddress.objects.filter(customer=self.customer, email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
-        if DeliveryAddress.objects.filter(mobile=mobile).exclude(id=self.instance.id).exists():
+        if DeliveryAddress.objects.filter(customer=self.customer, mobile=mobile).exclude(id=self.instance.id).exists():
             self.add_error('mobile', 'Mobile already exists')
-        if is_default:
-            if DeliveryAddress.objects.filter(is_default=True).exclude(id=self.instance.id).exists():
-                self.add_error('is_default', 'Default address already exists')
-            else:
-                self.instance.is_default = True
+        if is_default and DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exclude(
+                id=self.instance.id).exists():
+            self.add_error('is_default', 'Default address already exists')
+        else:
+            self.cleaned_data['is_default'] = is_default
 
     def save(self, commit=True):
         delivery_address = super().save(commit=False)
+        delivery_address.customer = self.customer
+        delivery_address.first_name = self.cleaned_data['first_name']
+        delivery_address.last_name = self.cleaned_data['last_name']
+        delivery_address.mobile = self.cleaned_data['mobile']
+        delivery_address.email = self.cleaned_data['email']
+        delivery_address.address = self.cleaned_data['address']
+        delivery_address.city = self.cleaned_data['city']
+        delivery_address.state = self.cleaned_data['state']
+        delivery_address.zip_code = self.cleaned_data['zip_code']
+        delivery_address.country = self.cleaned_data['country']
+        delivery_address.is_default = self.cleaned_data['is_default']
         if commit:
             delivery_address.save()
         return delivery_address
+

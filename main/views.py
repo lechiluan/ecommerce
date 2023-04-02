@@ -311,7 +311,7 @@ def password_reset_request(request):
 def delivery_address_table(request):
     # Get all delivery addresses
     customer = Customer.objects.filter(user=request.user).first()
-    delivery_addresses = DeliveryAddress.objects.all().order_by('id')
+    delivery_addresses = DeliveryAddress.objects.filter(customer=customer).order_by('-id')
     page_object = paginator(request, delivery_addresses)
     context = {'delivery_addresses': page_object,
                'customer': customer}
@@ -322,7 +322,7 @@ def delivery_address_table(request):
 def add_delivery_address(request):
     customer = Customer.objects.filter(user=request.user).first()
     if request.method == 'POST':
-        form = AddDeliveryAddressForm(request.POST)
+        form = AddDeliveryAddressForm(customer=customer, data=request.POST)
         if form.is_valid():
             delivery_address = form.save(commit=False)
             delivery_address.customer = customer
@@ -330,7 +330,7 @@ def add_delivery_address(request):
             messages.success(request, 'Delivery address added successfully!')
             return redirect('/auth/delivery_address/')
     else:
-        form = AddDeliveryAddressForm()
+        form = AddDeliveryAddressForm(customer=customer)
     context = {'form': form}
     return render(request, 'registration/address/add_delivery_address.html', context)
 
@@ -341,7 +341,7 @@ def update_delivery_address(request, delivery_address_id):
     customer = Customer.objects.filter(user=request.user).first()
     delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
     if request.method == 'POST':
-        form = UpdateDeliveryAddressForm(request.POST, instance=delivery_address)
+        form = UpdateDeliveryAddressForm(customer=customer, instance=delivery_address, data=request.POST)
         if form.is_valid():
             delivery_address = form.save(commit=False)
             delivery_address.customer = customer
@@ -349,8 +349,9 @@ def update_delivery_address(request, delivery_address_id):
             messages.success(request, 'Delivery address updated successfully!')
             return redirect('/auth/delivery_address/')
     else:
-        form = UpdateDeliveryAddressForm(instance=delivery_address)
-    context = {'form': form}
+        form = UpdateDeliveryAddressForm(customer=customer, instance=delivery_address)
+    context = {'form': form,
+               'delivery_address': delivery_address}
     return render(request, 'registration/address/update_delivery_address.html', context)
 
 

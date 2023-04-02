@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models.query_utils import Q
@@ -532,34 +533,34 @@ def add_all_to_cart_form_wishlist(request):
 def checkout(request):
     user = request.user
     customer = user.customer
-    deliver_address = DeliveryAddress.objects.filter(customer=customer)
+    payment_methods = Payment.METHOD_CHOICES
+    delivery_address = DeliveryAddress.objects.filter(customer=customer)
     cart_items = CartItem.objects.filter(customer=customer)
     total = sum([cart_item.sub_total for cart_item in cart_items])
-    payment = Payment.objects.all()
-
-    if request.method == 'POST':
-        payment_method = request.POST.get('payment_method')
-        payment = Payment.objects.get(method=payment_method)
-        delivery_address = request.POST.get('delivery_address')
-        address = DeliveryAddress.objects.get(address=delivery_address)
-        order = Orders.objects.create(customer=customer, payment=payment, delivery_address=address)
-        for cart_item in cart_items:
-            order_item = OrderDetails.objects.create(
-                product=cart_item.product,
-                quantity=cart_item.quantity,
-                price=cart_item.price,
-                sub_total=cart_item.sub_total,
-                order=order,
-            )
-            cart_item.delete()
-        messages.success(request, 'Order placed successfully')
-        return redirect('/customer/orders/')
+    payments = Payment.objects.all()
+    # if request.method == 'POST':
+    #     payment_method = request.POST.get('payment_method')
+    #     payment = Payment.objects.get(method=payment_method)
+    #     delivery_address = request.POST.get('delivery_address')
+    #     address = DeliveryAddress.objects.get(address=delivery_address)
+    #     order = Orders.objects.create(customer=customer, payment=payment, delivery_address=address)
+    #     for cart_item in cart_items:
+    #         order_item = OrderDetails.objects.create(
+    #             product=cart_item.product,
+    #             quantity=cart_item.quantity,
+    #             price=cart_item.price,
+    #             sub_total=cart_item.sub_total,
+    #             order=order,
+    #         )
+    #         cart_item.delete()
+    #     messages.success(request, 'Order placed successfully')
+    #     return redirect('/customer/orders/')
 
     context = {
-        'deliver_address': deliver_address,
+        'delivery_address': delivery_address,
         'cart_items': cart_items,
         'total': total,
-        'payment': payment,
+        'payment_methods': payment_methods,
     }
     return render(request, 'customer_checkout/checkout.html', context)
 
@@ -572,3 +573,21 @@ def track_orders(request):
         'orders': orders,
     }
     return render(request, 'customer_orders/track_orders.html', context)
+
+
+def get_address(request, address_id):
+    try:
+        address = DeliveryAddress.objects.get(id=address_id)
+        return JsonResponse({
+            'first_name': address.first_name,
+            'last_name': address.last_name,
+            'mobile': address.mobile,
+            'email': address.email,
+            'address': address.address,
+            'city': address.city,
+            'state': address.state,
+            'country': address.country,
+            'zip_code': address.zip_code,
+        })
+    except DeliveryAddress.DoesNotExist:
+        return JsonResponse({'error': 'Address not found'}, status=404)

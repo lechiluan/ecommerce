@@ -207,9 +207,11 @@ class Payment(models.Model):
         ('Cash on Delivery', 'Cash on Delivery'),
         ('Online Payment', 'Online Payment'),
         ('Bank Transfer', 'Bank Transfer'),
-        ('Visa', 'Visa'),
         ('Paypal', 'Paypal'),
+        ('Visa', 'Visa'),
         ('Master Card', 'Master Card'),
+        ('Payonner', 'Payonner'),
+        ('Masetro', 'Masetro'),
         ('Credit Card', 'Credit Card'),
         ('Debit Card', 'Debit Card')
     )

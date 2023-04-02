@@ -41,6 +41,7 @@
             margin-bottom: 25px;
             font-weight: 500;
             text-transform: uppercase;
+            padding-top: 15px;
         }
 
         .checkout-container .container form .row .col .inputBox {
@@ -52,6 +53,17 @@
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
+        }
+
+        .checkout-container .container form .row .col .inputBox .btn-add {
+            background-color: #1253cc;
+            color: #fff;
+            height: 45px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
         }
 
         input[type="text"],
@@ -120,45 +132,63 @@
         <h2 class="font-weight-bold form-title">Checkout</h2>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col">
-                        <h3 class="title">Billing Address</h3>
+                        <h3 class="title">Delivery Address</h3>
+                        {% if delivery_address %}
+                            <div class="inputBox">
+                                <span class="label">Select Delivery Address*</span>
+                                <select name="Address" id="Address" required>
+                                    <option value="0">Select Delivery Address - If any</option>
+                                    {% for address in delivery_address %}
+                                        <option value="{{ address.id }}">{{ address }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% else %}
+                            <div class="inputBox">
+                                <span class="label">Your Delivery Address is Empty*</span>
+                                <a type="button" class="btn btn-primary btn-add" href="/auth/delivery_address/add/"
+                                   id="add-delivery-address">Add A Delivery Address</a>
+                            </div>
+                        {% endif %}
                         <div class="inputBox">
-                            {#                            List Address from address book#}
-                            <span class="label">Select Address*</span>
-                            <select name="Address" id="Address" required>
-                                <option value="0">Select Address</option>
-                                <option value="1">Default Address</option>
-                                <option value="2">Address 2</option>
-                                <option value="3">Address 3</option>
-                            </select>
+                            <span class="label">Firstname*</span>
+                            <input type="text" name="firstname" required placeholder="Brain">
                         </div>
                         <div class="inputBox">
-                            <span class="label">Full Name*</span>
-                            <input type="text" name="name" required placeholder="Brain Lee">
+                            <span class="label">Lastname*</span>
+                            <input type="text" name="lastname" required placeholder="Lee">
                         </div>
-
+                        <div class="inputBox">
+                            <span class="label">Mobile*</span>
+                            <input type="number" name="phone" required placeholder="0123456789">
+                        </div>
                         <div class="inputBox">
                             <span class="label">Email*</span>
-                            <input type="email" name="name" required placeholder="example@example.com">
+                            <input type="email" name="email" required placeholder="example@example.com">
                         </div>
-
                         <div class="inputBox">
                             <span class="label">Address*</span>
-                            <input type="text" name="name" required placeholder="room - street - locality">
+                            <input type="text" name="address" required placeholder="room - street - locality">
                         </div>
                         <div class="inputBox">
                             <span class="label">City*</span>
-                            <input type="text" name="name" required placeholder="London">
+                            <input type="text" name="city" required placeholder="London">
+                        </div>
+                        <div class="inputBox">
+                            <span class="label">Country*</span>
+                            <input type="text" name="country" required placeholder="United Kingdom">
                         </div>
                         <div class="flex">
                             <div class="inputBox">
                                 <span class="label">State*</span>
-                                <input type="text" name="name" required placeholder="United Kingdom">
+                                <input type="text" name="state" required placeholder="United Kingdom">
                             </div>
                             <div class="inputBox">
                                 <span class="label">Zip Code*</span>
-                                <input type="text" name="name" required placeholder="123 456">
+                                <input type="text" name="zipcode" required placeholder="123 456">
                             </div>
                         </div>
                     </div>
@@ -169,16 +199,16 @@
                             <span class="label">Payment Method*</span>
                             <select name="payment" required>
                                 <option value="0">Select Payment Method</option>
-                                <option value="cash">Cash on Delivery</option>
-                                <option value="paypal">Paypal</option>
-                                <option value="card">Card</option>
+                                {% for choice in payment_methods %}
+                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
                             </select>
                         </div>
+
                         <div class="inputBox">
                             <span class="label">Card Accepted:</span>
                             {% load static %}<img src="{% static 'main/images/payments/payment-method.png' %}"
                                                   alt="payment method">
-
                         </div>
 
                         <div class="inputBox">
@@ -186,18 +216,19 @@
                             <select name="card" required>
                                 <option value="visa">Visa</option>
                                 <option value="mastercard">Mastercard</option>
-                                <option value="amex">American Express</option>
+                                <option value="payonner">Payonner</option>
+                                <option value="masetro">Masetro</option>
                             </select>
                         </div>
-
                         <div class="inputBox">
                             <span class="label">Name on Card*</span>
-                            <input type="text" name="name" required placeholder="Brain Lee">
+                            <input type="text" name="nameofcard" required placeholder="Brain Lee">
                         </div>
 
                         <div class="inputBox">
                             <span class="label">Card Number*</span>
-                            <input type="number" name="name" required placeholder="1234 5678 9012 3456">
+                            <input type="text" id="card-number" name="cardnumber" class="card-number" required
+                                   placeholder="1234 5678 9012 3456">
                         </div>
 
                         <div class="flex">
@@ -212,27 +243,84 @@
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="Proceed to Checkout" class="submit-btn">
+                <button type="submit" class="submit-btn">Place Your Order</button>
             </form>
         </div>
     </div>
-    {#    <div class="container-main">#}
-    {#        <div class="form-main">#}
-    {#            <h2 class="font-weight-bold mt-3 form-title">Check Out</h2>#}
-    {#            <form method="POST" class="form-group" enctype="multipart/form-data">#}
-    {#                {% csrf_token %}#}
-    {#                <div class="form-input">#}
-    {#                    {{ form| crispy }}#}
-    {#                </div>#}
-    {#                <div class="btn-form">#}
-    {#                    <button type="submit" class="btn btn-default form-button">Continue to Payment</button>#}
-    {#                </div>#}
-    {#            </form>#}
-    {#        </div>#}
-    {#    </div>#}
 {% endblock %}
 {% block scripts %}
     <script>
+        const addressSelect = document.getElementById('Address');
+        const firstnameInput = document.querySelector('input[name="firstname"]');
+        const lastnameInput = document.querySelector('input[name="lastname"]');
+        const phoneInput = document.querySelector('input[name="phone"]');
+        const emailInput = document.querySelector('input[name="email"]');
+        const addressInput = document.querySelector('input[name="address"]');
+        const cityInput = document.querySelector('input[name="city"]');
+        const countryInput = document.querySelector('input[name="country"]');
+        const stateInput = document.querySelector('input[name="state"]');
+        const zipcodeInput = document.querySelector('input[name="zipcode"]');
+
+        addressSelect.addEventListener('change', (event) => {
+            const selectedOption = addressSelect.options[addressSelect.selectedIndex];
+            if (selectedOption.value !== '0') {
+                // Get the data from the database based on the selected address ID
+                fetch(`/customer/get_address/${selectedOption.value}`)
+                    .then(response => response.json())
+                    .then(address => {
+                        // Update the input fields with the retrieved address data
+                        firstnameInput.value = address.first_name;
+                        lastnameInput.value = address.last_name;
+                        phoneInput.value = address.mobile;
+                        emailInput.value = address.email;
+                        addressInput.value = address.address;
+                        cityInput.value = address.city;
+                        countryInput.value = address.country;
+                        stateInput.value = address.state;
+                        zipcodeInput.value = address.zip_code;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching address data:', error);
+                    });
+            } else {
+                // Clear the input fields if no address is selected
+                firstnameInput.value = '';
+                lastnameInput.value = '';
+                phoneInput.value = '';
+                emailInput.value = '';
+                addressInput.value = '';
+                cityInput.value = '';
+                countryInput.value = '';
+                stateInput.value = '';
+                zipcodeInput.value = '';
+            }
+        });
+
+        // Card number formatting
+        // Select the card-number input field
+        const cardNumberInput = document.getElementById('card-number')
+
+        // Function to format card number with spaces
+        function formatCardNumber(e) {
+            // Remove all non-digit characters from the input value
+            const cardNumber = e.target.value.replace(/\D/g, '');
+
+            // Add a space after every 4 digits
+            const formattedCardNumber = cardNumber.replace(/(\d{4})/g, '$1 ');
+
+            // Set the formatted card number as the input value
+            e.target.value = formattedCardNumber.trim();
+        }
+
+        // Add an event listener to the input field to format the card number on input
+        cardNumberInput.addEventListener('input', formatCardNumber);
+
+        // Popup window code for add delivery address button
+        let addDeliveryAddressButton = document.getElementById("add-delivery-address");
+        addDeliveryAddressButton.onclick = function () {
+            window.open(this.href, "popupWindow", "width=600,height=1000,scrollbars=yes, center=yes");
+            return false;
+        };
 
     </script>
 {% endblock %}
