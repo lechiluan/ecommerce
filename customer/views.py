@@ -418,6 +418,9 @@ def apply_coupon(request):
 
                 total_discount = 0
                 for cart_item in cart_items:
+                    # update coupon amount
+                    coupon.amount = coupon.amount - cart_item.quantity
+                    coupon.save()
                     cart_item.discount = coupon.discount * cart_item.quantity
                     cart_item.sub_total = cart_item.get_total_amount_with_coupon
                     cart_item.coupon = coupon
@@ -441,8 +444,11 @@ def apply_coupon(request):
 def remove_coupon(request):
     customer = request.user.customer
     cart_items = CartItem.objects.filter(customer=customer)
-
+    coupon = Coupon.objects.get(code=cart_items[0].coupon.code)
     for cart_item in cart_items:
+        # restore amount to coupon
+        coupon.amount = coupon.amount + cart_item.quantity
+        coupon.save()
         cart_item.discount = 0
         cart_item.sub_total = cart_item.get_total_amount_without_coupon
         cart_item.coupon = None
@@ -536,26 +542,62 @@ def checkout(request):
     payment_methods = Payment.METHOD_CHOICES
     delivery_address = DeliveryAddress.objects.filter(customer=customer)
     cart_items = CartItem.objects.filter(customer=customer)
-    total = sum([cart_item.sub_total for cart_item in cart_items])
-    payments = Payment.objects.all()
-    # if request.method == 'POST':
-    #     payment_method = request.POST.get('payment_method')
-    #     payment = Payment.objects.get(method=payment_method)
-    #     delivery_address = request.POST.get('delivery_address')
-    #     address = DeliveryAddress.objects.get(address=delivery_address)
-    #     order = Orders.objects.create(customer=customer, payment=payment, delivery_address=address)
-    #     for cart_item in cart_items:
-    #         order_item = OrderDetails.objects.create(
-    #             product=cart_item.product,
-    #             quantity=cart_item.quantity,
-    #             price=cart_item.price,
-    #             sub_total=cart_item.sub_total,
-    #             order=order,
-    #         )
-    #         cart_item.delete()
-    #     messages.success(request, 'Order placed successfully')
-    #     return redirect('/customer/orders/')
+    # Auto create transaction_id for order
+    transaction_id = datetime.now().timestamp()
+    if request.method == 'POST':
+        # Save delivery address that customer selected
+        delivery_address_id = request.POST.get('delivery_address')
+        delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+        # Save payment method that customer selected
+        payment_method = request.POST.get('payment_method')
+        # Save order
+        order = Orders.objects.create(
+            customer=customer,
+            status='Pending',
+            sub_total=sum([cart_item.sub_total for cart_item in cart_items]),
+            total_discount=sum([cart_item.discount for cart_item in cart_items]),
+            total_amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
+                [cart_item.discount for cart_item in cart_items]),
+            delivery_address=delivery_address,
+        )
+        # Save OrderDetails for each item in the cart
+        for cart_item in cart_items:
+            OrderDetails.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.price,
+                sub_total=cart_item.sub_total,
+                discount=cart_item.discount,
+                coupon=cart_item.coupon,
+                coupon_applied=cart_item.coupon_applied,
+            )
+        # Save payment details
+        Payment.objects.create(
+            customer=customer,
+            order=order,
+            payment_method=payment_method,
+            payment_status='Pending',
+            amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
+                cart_item.discount for cart_item in cart_items),
+            transaction_id=transaction_id,
+        )
+        # Delete cart items
+        cart_items.delete()
+        # Update product stock and sold
+        for cart_item in cart_items:
+            product = cart_item.product
+            product.stock -= cart_item.quantity
+            product.sold += cart_item.quantity
+            product.save()
 
+        # Send email to admin
+        # Send email to customer
+
+        messages.success(request, 'Order placed successfully')
+        return redirect('/')
+
+    total = sum([cart_item.sub_total for cart_item in cart_items])
     context = {
         'delivery_address': delivery_address,
         'cart_items': cart_items,

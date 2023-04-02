@@ -150,15 +150,15 @@ class Orders(models.Model):
         ('Delivered', 'Delivered'),
     )
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
     order_date = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=50, null=True, choices=STATUS)
-    payment_method = models.ForeignKey('Payment', on_delete=models.CASCADE, null=True)
+    sub_total = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    total_discount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     delivery_address = models.ForeignKey('DeliveryAddress', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.product.name
+        return self.id.__str__()
 
     class Meta:
         db_table = "Orders"

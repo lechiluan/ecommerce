@@ -139,7 +139,7 @@
                         {% if delivery_address %}
                             <div class="inputBox">
                                 <span class="label">Select Delivery Address*</span>
-                                <select name="Address" id="Address" required>
+                                <select name="delivery_address" id="delivery_address" required>
                                     <option value="0">Select Delivery Address - If any</option>
                                     {% for address in delivery_address %}
                                         <option value="{{ address.id }}">{{ address }}</option>
@@ -197,7 +197,7 @@
                         <h3 class="title">Payment</h3>
                         <div class="inputBox">
                             <span class="label">Payment Method*</span>
-                            <select name="payment" required>
+                            <select name="payment_method" id="payment_method" required>
                                 <option value="0">Select Payment Method</option>
                                 {% for choice in payment_methods %}
                                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
@@ -247,10 +247,11 @@
             </form>
         </div>
     </div>
+    {% include 'main/base/services.html' %}
 {% endblock %}
 {% block scripts %}
     <script>
-        const addressSelect = document.getElementById('Address');
+        const addressSelect = document.getElementById('delivery_address');
         const firstnameInput = document.querySelector('input[name="firstname"]');
         const lastnameInput = document.querySelector('input[name="lastname"]');
         const phoneInput = document.querySelector('input[name="phone"]');

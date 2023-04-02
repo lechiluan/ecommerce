@@ -3,9 +3,71 @@
 {% block title %}Delivery Address{% endblock %}
 {% block style %}
     <style>
-        .container-main .container{
+        /* Style for checkboxes */
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            display: inline-block;
+            position: relative;
+            background-color: #fafafa;
+            color: #666666;
+            top: 4px;
+            height: 18px;
+            width: 18px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        input[type="checkbox"]:checked:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none;
+        }
+
+        /* Style for select-all checkbox */
+        #select-all:checked ~ table tbody .select-checkbox:checked:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        #select-all:checked ~ table tbody .select-checkbox:checked {
+            background-color: #e6f9f4;
+        }
+
+        #select-all:checked ~ table thead th:first-child:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        #select-all:checked ~ table thead th:first-child {
+            background-color: #e6f9f4;
+        }
+
+        .container-main .container {
             padding: 0;
         }
+
         .card-header {
             background-color: #fff;
             display: flex;
@@ -293,7 +355,8 @@
                                         <td>
                                             <a type="button" class="btn btn-success"
                                                href="/auth/delivery_address/set_default/{{ delivery.id }}/"
-                                               onclick="return confirm('Are you sure to set default delivery address?')">Set Default</a>
+                                               onclick="return confirm('Are you sure to set default delivery address?')">Set
+                                                Default</a>
                                         </td>
                                         <td class="action">
                                             <a href="/auth/delivery_address/update/{{ delivery.id }}/"><img
