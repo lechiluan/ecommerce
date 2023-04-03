@@ -1,0 +1,62 @@
+{% autoescape off %}
+    {% load static %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>New Orders</title>
+        <style>
+            /* add your CSS styles here */
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px;
+                background: #7da6f8;
+                border: 1px solid #000;
+            }
+
+            th {
+                background-color: #7da6f8;
+            }
+
+            tfoot td {
+                font-weight: bold;
+                background: #7da6f8;
+            }
+
+            /* ... */
+        </style>
+    </head>
+    <body>
+    <h3>New order from LCL Shop</h3>
+    <p>Hi Administrator,</p>
+    <p>An order has been placed on {{ domain }} by {{ customer.user.username }} - {{ customer.user.email }}. Please
+        login to the admin dashboard to view the order details.</p>
+    <p>Order details:</p>
+    <table style="border: 1px solid black; border-collapse: collapse;">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        {% for item in order_details %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p><strong>Total: {{ order.total_amount }}</strong></p>
+    <p>
+        Sincerely, <br>
+        LCL Shop
+    </p>
+    </body>
+    </html>
+{% endautoescape %}

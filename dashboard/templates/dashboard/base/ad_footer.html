@@ -1,15 +1,43 @@
+<button onclick="topFunction()" id="myBtn" title="Go to top"
+        class="button-scroll"><i class="fa fa-arrow-up" aria-hidden="true"></i>
+</button>
+<script>
+    scollButton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scollButton.style.display = "block";
+        } else {
+            scollButton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 0) {
+            window.requestAnimationFrame(topFunction);
+            window.scrollTo(0, scrollTop - scrollTop / 8);
+        }
+    }
+</script>
 <footer class="text-center text-white" style="background-color: #343a40;">
     <!-- Grid container -->
-        <div class="container">
-            <!-- Copyright -->
-            <div class="text-center p-3" style="background-color: #343a40;">
-                <h4  class="text-white">LCL Shop - Admin Dashboard</h4>
-                <p class="copyright-text">Copyright &copy; {% now "Y" %} All Rights Reserved by
-                    <a href="/">LCL Shop</a>. Developed by <a href="https://www.github.com/lechiluan/"
-                                                              target="_blank" class="author">Le Chi Luan {% load static %}<img
+    <div class="container">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color: #343a40;">
+            <h4 class="text-white">LCL Shop - Admin Dashboard</h4>
+            <p class="copyright-text">Copyright &copy; {% now "Y" %} All Rights Reserved by
+                <a href="/">LCL Shop</a>. Developed by <a href="https://www.github.com/lechiluan/"
+                                                          target="_blank" class="author">Le Chi
+                    Luan {% load static %}<img
                             src="{% static 'dashboard/images/icons/check-icon.png' %}" style="width:18px;height:18px;"></a>
-                </p>
-            </div>
+            </p>
         </div>
+    </div>
     <!-- Copyright -->
 </footer>

@@ -416,10 +416,11 @@ footer {
     margin: 15px auto;
 }
 
-.copyright-text a{
+.copyright-text a {
     text-decoration: none;
     color: #fff;
 }
+
 .copyright-text .author {
     color: #0062cc;
     font-weight: 600;
@@ -454,7 +455,9 @@ td.action {
     background-color: #fff;
     margin-top: 10px;
     margin-bottom: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    overflow: hidden;
 }
 
 .table-style thead tr th {
@@ -486,10 +489,12 @@ td.action {
     color: #1253cc;
     padding-bottom: 20px;
 }
-.title-manage{
+
+.title-manage {
     color: #1253cc;
     font-weight: bold;
 }
+
 .form-input {
     width: 100%;
     padding-right: 25px;
@@ -578,7 +583,7 @@ td.action {
 }
 
 .card-body {
-    margin: 20px 30px;
+    margin: 15px 10px;
 }
 
 .no-objects {
@@ -993,4 +998,38 @@ a#navbarDropdown.nav-link.dropdown-toggle {
         margin: 0.5rem auto;
         float: none;
     }
+}
+
+/* Scroll View */
+.button-scroll {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    height: 45px;
+    width: 45px;
+    background-color: #1253cc;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.button-scroll .fa {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: none;
+    outline: none;
+    transform: translate(-50%, -50%);
+}
+
+.button-scroll:hover {
+    border: none;
+    outline: none;
+    background-color: #5491ff;
 }

@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'customer.apps.CustomerConfig',  # for customer app
     'crispy_forms',  # for crispy forms
     'tinymce',  # for tinymce editor
+    'captcha',  # for google captcha
 ]
 
 MIDDLEWARE = [
@@ -190,3 +191,8 @@ TINYMCE_UPLOAD_NAME = 'tinymce_upload'
 INTERNAL_IPS = [
     '127.0.0.1'
 ]
+
+# Config for google captcha
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

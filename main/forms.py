@@ -1,3 +1,5 @@
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth.models import User
@@ -25,6 +27,7 @@ class RegisterForm(UserCreationForm):
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload avatar', widget=forms.FileInput,
                                       help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
     class Meta:
         model = User
@@ -36,7 +39,6 @@ class RegisterForm(UserCreationForm):
         username = cleaned_data.get('username')
         email = cleaned_data.get('email')
         customer_image = cleaned_data.get('customer_image')
-
         if User.objects.filter(username=username).exists():
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exists():
@@ -49,6 +51,7 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     rememberMe = forms.BooleanField(required=False, label='Remember me', initial=True)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
     class Meta:
         model = User
@@ -224,4 +227,3 @@ class UpdateDeliveryAddressForm(forms.ModelForm):
         if commit:
             delivery_address.save()
         return delivery_address
-

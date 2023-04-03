@@ -1,0 +1,87 @@
+{% autoescape off %}
+    {% load static %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Orders Success</title>
+        <style>
+            /* add your CSS styles here */
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            th, td {
+                text-align: left;
+                padding: 8px;
+                background: #7da6f8;
+                border: 1px solid #000;
+            }
+            th {
+                background-color: #7da6f8;
+            }
+            tfoot td {
+                font-weight: bold;
+                background: #7da6f8;
+            }
+            /* ... */
+        </style>
+    </head>
+    <body>
+    <p>Hello {{ customer.user.first_name }},</p>
+
+    <p>Thank you for your order on {{ domain }}. Your order details are as follows:</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in order_details %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2">Sub-total:</td>
+            <td>{{ order.sub_total }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Discount:</td>
+            <td>{{ order.total_discount }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Total:</td>
+            <td>{{ order.total_amount }}</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <p>Your order will be shipped to the following address:</p>
+
+    <p>{{ order.delivery_address.address }}</p>
+    <p>{{ order.delivery_address.city }}, {{ order.delivery_address.state }} {{ order.delivery_address.zip_code }}</p>
+
+
+    <p>
+        Please visit our website at {{ protocol }}://{{ domain }} to get more information. If you have any questions,
+        please contact us at <a href="mailto:lclshop.dev@gmail.com">lclshop.dev@gmail.com</a>
+        <br>
+    </p>
+    <p>Thank you for using our services.</p>
+    <p>
+        Sincerely, <br>
+        LCL Shop
+    </p>
+    </body>
+    </html>
+{% endautoescape %}

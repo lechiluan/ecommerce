@@ -40,7 +40,7 @@ def paginator(request, objects):
 
 # Display Homepage for all users. Display List of all products, categories, brands, etc.
 def home(request):
-    products = Product.objects.all().order_by('id')
+    products = Product.objects.all().order_by('-sold')
     categories = Category.objects.all().order_by('id')
     brands = Brand.objects.all().order_by('id')
     page_object = paginator(request, products)
@@ -80,6 +80,10 @@ def register(request):
 
                 send_email_activate_account(request, user)
                 return render(request, 'registration/register/account_activation_sent.html')
+        else:
+            if form.errors.get('captcha'):
+                messages.warning(request, 'Please check the captcha to verify that you are not a robot')
+            return render(request, "registration/register/register.html", {"form": form})
     else:
         form = RegisterForm()
     return render(request, 'registration/register/register.html', {'form': form})
@@ -144,6 +148,11 @@ def login(request, *args, **kwargs):
                     return render(request, "registration/login.html", {"form": form})
                 form.add_error('username', 'Username or password is incorrect')
                 return render(request, "registration/login.html", {"form": form})
+        else:
+            # Check captcha is checked
+            if form.errors.get('captcha'):
+                messages.warning(request, 'Please check the captcha to verify that you are not a robot')
+            return render(request, "registration/login.html", {"form": form})
     else:
         form = LoginForm()
     return render(request, "registration/login.html", {"form": form})

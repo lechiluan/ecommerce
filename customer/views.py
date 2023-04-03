@@ -81,8 +81,10 @@ def paginator(request, objects):
 # Code for display product
 def product_details(request, slug):
     product = Product.objects.get(slug=slug)
+    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
     context = {
         'product': product,
+        'related_products': related_products,
     }
     return render(request, 'customer_help/customer_product_details.html', context)
 
@@ -120,7 +122,7 @@ def product_search(request):
         if sort_by == 'newest':
             products = products.order_by('-created_date')
         elif sort_by == 'best_seller':
-            products = products.order_by('-updated_date')
+            products = products.order_by('-sold')
         elif sort_by == 'name_asc':
             products = products.order_by('name')
         elif sort_by == 'name_desc':
@@ -243,34 +245,31 @@ def add_to_cart(request, slug):
     return redirect('/customer/cart/')
 
 
+@login_required(login_url='/auth/login')
 # view cart function for customer
 def view_cart(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        cart_items = CartItem.objects.filter(customer=customer).order_by('-date_added')
-        total = sum(item.sub_total for item in cart_items)
-        total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in cart_items)
-        total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in cart_items)
-        #  check if any coupon is applied
-        if cart_items.filter(coupon_applied=True).exists():
-            code = cart_items[0].coupon.code if cart_items[0].coupon_applied is True else None
-            discount = sum(item.get_discount for item in cart_items)
-        else:
-            code = None
-            discount = 0
-
-        context = {
-            'cart_items': cart_items,
-            'total': total,
-            'code': code,
-            'discount': discount,
-            'total_amount_without_coupon': total_amount_without_coupon,
-            'total_amount_with_coupon': total_amount_with_coupon,
-        }
-        return render(request, 'customer_cart/view_cart.html', context)
+    customer = request.user.customer
+    cart_items = CartItem.objects.filter(customer=customer).order_by('-date_added')
+    total = sum(item.sub_total for item in cart_items)
+    total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in cart_items)
+    total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in cart_items)
+    #  check if any coupon is applied
+    if cart_items.filter(coupon_applied=True).exists():
+        code = cart_items[0].coupon.code if cart_items[0].coupon_applied is True else None
+        discount = sum(item.get_discount for item in cart_items)
     else:
-        messages.success(request, 'Please login to view cart')
-        return redirect('/auth/login/')
+        code = None
+        discount = 0
+
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+        'code': code,
+        'discount': discount,
+        'total_amount_without_coupon': total_amount_without_coupon,
+        'total_amount_with_coupon': total_amount_with_coupon,
+    }
+    return render(request, 'customer_cart/view_cart.html', context)
 
 
 @login_required(login_url='/auth/login')
@@ -398,6 +397,7 @@ def update_quantity(request, slug):
     return redirect('/customer/cart/')
 
 
+@login_required(login_url='/auth/login')
 def apply_coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
@@ -441,6 +441,7 @@ def apply_coupon(request):
         return redirect('/customer/cart/')
 
 
+@login_required(login_url='/auth/login')
 def remove_coupon(request):
     customer = request.user.customer
     cart_items = CartItem.objects.filter(customer=customer)
@@ -464,36 +465,30 @@ def add_to_wishlist(request, slug):
     # get the product from the database
     product = Product.objects.get(slug=slug)
     # check if the user is authenticated
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        # check if the product is already in the wishlist
-        wishlist_item, created = Wishlist.objects.get_or_create(customer=customer, product=product)
-        if created:
-            messages.success(request, 'Product added to wishlist successfully. You can view it in your wishlist')
-            return redirect('/')
-        else:
-            messages.success(request, 'Product already in wishlist')
-            return redirect('/')
+    customer = request.user.customer
+    # check if the product is already in the wishlist
+    wishlist_item, created = Wishlist.objects.get_or_create(customer=customer, product=product)
+    if created:
+        messages.success(request, 'Product added to wishlist successfully. You can view it in your wishlist')
+        return redirect('/')
     else:
-        messages.success(request, 'Please login to add product to wishlist')
-        return redirect('/auth/login/')
+        messages.success(request, 'Product already in wishlist')
+        return redirect('/')
 
 
 # view wishlist function for customer
+@login_required(login_url='/auth/login')
 def view_wishlist(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        wishlists = Wishlist.objects.filter(customer=customer).order_by('-date_added')
-        context = {
-            'wishlists': wishlists,
-        }
-        return render(request, 'customer_wishlist/view_wishlist.html', context)
-    else:
-        messages.success(request, 'Please login to view wishlist')
-        return redirect('/auth/login/')
+    customer = request.user.customer
+    wishlists = Wishlist.objects.filter(customer=customer).order_by('-date_added')
+    context = {
+        'wishlists': wishlists,
+    }
+    return render(request, 'customer_wishlist/view_wishlist.html', context)
 
 
 # remove from wishlist function for customer
+@login_required(login_url='/auth/login')
 def remove_from_wishlist(request, slug):
     # get the product from the database
     product = Product.objects.get(slug=slug)
@@ -508,6 +503,7 @@ def remove_from_wishlist(request, slug):
 
 
 # add all products to cart form wishlist function for customer
+@login_required(login_url='/auth/login')
 def add_all_to_cart_form_wishlist(request):
     customer = request.user.customer
     wishlists = customer.wishlist_set.all()
@@ -550,7 +546,7 @@ def checkout(request):
         delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
         # Save payment method that customer selected
         payment_method = request.POST.get('payment_method')
-        # Save order
+        # Save orders
         order = Orders.objects.create(
             customer=customer,
             status='Pending',
@@ -582,18 +578,24 @@ def checkout(request):
                 cart_item.discount for cart_item in cart_items),
             transaction_id=transaction_id,
         )
-        # Delete cart items
-        cart_items.delete()
         # Update product stock and sold
         for cart_item in cart_items:
             product = cart_item.product
             product.stock -= cart_item.quantity
             product.sold += cart_item.quantity
             product.save()
-
+        # Delete cart items
+        cart_items.delete()
         # Send email to admin
+        # Get email is admin
+        customer = request.user.customer
+        order = Orders.objects.filter(customer=customer, status='Pending').last()
+        order_details = OrderDetails.objects.filter(order=order)
+        admin = User.objects.get(is_superuser=True)
+        send_email_order_admin(request, admin.email, order, order_details, customer)
         # Send email to customer
-
+        send_email_order_customer(request, delivery_address.email, order, order_details, customer)
+        send_email_order_customer(request, user.email, order, order_details, customer)
         messages.success(request, 'Order placed successfully')
         return redirect('/')
 
@@ -605,6 +607,40 @@ def checkout(request):
         'payment_methods': payment_methods,
     }
     return render(request, 'customer_checkout/checkout.html', context)
+
+
+def send_email_order_admin(request, email, order, order_details, customer):
+    current_site = get_current_site(request)
+    mail_subject = 'New order placed.'
+    message = render_to_string('customer_checkout/email_orders_admin.html', {
+        'domain': current_site.domain,
+        'order': order,
+        'order_details': order_details,
+        'customer': customer,
+        'protocol': 'http',
+    })
+    to_email = [email]
+    from_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    email = EmailMessage(mail_subject, message, from_email, to_email)
+    email.content_subtype = "html"
+    email.send()
+
+
+def send_email_order_customer(request, email, order, order_details, customer):
+    current_site = get_current_site(request)
+    mail_subject = 'Order placed successfully.'
+    message = render_to_string('customer_checkout/email_orders_customer.html', {
+        'domain': current_site.domain,
+        'order': order,
+        'order_details': order_details,
+        'customer': customer,
+        'protocol': 'http',
+    })
+    to_email = [email]
+    from_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    email = EmailMessage(mail_subject, message, from_email, to_email)
+    email.content_subtype = "html"
+    email.send()
 
 
 @login_required(login_url='/auth/login/')
