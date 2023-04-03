@@ -59,13 +59,14 @@ Use multistep authentication for secure payments
 ## Installation
 **1. Clone Repository & Install Packages**
 ```sh
-git clone https://github.com/lechiluan/E-Commerce-System.git
-pip install -r requirements.txt
+git clone https://github.com/lechiluan/ecommerce.git
+pip install virtualenv
 ```
 **2. Setup Virtualenv**
 ```sh
 virtualenv venv
 .\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 **3. Migrate & Start Server**
 ```sh
