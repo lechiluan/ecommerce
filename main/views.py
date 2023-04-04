@@ -148,11 +148,6 @@ def login(request, *args, **kwargs):
                     return render(request, "registration/login.html", {"form": form})
                 form.add_error('username', 'Username or password is incorrect')
                 return render(request, "registration/login.html", {"form": form})
-        else:
-            # Check captcha is checked
-            if form.errors.get('captcha'):
-                messages.warning(request, 'Please check the captcha to verify that you are not a robot')
-            return render(request, "registration/login.html", {"form": form})
     else:
         form = LoginForm()
     return render(request, "registration/login.html", {"form": form})
@@ -337,7 +332,8 @@ def add_delivery_address(request):
             delivery_address.customer = customer
             delivery_address.save()
             messages.success(request, 'Delivery address added successfully!')
-            return redirect('/auth/delivery_address/')
+            next_url = request.GET.get('next', '/auth/delivery_address/')
+            return redirect(next_url)
     else:
         form = AddDeliveryAddressForm(customer=customer)
     context = {'form': form}
@@ -356,7 +352,8 @@ def update_delivery_address(request, delivery_address_id):
             delivery_address.customer = customer
             delivery_address.save()
             messages.success(request, 'Delivery address updated successfully!')
-            return redirect('/auth/delivery_address/')
+            next_url = request.GET.get('next', '/auth/delivery_address/')
+            return redirect(next_url)
     else:
         form = UpdateDeliveryAddressForm(customer=customer, instance=delivery_address)
     context = {'form': form,

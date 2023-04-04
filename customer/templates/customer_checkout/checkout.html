@@ -53,6 +53,7 @@
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
+            text-align: justify;
         }
 
         .checkout-container .container form .row .col .inputBox .btn-add {
@@ -105,7 +106,7 @@
             display: block;
             width: 100%;
             padding: 10px;
-            margin-top: 30px;
+            margin-top: 10px;
             border: none;
             border-radius: 5px;
             background-color: #1253cc;
@@ -118,9 +119,12 @@
 
         .submit-btn:hover {
             background-color: #0066cc;
+            border-color: #0066cc;
         }
 
-
+        .submit-btn:focus {
+            outline: none;
+        }
     </style>
 {% endblock %}
 
@@ -146,51 +150,57 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                            <div class="inputBox" id="edit-delivery-address-container" style="display: none;">
+                                <span class="label">Edit you delivery address*</span>
+                                <a type="button" class="btn btn-primary btn-add" href="#" id="edit-delivery-address">Edit Delivery Address</a>
+                                <div class="inputBox">
+                                    <span class="label">Firstname*</span>
+                                    <input type="text" name="firstname" required placeholder="Brain" readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">Lastname*</span>
+                                    <input type="text" name="lastname" required placeholder="Lee" readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">Mobile*</span>
+                                    <input type="number" name="phone" required placeholder="0123456789" readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">Email*</span>
+                                    <input type="email" name="email" required placeholder="example@example.com"
+                                           readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">Address*</span>
+                                    <input type="text" name="address" required placeholder="room - street - locality"
+                                           readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">City*</span>
+                                    <input type="text" name="city" required placeholder="London" readonly>
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">Country*</span>
+                                    <input type="text" name="country" required placeholder="United Kingdom" readonly>
+                                </div>
+                                <div class="flex">
+                                    <div class="inputBox">
+                                        <span class="label">State*</span>
+                                        <input type="text" name="state" required placeholder="United Kingdom" readonly>
+                                    </div>
+                                    <div class="inputBox">
+                                        <span class="label">Zip Code*</span>
+                                        <input type="text" name="zipcode" required placeholder="123 456" readonly>
+                                    </div>
+                                </div>
+                            </div>
                         {% else %}
                             <div class="inputBox">
-                                <span class="label">Your Delivery Address is Empty*</span>
-                                <a type="button" class="btn btn-primary btn-add" href="/auth/delivery_address/add/"
+                                <span class="label">Your delivery address is empty. Please add a delivery address to checkout.</span>
+                                <a type="button" class="btn btn-primary btn-add" href="/auth/delivery_address/add/?next=/customer/checkout/`"
                                    id="add-delivery-address">Add A Delivery Address</a>
                             </div>
                         {% endif %}
-                        <div class="inputBox">
-                            <span class="label">Firstname*</span>
-                            <input type="text" name="firstname" required placeholder="Brain">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Lastname*</span>
-                            <input type="text" name="lastname" required placeholder="Lee">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Mobile*</span>
-                            <input type="number" name="phone" required placeholder="0123456789">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Email*</span>
-                            <input type="email" name="email" required placeholder="example@example.com">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Address*</span>
-                            <input type="text" name="address" required placeholder="room - street - locality">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">City*</span>
-                            <input type="text" name="city" required placeholder="London">
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Country*</span>
-                            <input type="text" name="country" required placeholder="United Kingdom">
-                        </div>
-                        <div class="flex">
-                            <div class="inputBox">
-                                <span class="label">State*</span>
-                                <input type="text" name="state" required placeholder="United Kingdom">
-                            </div>
-                            <div class="inputBox">
-                                <span class="label">Zip Code*</span>
-                                <input type="text" name="zipcode" required placeholder="123 456">
-                            </div>
-                        </div>
                     </div>
 
                     <div class="col">
@@ -243,7 +253,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="submit-btn">Place Your Order</button>
+                <button type="submit" class="btn btn-primary submit-btn">Place Your Order</button>
             </form>
         </div>
     </div>
@@ -262,9 +272,12 @@
         const stateInput = document.querySelector('input[name="state"]');
         const zipcodeInput = document.querySelector('input[name="zipcode"]');
 
+        const editDeliveryAddress = document.getElementById('edit-delivery-address-container');
         addressSelect.addEventListener('change', (event) => {
             const selectedOption = addressSelect.options[addressSelect.selectedIndex];
             if (selectedOption.value !== '0') {
+                // Show the edit delivery address container
+                editDeliveryAddress.style.display = 'block';
                 // Get the data from the database based on the selected address ID
                 fetch(`/customer/get_address/${selectedOption.value}`)
                     .then(response => response.json())
@@ -285,6 +298,7 @@
                     });
             } else {
                 // Clear the input fields if no address is selected
+                editDeliveryAddress.style.display = 'none';
                 firstnameInput.value = '';
                 lastnameInput.value = '';
                 phoneInput.value = '';
@@ -294,6 +308,16 @@
                 countryInput.value = '';
                 stateInput.value = '';
                 zipcodeInput.value = '';
+            }
+        });
+
+        // Edit address button
+        const editDeliveryAddressBtn = document.getElementById('edit-delivery-address');
+        editDeliveryAddressBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const selectedOption = addressSelect.options[addressSelect.selectedIndex];
+            if (selectedOption.value !== '0') {
+                window.location.href = `/auth/delivery_address/update/${selectedOption.value}/?next=/customer/checkout/;
             }
         });
 

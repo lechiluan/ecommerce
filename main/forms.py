@@ -27,7 +27,7 @@ class RegisterForm(UserCreationForm):
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload avatar', widget=forms.FileInput,
                                       help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
     class Meta:
         model = User
@@ -51,7 +51,6 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     rememberMe = forms.BooleanField(required=False, label='Remember me', initial=True)
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
     class Meta:
         model = User

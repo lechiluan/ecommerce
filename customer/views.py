@@ -533,80 +533,87 @@ def add_all_to_cart_form_wishlist(request):
 # checkout function for customer
 @login_required(login_url='/auth/login/')
 def checkout(request):
-    user = request.user
-    customer = user.customer
-    payment_methods = Payment.METHOD_CHOICES
-    delivery_address = DeliveryAddress.objects.filter(customer=customer)
+    # check if the cart is empty
+    customer = request.user.customer
     cart_items = CartItem.objects.filter(customer=customer)
-    # Auto create transaction_id for order
-    transaction_id = datetime.now().timestamp()
-    if request.method == 'POST':
-        # Save delivery address that customer selected
-        delivery_address_id = request.POST.get('delivery_address')
-        delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
-        # Save payment method that customer selected
-        payment_method = request.POST.get('payment_method')
-        # Save orders
-        order = Orders.objects.create(
-            customer=customer,
-            status='Pending',
-            sub_total=sum([cart_item.sub_total for cart_item in cart_items]),
-            total_discount=sum([cart_item.discount for cart_item in cart_items]),
-            total_amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
-                [cart_item.discount for cart_item in cart_items]),
-            delivery_address=delivery_address,
-        )
-        # Save OrderDetails for each item in the cart
-        for cart_item in cart_items:
-            OrderDetails.objects.create(
-                order=order,
-                product=cart_item.product,
-                quantity=cart_item.quantity,
-                price=cart_item.price,
-                sub_total=cart_item.sub_total,
-                discount=cart_item.discount,
-                coupon=cart_item.coupon,
-                coupon_applied=cart_item.coupon_applied,
+    if cart_items.count() == 0:
+        messages.warning(request, 'Your cart is empty. Please add some products to your cart to checkout')
+        return redirect('/customer/cart/')
+    else:
+        user = request.user
+        customer = user.customer
+        payment_methods = Payment.METHOD_CHOICES
+        delivery_address = DeliveryAddress.objects.filter(customer=customer)
+        cart_items = CartItem.objects.filter(customer=customer)
+        # Auto create transaction_id for order
+        transaction_id = datetime.now().timestamp()
+        if request.method == 'POST':
+            # Save delivery address that customer selected
+            delivery_address_id = request.POST.get('delivery_address')
+            delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
+            # Save payment method that customer selected
+            payment_method = request.POST.get('payment_method')
+            # Save orders
+            order = Orders.objects.create(
+                customer=customer,
+                status='Pending',
+                sub_total=sum([cart_item.sub_total for cart_item in cart_items]),
+                total_discount=sum([cart_item.discount for cart_item in cart_items]),
+                total_amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
+                    [cart_item.discount for cart_item in cart_items]),
+                delivery_address=delivery_address,
             )
-        # Save payment details
-        Payment.objects.create(
-            customer=customer,
-            order=order,
-            payment_method=payment_method,
-            payment_status='Pending',
-            amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
-                cart_item.discount for cart_item in cart_items),
-            transaction_id=transaction_id,
-        )
-        # Update product stock and sold
-        for cart_item in cart_items:
-            product = cart_item.product
-            product.stock -= cart_item.quantity
-            product.sold += cart_item.quantity
-            product.save()
-        # Delete cart items
-        cart_items.delete()
-        # Send email to admin
-        # Get email is admin
-        customer = request.user.customer
-        order = Orders.objects.filter(customer=customer, status='Pending').last()
-        order_details = OrderDetails.objects.filter(order=order)
-        admin = User.objects.get(is_superuser=True)
-        send_email_order_admin(request, admin.email, order, order_details, customer)
-        # Send email to customer
-        send_email_order_customer(request, delivery_address.email, order, order_details, customer)
-        send_email_order_customer(request, user.email, order, order_details, customer)
-        messages.success(request, 'Order placed successfully')
-        return redirect('/')
+            # Save OrderDetails for each item in the cart
+            for cart_item in cart_items:
+                OrderDetails.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    price=cart_item.price,
+                    sub_total=cart_item.sub_total,
+                    discount=cart_item.discount,
+                    coupon=cart_item.coupon,
+                    coupon_applied=cart_item.coupon_applied,
+                )
+            # Save payment details
+            Payment.objects.create(
+                customer=customer,
+                order=order,
+                payment_method=payment_method,
+                payment_status='Pending',
+                amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
+                    cart_item.discount for cart_item in cart_items),
+                transaction_id=transaction_id,
+            )
+            # Update product stock and sold
+            for cart_item in cart_items:
+                product = cart_item.product
+                product.stock -= cart_item.quantity
+                product.sold += cart_item.quantity
+                product.save()
+            # Delete cart items
+            cart_items.delete()
+            # Send email to admin
+            # Get email is admin
+            customer = request.user.customer
+            order = Orders.objects.filter(customer=customer, status='Pending').last()
+            order_details = OrderDetails.objects.filter(order=order)
+            admin = User.objects.get(is_superuser=True)
+            send_email_order_admin(request, admin.email, order, order_details, customer)
+            # Send email to customer
+            send_email_order_customer(request, delivery_address.email, order, order_details, customer)
+            send_email_order_customer(request, user.email, order, order_details, customer)
+            messages.success(request, 'Order placed successfully')
+            return redirect('/')
 
-    total = sum([cart_item.sub_total for cart_item in cart_items])
-    context = {
-        'delivery_address': delivery_address,
-        'cart_items': cart_items,
-        'total': total,
-        'payment_methods': payment_methods,
-    }
-    return render(request, 'customer_checkout/checkout.html', context)
+        total = sum([cart_item.sub_total for cart_item in cart_items])
+        context = {
+            'delivery_address': delivery_address,
+            'cart_items': cart_items,
+            'total': total,
+            'payment_methods': payment_methods,
+        }
+        return render(request, 'customer_checkout/checkout.html', context)
 
 
 def send_email_order_admin(request, email, order, order_details, customer):

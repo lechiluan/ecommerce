@@ -888,7 +888,7 @@ def search_coupon(request):
 @login_required(login_url='/auth/login/')
 def order_table(request):
     # Get all orders
-    orders = Orders.objects.all().order_by('id')
+    orders = Orders.objects.all().order_by('-id')
     page_object = paginator(request, orders)
     context = {'orders': page_object}
     return render(request, 'dashboard/manage_order/order_table.html', context)
