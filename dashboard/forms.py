@@ -56,7 +56,7 @@ class ChangePasswordForm(PasswordChangeForm):
 
 class ChangeEmailForm(forms.ModelForm):
     email = forms.EmailField(label='Current Email', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    current_password = forms.CharField(label='Current Password', widget=forms.PasswordInput())
+    current_password = forms.CharField(label='Current Password', widget=forms.PasswordInput(attrs={'autofocus': True}))
     new_email = forms.EmailField(label='New Email')
 
     class Meta:
@@ -66,7 +66,7 @@ class ChangeEmailForm(forms.ModelForm):
 
 # Customer Forms
 class AddCustomerForm(UserCreationForm):
-    first_name = forms.CharField(required=True)
+    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autofocus': True}))
     last_name = forms.CharField(required=True)
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
@@ -95,7 +95,7 @@ class AddCustomerForm(UserCreationForm):
 
 
 class UpdateCustomerForm(forms.ModelForm):
-    first_name = forms.CharField(required=True)
+    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autofocus': True}))
     last_name = forms.CharField(required=True)
     username = forms.CharField(required=True, max_length=20)
     email = forms.EmailField(required=True)
@@ -139,8 +139,9 @@ class UpdateCustomerForm(forms.ModelForm):
 
 
 class UpdateCustomerPasswordForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput, required=True, label='New Password')
-    password2 = forms.CharField(widget=forms.PasswordInput, required=True, label='Confirm Password')
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'autofocus': True}), required=True,
+                                label='New Password')
+    password2 = forms.CharField(widget=forms.PasswordInput(), required=True, label='Confirm Password')
 
     class Meta:
         model = User
@@ -162,7 +163,7 @@ class UpdateCustomerPasswordForm(forms.Form):
 
 # Category Forms
 class AddCategoryForm(forms.Form):
-    slug = forms.CharField(required=True, max_length=50)
+    slug = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'autofocus': True}))
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True)
 
@@ -227,7 +228,7 @@ class UpdateCategoryForm(forms.Form):
 
 
 class AddBrandForm(forms.Form):
-    slug = forms.CharField(required=True, max_length=50)
+    slug = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'autofocus': True}))
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload logo', widget=forms.FileInput,
@@ -261,7 +262,7 @@ class AddBrandForm(forms.Form):
 
 
 class UpdateBrandForm(forms.Form):
-    slug = forms.CharField(required=True, max_length=50)
+    slug = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'autofocus': True}))
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload new logo', widget=forms.FileInput,
@@ -309,7 +310,7 @@ class UpdateBrandForm(forms.Form):
 
 # Product Forms
 class AddProductForm(forms.Form):
-    slug = forms.SlugField(required=True, max_length=50)
+    slug = forms.SlugField(required=True, max_length=50, widget=forms.TextInput(attrs={'autofocus': True}))
     name = forms.CharField(required=True, max_length=40)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
@@ -364,7 +365,7 @@ class AddProductForm(forms.Form):
 
 
 class UpdateProductForm(forms.Form):
-    slug = forms.SlugField(required=True, max_length=50)
+    slug = forms.SlugField(required=True, max_length=50, widget=forms.TextInput(attrs={'autofocus': True}))
     name = forms.CharField(required=True, max_length=40)
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True, empty_label="Select Category")
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
@@ -444,7 +445,7 @@ class UpdateProductForm(forms.Form):
 
 # Coupon Forms
 class AddCouponForm(forms.Form):
-    code = forms.CharField(required=True, max_length=20)
+    code = forms.CharField(required=True, max_length=20, widget=forms.TextInput(attrs={'autofocus': True}))
     discount = forms.DecimalField(required=True, label='Discount ($)', max_digits=10, decimal_places=1)
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
@@ -484,7 +485,7 @@ class AddCouponForm(forms.Form):
 
 
 class UpdateCouponForm(forms.Form):
-    code = forms.CharField(required=True, max_length=20)
+    code = forms.CharField(required=True, max_length=20, widget=forms.TextInput(attrs={'autofocus': True}))
     discount = forms.DecimalField(required=True, label='Discount ($)', max_digits=10, decimal_places=1)
     amount = forms.IntegerField(required=True, min_value=1)
     valid_from = forms.DateTimeField(required=True, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
@@ -538,4 +539,4 @@ class UpdateCouponForm(forms.Form):
         self.coupon.save()
         return self.coupon
 
-# Payment Forms
+

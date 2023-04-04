@@ -585,6 +585,10 @@ td.action {
     margin: 15px 10px;
 }
 
+.card-body table tbody tr:hover {
+    background-color: #F5F9FA;
+}
+
 .no-objects {
     margin: 50px auto;
     text-align: center;
@@ -649,7 +653,7 @@ td.action {
 .pagination .current {
     font-weight: bold;
     color: #fff;
-    background-color: #7da6f8;
+    background-color: #1253cc;
 }
 
 .pagination .disabled {

@@ -3,6 +3,8 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('terms_and_conditions/', views.terms_and_conditions, name='terms_and_conditions'),
+    path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
     path('register/', views.register, name='register'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('activate_email/<uidb64>/<token>/', views.activate_new_email, name='activate_email'),

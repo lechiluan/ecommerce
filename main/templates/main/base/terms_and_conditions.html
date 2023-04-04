@@ -1,0 +1,127 @@
+{% extends "main/base/base.html" %}
+{% block title %}LCL Shop - Terms and Conditions{% endblock %}
+
+{% block style %}
+    <style>
+        .terms {
+            padding: 30px;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms .container h1, h2 {
+            color: #000000;
+        }
+
+        .terms .container .terms-title {
+            padding-bottom: 10px;
+            color: #1253cc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terms .container p {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .terms .container ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            list-style-type: disc;
+        }
+
+        .terms .container ul li {
+            font-size: 1em;
+            padding-left: 10px;
+        }
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="terms">
+        <div class="container">
+            <h2 class="font-weight-bold mt-3 terms-title">LCL Shop - Terms and Conditions</h2>
+            <h2>Introduction</h2>
+            <p>Welcome to LCL Shop, an e-commerce website that sells technology devices. These terms and conditions
+                ("Terms") govern your use of our website, located at www.lclshop.com ("Site"), and your purchase of
+                products
+                from our Site. By accessing and using our Site, you agree to be bound by these Terms. If you do not
+                agree to
+                these Terms, you should not use our Site.</p>
+            <h2>Use of the Site</h2>
+            <p>You may use our Site only for lawful purposes and in accordance with these Terms. You agree not to use
+                our
+                Site:</p>
+            <ul>
+                <li>In any way that violates any applicable federal, state, local, or international law or regulation
+                    (including, without limitation, any laws regarding the export of data or software to and from the
+                    United
+                    States or other countries).
+                </li>
+                <li>To transmit, or procure the sending of, any advertising or promotional material, including any "junk
+                    mail", "chain letter," "spam," or any other similar solicitation.
+                </li>
+                <li>To impersonate or attempt to impersonate LCL Shop, a LCL Shop employee, another user, or any other
+                    person or entity.
+                </li>
+                <li>To engage in any other conduct that restricts or inhibits anyone's use or enjoyment of the Site, or
+                    which, as determined by us, may harm LCL Shop or users of the Site or expose them to liability.
+                </li>
+            </ul>
+            <h2>Product Descriptions</h2>
+            <p>We try to be as accurate as possible with our product descriptions and pricing information. However, we
+                do
+                not guarantee that any product description or pricing information is accurate, complete, reliable,
+                current,
+                or error-free. If a product offered by us is not as described, your sole remedy is to return it in
+                unused
+                condition.</p>
+            <h2>Shipping and Delivery</h2>
+            <p>Our shipping and delivery policies are set forth on our Site and are incorporated into these Terms by
+                reference. You agree to be bound by these policies when you place an order with us.</p>
+            <h2>Returns and Refunds</h2>
+            <p>Our return and refund policies are set forth on our Site and are incorporated into these Terms by
+                reference.
+                You agree to bebound by these policies when you make a purchase from us. If you are not satisfied with a
+                product you purchased from us, you may be eligible for a return or refund in accordance with our
+                policies.</p>
+            <h2>Intellectual Property</h2>
+            <p>The Site and its entire contents, features, and functionality (including but not limited to all
+                information,
+                software, text, displays, images, video, and audio, and the design, selection, and arrangement thereof)
+                are
+                owned by LCL Shop, its licensors, or other providers of such material and are protected by United States
+                and
+                international copyright, trademark, patent, trade secret, and other intellectual property or proprietary
+                rights laws.</p>
+            <h2>Limitation of Liability</h2>
+            <p>LCL Shop will not be liable for any damages of any kind arising from the use of this Site or from any
+                products purchased from this Site, including but not limited to direct, indirect, incidental, punitive,
+                and
+                consequential damages.</p>
+            <h2>Changes to these Terms and Conditions</h2>
+            <p>We reserve the right to update or modify these Terms and Conditions at any time without prior notice.
+                Your
+                use of the Site following any such change constitutes your agreement to follow and be bound by the Terms
+                and
+                Conditions as changed. For this reason, we encourage you to review these Terms and Conditions whenever
+                you
+                use this Site.</p>
+            <h2>Contact Us</h2>
+            <p>If you have any questions about these Terms and Conditions, please <a href="/customer/about/">contact
+                us</a> at <a href="mailto:lclshop.dev@gmail.com">lclshop.dev@gmail.com</a>.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

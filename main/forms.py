@@ -20,7 +20,7 @@ def validate_image_size(value):
 
 class RegisterForm(UserCreationForm):
     phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
-    first_name = forms.CharField(required=True)
+    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     last_name = forms.CharField(required=True)
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
@@ -48,9 +48,10 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
+    username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     password = forms.CharField(widget=forms.PasswordInput)
     rememberMe = forms.BooleanField(required=False, label='Remember me', initial=True)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
     class Meta:
         model = User
@@ -95,7 +96,7 @@ class ChangePasswordForm(PasswordChangeForm):
 
 class ChangeEmailForm(forms.ModelForm):
     email = forms.EmailField(label='Current Email', widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    current_password = forms.CharField(label='Current Password', widget=forms.PasswordInput())
+    current_password = forms.CharField(label='Current Password', widget=forms.PasswordInput(attrs={'autofocus': True}))
     new_email = forms.EmailField(label='New Email')
 
     class Meta:
@@ -115,7 +116,8 @@ class ChangeEmailForm(forms.ModelForm):
 
 # DeliveryAddress
 class AddDeliveryAddressForm(forms.Form):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name'}), required=True,
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name', 'autofocus': True}),
+                                 required=True,
                                  max_length=40)
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name'}), required=True,
                                 max_length=40)
@@ -172,7 +174,8 @@ class AddDeliveryAddressForm(forms.Form):
 
 
 class UpdateDeliveryAddressForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name'}), required=True,
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name', 'autofocus': True}),
+                                 required=True,
                                  max_length=40)
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name'}), required=True,
                                 max_length=40)

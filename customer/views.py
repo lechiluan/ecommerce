@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from .forms import FeedbackForm, CheckoutForm, DeliveryAddressForm
+from .forms import FeedbackForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist, Payment
 from django.contrib.auth.models import User
@@ -654,8 +654,10 @@ def send_email_order_customer(request, email, order, order_details, customer):
 def track_orders(request):
     customer = request.user.customer
     orders = Orders.objects.filter(customer=customer)
+    order_details = OrderDetails.objects.filter(id=orders)
     context = {
         'orders': orders,
+        'order_details': order_details,
     }
     return render(request, 'customer_orders/track_orders.html', context)
 

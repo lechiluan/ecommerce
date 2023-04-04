@@ -1,0 +1,93 @@
+{% extends "main/base/base.html" %}
+{% block title %}LCL Shop - Privacy Policy{% endblock %}
+
+{% block style %}
+    <style>
+        .terms {
+            padding: 30px;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms .container h1, h2 {
+            color: #000000;
+        }
+
+        .terms .container .terms-title {
+            padding-bottom: 10px;
+            color: #1253cc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terms .container p {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .terms .container ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            list-style-type: disc;
+        }
+
+        .terms .container ul li {
+            font-size: 1em;
+            padding-left: 10px;
+        }
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="terms">
+        <div class="container">
+            <h2 class="font-weight-bold mt-3 terms-title">LCL Shop - Privacy Policy</h2>
+            <h3>Privacy Policy</h3>
+            <p>We take your privacy seriously and are committed to protecting your personal information. This Privacy
+                Policy
+                explains how we collect, use, and disclose your personal information when you use our Site.</p>
+            <h3>Information We Collect</h3>
+            <p>We may collect personal information such as your name, email address, shipping address, billing address,
+                phone
+                number, and payment information when you make a purchase on our Site. We also collect information about
+                your
+                use of our Site, such as your IP address, browser type, and pages viewed.</p>
+            <h3>How We Use Your Information</h3>
+            <p>We use your personal information to process and fulfill your orders, communicate with you about your
+                orders
+                and our products and services, and to improve our Site and your user experience. We may also use your
+                personal information to send you marketing communications if you have opted-in to receive them.</p>
+            <h3>Disclosure of Your Information</h3>
+            <p>We may share your personal information with our third-party service providers who assist us in operating
+                our
+                Site and processing your orders. We may also disclose your personal information if required by law or to
+                protect our rights or the rights of others.</p>
+            <h3>Security of Your Information</h3>
+            <p>We take reasonable measures to protect your personal information from unauthorized access, use, or
+                disclosure.
+                However, no method of transmission over the internet or electronic storage is completely secure, and we
+                cannot guarantee the absolute security of your personal information.</p>
+            <h3>Changes to this Privacy Policy</h3>
+            <p>We reserve the right to update or modify this Privacy Policy at any time without prior notice. Your use
+                of
+                the Site following any such change constitutes your agreement to follow and be bound by the Privacy
+                Policy
+                as changed. For this reason, we encourage you to review this Privacy Policy whenever you use our
+                Site.</p>
+            <h2>Contact Us</h2>
+            <p>If you have any questions about these Privacy Policy, please <a href="/customer/about/">contact
+                us</a> at <a href="mailto:lclshop.dev@gmail.com">lclshop.dev@gmail.com</a>.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

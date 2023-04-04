@@ -172,7 +172,7 @@ def change_password(request):
 def logout(request):
     auth_logout(request)
     messages.success(request, "You have logged out. See you again. Administrator!")
-    return redirect('/')
+    return redirect('/auth/login/')
 
 
 # Customer Management

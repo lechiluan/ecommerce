@@ -455,8 +455,8 @@
 .button-scroll {
     display: none;
     position: fixed;
-    bottom: 23px;
-    right: 110px;
+    bottom: 90px;
+    right: 33px;
     z-index: 99;
     border: none;
     outline: none;
@@ -632,7 +632,7 @@
 .pagination .current {
     font-weight: bold;
     color: #fff;
-    background-color: #7da6f8;
+    background-color: #1253cc;
 }
 
 .pagination .disabled {
@@ -880,6 +880,7 @@ input[type="checkbox"]:focus {
     .text-checkbox {
         width: 100%;
         padding-left: 30px;
+        padding-right: 30px;
         text-align: left;
     }
 
@@ -911,6 +912,13 @@ input[type="checkbox"]:focus {
         min-width: 280px;
     }
 
+    .text-checkbox {
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        text-align: left;
+    }
+
     .text-img {
         width: 100%;
         padding-left: 30px;
@@ -934,7 +942,7 @@ input[type="checkbox"]:focus {
     .button-scroll {
         display: none;
         position: fixed;
-        bottom: 15px;
+        bottom: 90px;
         right: 20px;
         z-index: 99;
         border: none;
@@ -958,6 +966,13 @@ input[type="checkbox"]:focus {
         min-width: 280px;
     }
 
+    .text-checkbox {
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        text-align: left;
+    }
+
     .text-img {
         width: 100%;
         padding-left: 30px;
@@ -981,7 +996,7 @@ input[type="checkbox"]:focus {
     .button-scroll {
         display: none;
         position: fixed;
-        bottom: 15px;
+        bottom: 90px;
         right: 20px;
         z-index: 99;
         border: none;

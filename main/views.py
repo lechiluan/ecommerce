@@ -89,6 +89,14 @@ def register(request):
     return render(request, 'registration/register/register.html', {'form': form})
 
 
+def terms_and_conditions(request):
+    return render(request, 'main/base/terms_and_conditions.html')
+
+
+def privacy_policy(request):
+    return render(request, 'main/base/privacy_policy.html')
+
+
 def send_email_activate_account(request, user):
     current_site = get_current_site(request)
     mail_subject = 'Activate your account.'
@@ -148,6 +156,10 @@ def login(request, *args, **kwargs):
                     return render(request, "registration/login.html", {"form": form})
                 form.add_error('username', 'Username or password is incorrect')
                 return render(request, "registration/login.html", {"form": form})
+        else:
+            if form.errors.get('captcha'):
+                messages.warning(request, 'Please check the captcha to verify that you are not a robot')
+            return render(request, "registration/login.html", {"form": form})
     else:
         form = LoginForm()
     return render(request, "registration/login.html", {"form": form})
@@ -267,7 +279,7 @@ def change_password(request):
 def logout(request):
     auth_logout(request)
     messages.success(request, "You have logged out. See you again!")
-    return redirect('/')
+    return redirect('/auth/login/')
 
 
 def password_reset_request(request):
