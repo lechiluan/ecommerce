@@ -24,7 +24,7 @@
     <!-- Font Awesome version 4.3.0-->
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"
           type='text/css'>
-    {{ form.media }}
+
 
     <!-- Custom CSS -->
     {% load static %}
@@ -35,9 +35,12 @@
 </head>
 
 <body data-pace-options='{ "ajax": false }'>
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+{{ form.media }}
 
 {% include "dashboard/base/ad_header.html" %}
-
 
 <div class="main">
     {% include "dashboard/base/ad_topbar.html" %}

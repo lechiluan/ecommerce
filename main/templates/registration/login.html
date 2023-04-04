@@ -17,7 +17,6 @@
                 {% csrf_token %}
                 <div class="form-input">{{ form.username|as_crispy_field }}</div>
                 <div class="form-input">{{ form.password|as_crispy_field }}</div>
-                <div class="form-input">{{ form.captcha|as_crispy_field }}</div>
                 <div class="text-checkbox">{{ form.rememberMe|as_crispy_field }}</div>
                 <p>Don't have an account? <a href="/auth/register">Create an account.</a></p>
                 <p><a href="/auth/password_reset">Forgot Password?</a></p>
