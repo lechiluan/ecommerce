@@ -21,6 +21,9 @@ urlpatterns = [
     path('customer/delete_selected/<str:customer_ids>/', views.delete_selected_customer,
          name='delete_selected_customer'),
     path('customer/search/', views.search_customer, name='search_customer'),
+    path('customer/export/csv/', views.export_customer_csv, name='export_customer_csv'),
+    path('customer/export/excel/', views.export_customer_excel, name='export_customer_excel'),
+    path('customer/export/json/', views.export_customer_json, name='export_customer_json'),
 
     # Category URL
     path('category/', views.category_table, name='category_table'),
@@ -31,6 +34,9 @@ urlpatterns = [
     path('category/delete_selected/<str:category_ids>/', views.delete_selected_category,
          name='delete_selected_category'),
     path('category/search/', views.search_category, name='search_category'),
+    path('category/export/csv/', views.export_category_csv, name='export_category_csv'),
+    path('category/export/excel/', views.export_category_excel, name='export_category_excel'),
+    path('category/export/json/', views.export_category_json, name='export_category_json'),
 
     # Brand URL
     path('brand/', views.brand_table, name='brand_table'),
@@ -41,6 +47,9 @@ urlpatterns = [
     path('brand/delete_selected/<str:brand_ids>/', views.delete_selected_brand,
          name='delete_selected_brand'),
     path('brand/search/', views.search_brand, name='search_brand'),
+    path('brand/export/csv/', views.export_brand_csv, name='export_brand_csv'),
+    path('brand/export/excel/', views.export_brand_excel, name='export_brand_excel'),
+    path('brand/export/json/', views.export_brand_json, name='export_brand_json'),
 
     # Product URL
     path('product/', views.product_table, name='product_table'),
@@ -51,6 +60,9 @@ urlpatterns = [
     path('product/delete_selected/<str:product_ids>/', views.delete_selected_product,
          name='delete_selected_product'),
     path('product/search/', views.search_product, name='search_product'),
+    path('product/export/csv/', views.export_product_csv, name='export_product_csv'),
+    path('product/export/excel/', views.export_product_excel, name='export_product_excel'),
+    path('product/export/json/', views.export_product_json, name='export_product_json'),
 
     # Coupon URL
     path('coupon/', views.coupon_table, name='coupon_table'),
@@ -61,11 +73,16 @@ urlpatterns = [
     path('coupon/delete_selected/<str:coupon_ids>/', views.delete_selected_coupon,
          name='delete_selected_coupon'),
     path('coupon/search/', views.search_coupon, name='search_coupon'),
+    path('coupon/export/csv/', views.export_coupon_csv, name='export_coupon_csv'),
+    path('coupon/export/excel/', views.export_coupon_excel, name='export_coupon_excel'),
+    path('coupon/export/json/', views.export_coupon_json, name='export_coupon_json'),
 
     # Order URL
     path('order/', views.order_table, name='order_table'),
     path('order/details/<int:order_id>/', views.order_details, name='order_details'),
-    # path('order/payment/<int:order_id>/', views.order_payment, name='order_payment'),
+    path('order/export/csv/', views.export_order_csv, name='export_order_csv'),
+    path('order/export/excel/', views.export_order_excel, name='export_order_excel'),
+    path('order/export/json/', views.export_order_json, name='export_order_json'),
 
     # Feedback URL
     path('feedback/', views.feedback_table, name='feedback_table'),
@@ -74,21 +91,8 @@ urlpatterns = [
     path('feedback/delete_selected/<str:feedback_ids>/', views.delete_selected_feedback,
          name='delete_selected_feedback'),
     path('feedback/search/', views.search_feedback, name='search_feedback'),
+    path('feedback/export/csv/', views.export_feedback_csv, name='export_feedback_csv'),
+    path('feedback/export/excel/', views.export_feedback_excel, name='export_feedback_excel'),
+    path('feedback/export/json/', views.export_feedback_json, name='export_feedback_json'),
 
-
-    # Export URL
-    # path('export/customer/csv/', views.export_customer_csv, name='export_customer_csv'),
-    # path('export/customer/xls/', views.export_customer_xls, name='export_customer_xls'),
-    # path('export/category/csv/', views.export_category_csv, name='export_category_csv'),
-    # path('export/category/xls/', views.export_category_xls, name='export_category_xls'),
-    # path('export/brand/csv/', views.export_brand_csv, name='export_brand_csv'),
-    # path('export/brand/xls/', views.export_brand_xls, name='export_brand_xls'),
-    # path('export/product/csv/', views.export_product_csv, name='export_product_csv'),
-    # path('export/product/xls/', views.export_product_xls, name='export_product_xls'),
-    # path('export/coupon/csv/', views.export_coupon_csv, name='export_coupon_csv'),
-    # path('export/coupon/xls/', views.export_coupon_xls, name='export_coupon_xls'),
-    # path('export/order/csv/', views.export_order_csv, name='export_order_csv'),
-    # path('export/order/xls/', views.export_order_xls, name='export_order_xls'),
-    # path('export/feedback/csv/', views.export_feedback_csv, name='export_feedback_csv'),
-    # path('export/feedback/xls/', views.export_feedback_xls, name='export_feedback_xls'),
 ]

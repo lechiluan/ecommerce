@@ -22,6 +22,10 @@ from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordFo
     AddCouponForm, UpdateCouponForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, \
     DeliveryAddress
+import csv
+import xlwt
+import json
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -879,7 +883,7 @@ def search_coupon(request):
     return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
 
 
-# Payement Management
+# Payment Management
 
 
 # Order Management
@@ -1063,3 +1067,596 @@ def search_feedback(request):
                'search_query': search_query}
     return render(request, 'dashboard/manage_feedback/feedback_table.html', context)
 
+
+# Export Customer
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_customer_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="customers.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ['ID', 'Username', 'First Name', 'Last Name', 'Email', 'Mobile', 'Address', 'Customer Image', 'Last Login',
+         'Date Joined', 'Active', 'Admin'])
+
+    customers = Customer.objects.all().order_by('id')
+    for customer in customers:
+        writer.writerow([customer.user.id if customer.user.id else '',
+                         customer.user.username if customer.user.username else '',
+                         customer.user.first_name if customer.user.first_name else '',
+                         customer.user.last_name if customer.user.last_name else '',
+                         customer.user.email if customer.user.email else '',
+                         customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
+                         customer.address if customer.address else '',
+                         customer.customer_image if customer.customer_image else '',
+                         customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                        '') if customer.user.last_login else '',
+                         customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                         '') if customer.user.date_joined else '',
+                         customer.user.is_active if customer.user.is_active else 'False',
+                         customer.user.is_superuser if customer.user.is_superuser else 'False'])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_customer_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="customers.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Customers')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Username', 'First Name', 'Last Name', 'Email', 'Mobile', 'Address', 'Customer Image',
+               'Last Login', 'Date Joined', 'Active', 'Admin']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    customers = Customer.objects.all().order_by('id')
+
+    for customer in customers:
+        row_num += 1
+        row = [
+            customer.user.id if customer.user.id else '',
+            customer.user.username if customer.user.username else '',
+            customer.user.first_name if customer.user.first_name else '',
+            customer.user.last_name if customer.user.last_name else '',
+            customer.user.email if customer.user.email else '',
+            customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
+            customer.address if customer.address else '',
+            customer.customer_image.name if customer.customer_image else '',
+            customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                           '') if customer.user.last_login else '',
+            customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                            '') if customer.user.date_joined else '',
+            customer.user.is_active if customer.user.is_active else 'False',
+            customer.user.is_superuser if customer.user.is_superuser else 'False',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_customer_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="customers.json"'
+
+    customers = Customer.objects.all().order_by('id')
+
+    data = []
+    for customer in customers:
+        customer_data = {
+            'id': customer.user.id if customer.user.id else '',
+            'username': customer.user.username if customer.user.username else '',
+            'first_name': customer.user.first_name if customer.user.first_name else '',
+            'last_name': customer.user.last_name if customer.user.last_name else '',
+            'email': customer.user.email if customer.user.email else '',
+            'mobile': customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
+            'address': customer.address if customer.address else '',
+            'customer_image': customer.customer_image.name if customer.customer_image else '',
+            'last_login': customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                         '') if customer.user.last_login else '',
+            'date_joined': customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                           '') if customer.user.date_joined else '',
+            'is_active': customer.user.is_active if customer.user.is_active else False,
+            'is_superuser': customer.user.is_superuser if customer.user.is_superuser else False,
+        }
+        data.append(customer_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+# Category Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_category_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="categories.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Category Slug', 'Category Name', 'Category Description'])
+
+    categories = Category.objects.all().order_by('id')
+    for category in categories:
+        writer.writerow([category.id if category.id else '',
+                         category.slug if category.slug else '',
+                         category.name if category.name else '',
+                         category.description if category.description else ''])
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_category_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="categories.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Categories')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Category Slug', 'Category Name', 'Category Description']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    categories = Category.objects.all().order_by('id')
+
+    for category in categories:
+        row_num += 1
+        row = [
+            category.id if category.id else '',
+            category.slug if category.slug else '',
+            category.name if category.name else '',
+            category.description if category.description else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_category_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="categories.json"'
+
+    categories = Category.objects.all().order_by('id')
+
+    data = []
+    for category in categories:
+        category_data = {
+            'id': category.id if category.id else '',
+            'slug': category.slug if category.slug else '',
+            'name': category.name if category.name else '',
+            'description': category.description if category.description else '',
+        }
+        data.append(category_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+# Brand Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_brand_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="brands.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Brand Slug', 'Brand Name', 'Brand Description', 'Brand Logo Image'])
+
+    brands = Brand.objects.all().order_by('id')
+    for brand in brands:
+        writer.writerow([brand.id if brand.id else '',
+                         brand.slug if brand.slug else '',
+                         brand.name if brand.name else '',
+                         brand.description if brand.description else '',
+                         brand.logo.name if brand.logo else ''])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_brand_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="brands.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Brands')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Brand Slug', 'Brand Name', 'Brand Description', 'Brand Logo Image']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    brands = Brand.objects.all().order_by('id')
+
+    for brand in brands:
+        row_num += 1
+        row = [
+            brand.id if brand.id else '',
+            brand.slug if brand.slug else '',
+            brand.name if brand.name else '',
+            brand.description if brand.description else '',
+            brand.logo.name if brand.logo else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_brand_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="brands.json"'
+
+    brands = Brand.objects.all().order_by('id')
+
+    data = []
+    for brand in brands:
+        brand_data = {
+            'id': brand.id if brand.id else '',
+            'slug': brand.slug if brand.slug else '',
+            'name': brand.name if brand.name else '',
+            'description': brand.description if brand.description else '',
+            'brand_logo': brand.logo.name if brand.logo else '',
+        }
+        data.append(brand_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+# Coupon Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_coupon_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="coupons.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ['ID', 'Coupon Code', 'Coupon Discount', 'Coupon Amount', 'Valid From', 'Valid To', 'Coupon Status'])
+
+    coupons = Coupon.objects.all().order_by('id')
+    for coupon in coupons:
+        writer.writerow([coupon.id if coupon.id else '',
+                         coupon.code if coupon.code else '',
+                         float(coupon.discount) if coupon.discount else '',
+                         coupon.amount if coupon.amount else '',
+                         coupon.valid_from.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                 '') if coupon.valid_from else '',
+                         coupon.valid_to.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if coupon.valid_to else '',
+                         coupon.is_active if coupon.is_active else 'False'])
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_coupon_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="coupons.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Coupons')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Coupon Code', 'Coupon Discount', 'Coupon Amount', 'Valid From', 'Valid To', 'Coupon Status']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    coupons = Coupon.objects.all().order_by('id')
+
+    for coupon in coupons:
+        row_num += 1
+        row = [
+            coupon.id if coupon.id else '',
+            coupon.code if coupon.code else '',
+            float(coupon.discount) if coupon.discount else '',
+            coupon.amount if coupon.amount else '',
+            coupon.valid_from.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if coupon.valid_from else '',
+            coupon.valid_to.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if coupon.valid_to else '',
+            coupon.is_active if coupon.is_active else 'False',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_coupon_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="coupons.json"'
+
+    coupons = Coupon.objects.all().order_by('id')
+
+    data = []
+    for coupon in coupons:
+        coupon_data = {
+            'id': coupon.id if coupon.id else '',
+            'code': coupon.code if coupon.code else '',
+            'discount': float(coupon.discount) if coupon.discount else '',
+            'amount': coupon.amount if coupon.amount else '',
+            'valid_from': coupon.valid_from.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00' or '+00:00',
+                                                                                  '') if coupon.valid_from else '',
+            'valid_to': coupon.valid_to.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00' or '+00:00',
+                                                                              '') if coupon.valid_to else '',
+            'is_active': coupon.is_active if coupon.is_active else 'False',
+        }
+        data.append(coupon_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+#  Product Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_product_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="products.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ['ID', 'Product Name', 'Product Slug', 'Category','Brand', ' Price Original',
+         'Price', 'Old Price', 'Stock', 'Product Image', 'Sold','Description', 'Created At', 'Updated At'])
+
+    products = Product.objects.all().order_by('id')
+    for product in products:
+        writer.writerow([product.id if product.id else '',
+                         product.name if product.name else '',
+                         product.slug if product.slug else '',
+                         product.category.name if product.category else '',
+                         product.brand.name if product.brand else '',
+                         float(product.price_original) if product.price_original else '',
+                         float(product.price) if product.price else '',
+                         float(product.old_price) if product.old_price else '',
+                         product.stock if product.stock else '',
+                         product.image.name if product.image else '',
+                         product.sold if product.sold else '',
+                         product.description if product.description else '',
+                         product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
+                         product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else ''])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_product_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="products.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Products')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Product Name', 'Product Slug', 'Category','Brand', ' Price Original',
+               'Price', 'Old Price', 'Stock', 'Product Image', 'Sold','Description', 'Created At', 'Updated At']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    products = Product.objects.all().order_by('id')
+
+    for product in products:
+        row_num += 1
+        row = [
+            product.id if product.id else '',
+            product.name if product.name else '',
+            product.slug if product.slug else '',
+            product.category.name if product.category else '',
+            product.brand.name if product.brand else '',
+            float(product.price_original) if product.price_original else '',
+            float(product.price) if product.price else '',
+            float(product.old_price) if product.old_price else '',
+            product.stock if product.stock else '',
+            product.image.name if product.image else '',
+            product.sold if product.sold else '',
+            product.description if product.description else '',
+            product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
+            product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_product_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="products.json"'
+
+    products = Product.objects.all().order_by('id')
+
+    data = []
+    for product in products:
+        product_data = {
+            'id': product.id if product.id else '',
+            'name': product.name if product.name else '',
+            'slug': product.slug if product.slug else '',
+            'category': product.category.name if product.category else '',
+            'brand': product.brand.name if product.brand else '',
+            'price_original': float(product.price_original) if product.price_original else '',
+            'price': float(product.price) if product.price else '',
+            'old_price': float(product.old_price) if product.old_price else '',
+            'stock': product.stock if product.stock else '',
+            'image': product.image.name if product.image else '',
+            'sold': product.sold if product.sold else '',
+            'description': product.description if product.description else '',
+            'created_at': product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
+            'updated_at': product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else '',
+        }
+        data.append(product_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+# Feedback Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_feedback_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="feedbacks.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Name', 'Email', 'Mobile', 'Subject', 'Message', 'Date Sent'])
+
+    feedbacks = Feedback.objects.all().order_by('id')
+    for feedback in feedbacks:
+        writer.writerow([feedback.id if feedback.id else '',
+                         feedback.name if feedback.name else '',
+                         feedback.email if feedback.email else '',
+                         feedback.mobile if feedback.mobile else '',
+                         feedback.subject if feedback.subject else '',
+                         feedback.message if feedback.message else '',
+                         feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if feedback.date_sent else ''])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_feedback_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="feedbacks.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Feedbacks')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Name', 'Email', 'Mobile', 'Subject', 'Message', 'Date Sent']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    feedbacks = Feedback.objects.all().order_by('id')
+
+    for feedback in feedbacks:
+        row_num += 1
+        row = [
+            feedback.id if feedback.id else '',
+            feedback.name if feedback.name else '',
+            feedback.email if feedback.email else '',
+            feedback.mobile if feedback.mobile else '',
+            feedback.subject if feedback.subject else '',
+            feedback.message if feedback.message else '',
+            feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if feedback.date_sent else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_feedback_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="feedbacks.json"'
+
+    feedbacks = Feedback.objects.all().order_by('id')
+
+    data = []
+    for feedback in feedbacks:
+        feedback_data = {
+            'id': feedback.id if feedback.id else '',
+            'name': feedback.name if feedback.name else '',
+            'email': feedback.email if feedback.email else '',
+            'mobile': feedback.mobile if feedback.mobile else '',
+            'subject': feedback.subject if feedback.subject else '',
+            'message': feedback.message if feedback.message else '',
+            'date_sent': feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if feedback.date_sent else '',
+        }
+        data.append(feedback_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+# Order Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_order_csv(request):
+    pass
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_order_excel(request):
+    pass
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_order_json(request):
+    pass

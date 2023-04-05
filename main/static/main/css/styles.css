@@ -456,8 +456,8 @@
 .button-scroll {
     display: none;
     position: fixed;
-    bottom: 90px;
-    right: 33px;
+    bottom: 25px;
+    right: 90px;
     z-index: 99;
     border: none;
     outline: none;
@@ -943,8 +943,8 @@ input[type="checkbox"]:focus {
     .button-scroll {
         display: none;
         position: fixed;
-        bottom: 90px;
-        right: 20px;
+        bottom: 25px;
+        right: 90px;
         z-index: 99;
         border: none;
         outline: none;
@@ -997,8 +997,8 @@ input[type="checkbox"]:focus {
     .button-scroll {
         display: none;
         position: fixed;
-        bottom: 90px;
-        right: 20px;
+        bottom: 25px;
+        right: 90px;
         z-index: 99;
         border: none;
         outline: none;

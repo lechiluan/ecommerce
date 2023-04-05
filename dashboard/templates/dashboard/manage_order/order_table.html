@@ -58,8 +58,9 @@
                 Export Data
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="/dashboard/export/order/csv/">CSV</a>
-                <a class="dropdown-item" href="/dashboard/export/order/xls/">Excel</a>
+                <a class="dropdown-item" href="/dashboard/order/export/csv/">Export to CSV</a>
+                <a class="dropdown-item" href="/dashboard/order/export/excel/">Export to Excel</a>
+                <a class="dropdown-item" href="/dashboard/order/export/json/">Export to JSON</a>
             </div>
         </div>
         {% if orders %}
@@ -92,7 +93,7 @@
                                 <td>
                                     <div class="main-image-table">
                                         {% if order.customer.customer_image %}
-                                            <img src="{{ MEDIA_URL }}{{order.customer.customer_image.url }}"
+                                            <img src="{{ MEDIA_URL }}{{ order.customer.customer_image.url }}"
                                                  alt="Product Image"
                                                  class="img-thumbnail image-table"
                                                  title="Product image of {{ order.customer.user.username }}"/>
