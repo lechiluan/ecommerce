@@ -14,7 +14,8 @@
 /*#ffffff white */
 /*ff2020 red*/
 
-/*Breadcrumbs*/
+
+/* Breadcrumb */
 .breadcrumb {
     display: flex;
     align-items: center;
@@ -25,7 +26,7 @@
 }
 
 .breadcrumb a {
-    color: #333;
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -34,7 +35,7 @@
 }
 
 .breadcrumb span {
-    color: #000000;
+    color: #ffffff;
     margin: 0 8px;
 }
 
@@ -513,7 +514,7 @@
 /* Form CSS */
 .container-main {
     padding-bottom: 20px;
-    padding-top: 20px;
+    padding-top: 0;
 }
 
 .form-main {

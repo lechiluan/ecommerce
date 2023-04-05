@@ -88,7 +88,7 @@
                                            value="{{ order.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ order.id }}</td>
-                                <td>{{ order.customer.user.username }}</td>
+                                <td>{{ order.customer.user.first_name }} {{ order.customer.user.last_name }}</td>
                                 <td>
                                     <div class="main-image-table">
                                         {% if order.customer.customer_image %}

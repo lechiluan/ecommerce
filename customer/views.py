@@ -604,7 +604,10 @@ def checkout(request):
             send_email_order_customer(request, delivery_address.email, order, order_details, customer)
             send_email_order_customer(request, user.email, order, order_details, customer)
             messages.success(request, 'Order placed successfully')
-            return redirect('/')
+            context = {
+                'order': order,
+            }
+            return render(request, 'customer_cart/orders_success.html', context)
 
         total = sum([cart_item.sub_total for cart_item in cart_items])
         context = {
@@ -678,3 +681,23 @@ def get_address(request, address_id):
         })
     except DeliveryAddress.DoesNotExist:
         return JsonResponse({'error': 'Address not found'}, status=404)
+
+
+def get_default_address(request):
+    try:
+        address = DeliveryAddress.objects.get(customer=request.user.customer, is_default=True)
+        return JsonResponse({
+            'id': address.id,
+            'first_name': address.first_name,
+            'last_name': address.last_name,
+            'mobile': address.mobile,
+            'email': address.email,
+            'address': address.address,
+            'city': address.city,
+            'state': address.state,
+            'country': address.country,
+            'zip_code': address.zip_code,
+        })
+    except DeliveryAddress.DoesNotExist:
+        return JsonResponse({'error': 'Address not found'}, status=404)
+

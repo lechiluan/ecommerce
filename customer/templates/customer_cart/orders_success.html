@@ -1,0 +1,63 @@
+{% extends "main/base/base.html" %}
+{% block title %}Order Success{% endblock %}
+
+{% block style %}
+    <style>
+        .order {
+            background-color: #ffffff;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .order .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .order img {
+            width: 300px;
+            height: 300px;
+        }
+
+        .order .container .btn-continue {
+            margin-top: 10px;
+            height: 50px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/customer/track_orders/">Track Orders</a>
+    </div>
+    <div class="order">
+        <div class="container">
+            <h2 class="font-weight-bold mt-3 form-title">Order Success</h2>
+            <img src="{% static 'main/images/main/order.gif' %}" alt="Order Success"/>
+            <h3 class="text-center mt-3">Your order has been successfully placed. You order id is {{ order.id }}.</h3>
+            <h3 class="text-center mt-1"><a href="/customer/track_orders/">Please please here to see your order
+                details.</a></h3>
+            <h3 class="text-center mt-1">You will receive an email with the order details.</h3>
+            <h3 class="text-center mt-1">Thank you for shopping with us.</h3>
+            <a type="button" class="btn btn-success btn-continue" href="/">Continue Shopping</a>
+
+        </div>
+    </div>
+    {% include "main/base/services.html" %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

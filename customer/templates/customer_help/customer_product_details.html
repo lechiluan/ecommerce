@@ -74,6 +74,11 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/customer/product/details/{{ product.slug }}">{{ product.name }}</a>
+    </div>
     <div class="product-details">
         <div class="container">
             <div class="row">

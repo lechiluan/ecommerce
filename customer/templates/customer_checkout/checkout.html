@@ -65,6 +65,7 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 5px;
+            width: 100%;
         }
 
         input[type="text"],
@@ -132,6 +133,13 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/customer/cart/">My Shopping Cart</a>
+        <span> > </span>
+        <a href="/customer/checkout/">Checkout</a>
+    </div>
     <div class="checkout-container">
         <h2 class="font-weight-bold form-title">Checkout</h2>
         <div class="container">
@@ -146,13 +154,21 @@
                                 <select name="delivery_address" id="delivery_address" required>
                                     <option value="0" disabled selected>Select Delivery Address - If any</option>
                                     {% for address in delivery_address %}
-                                        <option value="{{ address.id }}">{{ address }}</option>
+                                        {% if address.is_default %}
+                                            <option value="{{ address.id }}" selected>{{ address.address }} (Default)
+                                            </option>
+                                        {% else %}
+                                            <option value="{{ address.id }}">{{ address.address }}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="inputBox" id="edit-delivery-address-container" style="display: none;">
                                 <span class="label">Edit you delivery address*</span>
-                                <a type="button" class="btn btn-primary btn-add" href="#" id="edit-delivery-address">Edit Delivery Address</a>
+                                <button type="button" class="btn btn-primary btn-add" href="#"
+                                        id="edit-delivery-address">Edit
+                                    Delivery Address
+                                </button>
                                 <div class="inputBox">
                                     <span class="label">Firstname*</span>
                                     <input type="text" name="firstname" required placeholder="Brain" readonly>
@@ -197,7 +213,8 @@
                         {% else %}
                             <div class="inputBox">
                                 <span class="label">Your delivery address is empty. Please add a delivery address to checkout.</span>
-                                <a type="button" class="btn btn-primary btn-add" href="/auth/delivery_address/add/?next=/customer/checkout/`"
+                                <a type="button" class="btn btn-primary btn-add"
+                                   href="/auth/delivery_address/add/?next=/customer/checkout/`"
                                    id="add-delivery-address">Add A Delivery Address</a>
                             </div>
                         {% endif %}
@@ -220,35 +237,35 @@
                             {% load static %}<img src="{% static 'main/images/payments/payment-method.png' %}"
                                                   alt="payment method">
                         </div>
-
-                        <div class="inputBox">
-                            <span class="label">Card Type*</span>
-                            <select name="card" required>
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                                <option value="payonner">Payonner</option>
-                                <option value="masetro">Masetro</option>
-                            </select>
-                        </div>
-                        <div class="inputBox">
-                            <span class="label">Name on Card*</span>
-                            <input type="text" name="nameofcard" required placeholder="Brain Lee">
-                        </div>
-
-                        <div class="inputBox">
-                            <span class="label">Card Number*</span>
-                            <input type="text" id="card-number" name="cardnumber" class="card-number" required
-                                   placeholder="1234 5678 9012 3456">
-                        </div>
-
-                        <div class="flex">
+                        <div class="payment-container">
                             <div class="inputBox">
-                                <span class="label">Expiry Date*</span>
-                                <input type="text" name="expiryDate" required placeholder="MM/YY">
+                                <span class="label">Card Type*</span>
+                                <select name="card" required>
+                                    <option value="visa">Visa</option>
+                                    <option value="mastercard">Mastercard</option>
+                                    <option value="payonner">Payonner</option>
+                                    <option value="masetro">Masetro</option>
+                                </select>
                             </div>
                             <div class="inputBox">
-                                <span class="label">CVV*</span>
-                                <input type="number" name="CVV" required placeholder="123">
+                                <span class="label">Name on Card*</span>
+                                <input type="text" name="nameofcard" required placeholder="Brain Lee">
+                            </div>
+
+                            <div class="inputBox">
+                                <span class="label">Card Number*</span>
+                                <input type="text" id="card-number" name="cardnumber" class="card-number" required
+                                       placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="flex">
+                                <div class="inputBox">
+                                    <span class="label">Expiry Date*</span>
+                                    <input type="text" name="expiryDate" required placeholder="MM/YY">
+                                </div>
+                                <div class="inputBox">
+                                    <span class="label">CVV*</span>
+                                    <input type="number" name="CVV" required placeholder="123">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -260,7 +277,7 @@
     {% include 'main/base/services.html' %}
 {% endblock %}
 {% block scripts %}
-    <script>
+    <script type="text/javascript">
         const addressSelect = document.getElementById('delivery_address');
         const firstnameInput = document.querySelector('input[name="firstname"]');
         const lastnameInput = document.querySelector('input[name="lastname"]');
@@ -273,6 +290,32 @@
         const zipcodeInput = document.querySelector('input[name="zipcode"]');
 
         const editDeliveryAddress = document.getElementById('edit-delivery-address-container');
+        // Get the default address from the database
+        fetch('/customer/get_default_address/')
+            .then(response => response.json())
+            .then(defaultAddress => {
+                // Check if the default address exists
+                if (defaultAddress) {
+                    // Show the edit delivery address container
+                    editDeliveryAddress.style.display = 'block';
+                    // Select the default address in the dropdown
+                    const defaultOption = document.querySelector(`option[value='${defaultAddress.id}']`);
+                    defaultOption.selected = true;
+                    // Display the default address info
+                    firstnameInput.value = defaultAddress.first_name;
+                    lastnameInput.value = defaultAddress.last_name;
+                    phoneInput.value = defaultAddress.mobile;
+                    emailInput.value = defaultAddress.email;
+                    addressInput.value = defaultAddress.address;
+                    cityInput.value = defaultAddress.city;
+                    countryInput.value = defaultAddress.country;
+                    stateInput.value = defaultAddress.state;
+                    zipcodeInput.value = defaultAddress.zip_code;
+                } else {
+                    // Hide the edit delivery address container
+                    editDeliveryAddress.style.display = 'none';
+                }
+            });
         addressSelect.addEventListener('change', (event) => {
             const selectedOption = addressSelect.options[addressSelect.selectedIndex];
             if (selectedOption.value !== '0') {
@@ -317,7 +360,7 @@
             event.preventDefault();
             const selectedOption = addressSelect.options[addressSelect.selectedIndex];
             if (selectedOption.value !== '0') {
-                window.location.href = `/auth/delivery_address/update/${selectedOption.value}/?next=/customer/checkout/;
+                window.location.href = `/auth/delivery_address/update/${selectedOption.value}/?next=/customer/checkout/`;
             }
         });
 

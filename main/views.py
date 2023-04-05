@@ -382,6 +382,9 @@ def delete_delivery_address(request, delivery_address_id):
         messages.warning(request,
                          'The delivery address {} you are trying to delete does not exist!'.format(delivery_address_id))
         return redirect('/auth/delivery_address/')
+    if delivery_address.is_default:
+        messages.warning(request, 'You cannot delete the default delivery address!')
+        return redirect('/auth/delivery_address/')
     delivery_address.delete()
     messages.success(request, 'Delivery address {} deleted successfully!'.format(delivery_address_id))
     return redirect('/auth/delivery_address/')
@@ -398,8 +401,12 @@ def delete_selected_delivery_address(request, delivery_address_ids):
             for delivery_address_id in delivery_address_ids:
                 try:
                     delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
-                    delivery_address.delete()
-                    messages.success(request, 'Delivery address deleted successfully!')
+                    if delivery_address.is_default:
+                        messages.warning(request, 'You cannot delete the default delivery address!')
+                        return redirect('/auth/delivery_address/')
+                    else:
+                        delivery_address.delete()
+                        messages.success(request, 'Delivery address deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The delivery address with ID {delivery_address_id} does not exist!')
             return redirect('/auth/delivery_address/')

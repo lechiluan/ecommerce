@@ -151,8 +151,8 @@ class AddDeliveryAddressForm(forms.Form):
             self.add_error('mobile', 'Mobile already exists')
         if is_default and DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exists():
             self.add_error('is_default', 'Default address already exists')
-        else:
-            self.cleaned_data['is_default'] = is_default
+        elif not is_default and not DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exists():
+            self.add_error('is_default', 'Please set a default address')
 
     def save(self, commit=True):
         delivery_address = DeliveryAddress(
@@ -210,6 +210,9 @@ class UpdateDeliveryAddressForm(forms.ModelForm):
         if is_default and DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exclude(
                 id=self.instance.id).exists():
             self.add_error('is_default', 'Default address already exists')
+        elif not is_default and not DeliveryAddress.objects.filter(customer=self.customer, is_default=True).exclude(
+                id=self.instance.id).exists():
+            self.add_error('is_default', 'At least one default address is required')
         else:
             self.cleaned_data['is_default'] = is_default
 

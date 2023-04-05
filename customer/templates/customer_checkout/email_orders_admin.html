@@ -16,17 +16,20 @@
             th, td {
                 text-align: left;
                 padding: 8px;
-                background: #7da6f8;
+                background: #1253cc;
+                color: #fff;
                 border: 1px solid #000;
             }
 
             th {
-                background-color: #7da6f8;
+                color: #fff;
+                background-color: #1253cc;
             }
 
             tfoot td {
                 font-weight: bold;
-                background: #7da6f8;
+                color: #fff;
+                background: #1253cc;
             }
 
             /* ... */
@@ -38,21 +41,41 @@
     <p>An order has been placed on {{ domain }} by {{ customer.user.username }} - {{ customer.user.email }}. Please
         login to the admin dashboard to view the order details.</p>
     <p>Order details:</p>
-    <table style="border: 1px solid black; border-collapse: collapse;">
+    <table>
+        <thead>
         <tr>
             <th>Product</th>
             <th>Quantity</th>
             <th>Price</th>
         </tr>
+        </thead>
+        <tbody>
         {% for item in order_details %}
             <tr>
                 <td>{{ item.product.name }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.product.price }}</td>
+                <td>{{ item.price }}</td>
             </tr>
         {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2">Sub-total:</td>
+            <td>{{ order.sub_total }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Discount:</td>
+            <td>{{ order.total_discount }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Total:</td>
+            <td>{{ order.total_amount }}</td>
+        </tr>
+        </tfoot>
     </table>
-    <p><strong>Total: {{ order.total_amount }}</strong></p>
+    <p>Customer delivery address:</p>
+    <p>{{ order.delivery_address.address }}</p>
+    <p>{{ order.delivery_address.city }}, {{ order.delivery_address.state }} {{ order.delivery_address.zip_code }}</p>
     <p>
         Sincerely, <br>
         LCL Shop
