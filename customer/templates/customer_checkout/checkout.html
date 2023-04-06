@@ -4,7 +4,8 @@
     <style>
         .checkout-container {
             width: 100%;
-            padding: 50px 0;
+            padding-top: 50px;
+            padding-bottom: 5px;
             background-color: #ffffff;
             display: flex;
             justify-content: center;
@@ -29,6 +30,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            padding-top: 20px;
+            padding-bottom: 5px;
         }
 
         .checkout-container .container form .row .col {
@@ -59,7 +62,7 @@
         .checkout-container .container form .row .col .inputBox .btn-add {
             background-color: #1253cc;
             color: #fff;
-            height: 45px;
+            height: 47px;
             border-radius: 5px;
             display: flex;
             justify-content: center;
@@ -91,15 +94,16 @@
             display: flex;
             justify-content: space-between;
             gap: 10px;
+
         }
 
         .checkout-container .container form .row .col .flex .inputBox {
-            margin-top: 5px;
+            margin-top: 0;
         }
 
         .checkout-container .container form .row .col .inputBox img {
             max-width: 100%;
-            height: 45px;
+            height: 47px;
             filter: drop-shadow(0 0 1px #000);
         }
 
@@ -107,7 +111,8 @@
             display: block;
             width: 100%;
             padding: 10px;
-            margin-top: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
             border: none;
             border-radius: 5px;
             background-color: #1253cc;
@@ -126,12 +131,275 @@
         .submit-btn:focus {
             outline: none;
         }
+
+        .cart-container {
+            width: 100%;
+            padding: 5px 20px 20px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .cart-container .container {
+            padding: 20px;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-main thead {
+            background: #f5f5f5;
+        }
+
+        .table-main thead th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tbody td {
+            padding: 10px;
+        }
+
+        .table-main tbody td img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .table-main tbody td .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .table-main tbody td .delete-btn {
+            width: 100%;
+        }
+
+        .table-main tfoot {
+            background: #f5f5f5;
+        }
+
+        .table-main tfoot th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tfoot td {
+            padding: 10px;
+        }
+
+        .table-main tfoot td .btn {
+            width: 100%;
+        }
+
+        /* Make the table rows alternate colors for better readability */
+        .table-main tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+
+        /* Style the plus/minus buttons and quantity input */
+        .quantity-input {
+            width: 50px !important;
+            text-align: center !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            margin: 0 5px !important;
+            font-size: 16px !important;
+            height: 37px !important;
+            padding: 0 !important;
+        }
+
+        .minus-btn,
+        .plus-btn {
+            width: 37px;
+            height: 37px;
+            background-color: #1253cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .minus-btn:hover,
+        .plus-btn:hover {
+            background-color: #0062cc;
+        }
+
+        .minus-btn:focus,
+        .plus-btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+            border: none;
+        }
+
+        .quantity {
+            white-space: nowrap;
+        }
+
+        .quantity form {
+            display: inline-block;
+        }
+
+        .quantity .update-btn {
+            background-color: #1253cc;
+            border-color: #1253cc;
+            height: 37px;
+            margin-left: 5px;
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            border: none;
+        }
+
+        .delete-btn:hover {
+            background-color: transparent;
+            border: none;
+        }
+
+        .delete-btn:focus {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .delete-btn img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .quantity .update-btn:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+
+        /* Style the checkout button */
+        .action .btn-primary {
+            background-color: #1253cc;
+            border-color: #1253cc;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .action .btn-success {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .action .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+        .btn-primary:focus,
+        .btn-success:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+        }
+
+        .row {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+
+        .table-title {
+            background-color: #1253cc;
+        }
+
+        .table-coupon .btn-primary {
+            background-color: #1253cc;
+            border-color: #1253cc;
+        }
+
+        .table-coupon .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+        .table-title tr th {
+            color: #fff;
+            padding: 10px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .table-coupon .form-control {
+            display: inline-block;
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .table-coupon .btn-primary {
+            display: block;
+            width: 100%;
+        }
+
+        .table-total tbody tr:hover {
+            background-color: #F5F9FA;
+        }
+
+        @media (min-width: 768px) {
+            .table-coupon .form-control {
+                display: inline-block;
+                width: 65%;
+                margin-right: 10px;
+                margin-bottom: 0;
+            }
+
+            .table-coupon .btn-primary {
+                display: inline-block;
+                width: 30%;
+            }
+        }
+
+        .table-cart {
+            margin-top: 10px;
+        }
+
+        .table-cart tbody tr:hover {
+            background-color: #F5F9FA;
+        }
+
+        .table-cart .img-cart {
+            width: 80px;
+            height: 80px;
+        }
+
+        .img-thumbnail {
+            max-width: none;
+        }
+
+        .table-cart .price {
+            color: #ff0000;
+            font-weight: 600;
+        }
+
+        .table-total .price {
+            color: #ff0000;
+            font-weight: 600;
+        }
+
+        .table-cart table thead {
+            background-color: #1253cc;
+            color: #fff;
+        }
     </style>
 {% endblock %}
 
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
-
+{% load static %}
 {% block content %}
     <div class="breadcrumb">
         <a href="/">Home</a>
@@ -164,7 +432,13 @@
                                 </select>
                             </div>
                             <div class="inputBox" id="edit-delivery-address-container" style="display: none;">
-                                <span class="label">Edit you delivery address*</span>
+                                <div class="inputBox">
+                                    <span class="label">Add new delivery address</span>
+                                    <a type="button" class="btn btn-primary btn-add"
+                                       href="/auth/delivery_address/add/?next=/customer/checkout/"
+                                       id="add-delivery-address">Add A Delivery Address</a>
+                                </div>
+                                <span class="label">Edit you delivery address</span>
                                 <button type="button" class="btn btn-primary btn-add" href="#"
                                         id="edit-delivery-address">Edit
                                     Delivery Address
@@ -214,7 +488,7 @@
                             <div class="inputBox">
                                 <span class="label">Your delivery address is empty. Please add a delivery address to checkout.</span>
                                 <a type="button" class="btn btn-primary btn-add"
-                                   href="/auth/delivery_address/add/?next=/customer/checkout/`"
+                                   href="/auth/delivery_address/add/?next=/customer/checkout/"
                                    id="add-delivery-address">Add A Delivery Address</a>
                             </div>
                         {% endif %}
@@ -272,6 +546,136 @@
                 </div>
                 <button type="submit" class="btn btn-primary submit-btn">Place Your Order</button>
             </form>
+        </div>
+    </div>
+    <div class="cart-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2 class="font-weight-bold form-title">Review Cart</h2>
+                    {% if cart_items %}
+                        <div class="table-responsive table-cart">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Unit Total</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><img class="img-thumbnail img-cart"
+                                                 src="{{ MEDIA_URL }}{{ cart_item.product.product_image.url }}"
+                                                 alt="{{ cart_item.product.name }}"></td>
+                                        <td>{{ cart_item.product.name }}</td>
+                                        <td class="quantity">
+                                            <form action="/customer/update_quantity/{{ cart_item.product.slug }}/?next=/customer/checkout/"
+                                                  method="post" onsubmit="return checkQuantity(this);">
+                                                {% csrf_token %}
+                                                <a href="/customer/remove_quantity/{{ cart_item.product.slug }}/?next=/customer/checkout/"
+                                                   class="btn btn-sm btn-secondary minus-btn"
+                                                   onclick="confirmRemove(event, {{ cart_item.quantity }})">-</a>
+                                                <input type="hidden" name="product_id"
+                                                       value="{{ cart_item.product.id }}">
+                                                <input type="number" class="quantity-input" name="quantity"
+                                                       value="{{ cart_item.quantity }}" min="0" pattern="[0-9]*"
+                                                       onkeydown="if (event.keyCode === 109 || event.keyCode === 189 || event.keyCode === 187 || event.keyCode === 107) return false;">
+                                                <a href="/customer/add_quantity/{{ cart_item.product.slug }}/?next=/customer/checkout/"
+                                                   class="btn btn-sm btn-secondary plus-btn">+</a>
+                                                <button type="submit" class="btn btn-sm btn-primary update-btn">Update
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="price">${{ cart_item.price }}</td>
+                                        <td class="price">${{ cart_item.sub_total }}</td>
+                                        <td>
+                                            <form action="/customer/remove_from_cart/{{ cart_item.product.slug }}/?next=/customer/checkout/"
+                                                  method="post">
+                                                {% csrf_token %}
+                                                <button class="btn btn-sm delete-btn"
+                                                        onclick="return confirm('Are you sure to delete this product?')">
+                                                    <img src="{% static 'dashboard/images/icons/delete.png' %}"
+                                                         alt="Delete" title="Delete"></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-bordered table-coupon">
+                                    <thead class="table-title">
+                                    <tr>
+                                        <th colspan="2">Apply Coupon</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            <form action="/customer/apply_coupon/?next=/customer/checkout/"
+                                                  method="post">
+                                                {% csrf_token %}
+                                                <label for="coupon_code">Enter your coupon code if you have one.</label>
+                                                <input type="text" name="coupon_code" class="form-control"
+                                                       placeholder="Coupon Code">
+                                                <button type="submit" class="btn btn-primary">Apply</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-6">
+                                <table class="table table-bordered table-total">
+                                    <thead class="table-title">
+                                    <tr>
+                                        <th colspan="2">Cart Total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="price">${{ total_amount_without_coupon }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shipping</strong></td>
+                                        <td class="price">Free</td>
+                                    </tr>
+
+                                    <tr>
+                                        {% if discount > 0 %}
+                                            <td><strong>Discount ({{ code }}) <a
+                                                    href="/customer/remove_coupon/?next=/customer/checkout/">Remove</a></strong>
+                                            </td>
+                                            <td class="price">-${{ discount }}</td>
+                                        {% else %}
+                                            <td><strong>Discount (None)</strong></td>
+                                            <td class="price">$0.0</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total(USD)</strong></td>
+                                        <td class="price">${{ total_amount_with_coupon }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% include 'customer_cart/404.html' %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     {% include 'main/base/services.html' %}
@@ -383,12 +787,29 @@
         // Add an event listener to the input field to format the card number on input
         cardNumberInput.addEventListener('input', formatCardNumber);
 
-        // Popup window code for add delivery address button
-        let addDeliveryAddressButton = document.getElementById("add-delivery-address");
-        addDeliveryAddressButton.onclick = function () {
-            window.open(this.href, "popupWindow", "width=600,height=1000,scrollbars=yes, center=yes");
-            return false;
-        };
+        function confirmRemove(event, quantity) {
+            if (quantity <= 1) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to remove this product from the cart?')) {
+                    window.location.href = event.target.href;
+                }
+            } else {
+                quantity--;
+                event.target.parentNode.querySelector('.quantity-input').value = quantity;
+            }
+        }
 
+        function checkQuantity(form) {
+            let quantityInput = form.querySelector('.quantity-input');
+            let quantity = quantityInput.value;
+            if (quantity === '0') {
+                let confirmed = confirm('Are you sure to delete this product?');
+                if (!confirmed) {
+                    quantityInput.value = quantityInput.defaultValue;
+                    return false;
+                }
+            }
+            return true;
+        }
     </script>
 {% endblock %}

@@ -36,7 +36,35 @@ def is_admin(user):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def dashboard(request):
-    return render(request, 'dashboard/base/ad_base.html')
+    # get all recent customers last login
+    customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('-last_login')[:10]
+    # get all recent orders
+    orders = Orders.objects.all().order_by('-id')[:10]
+    # get all recent sales
+    sales = 0
+    for order in orders:
+        sales += order.total_amount
+    # get revenue = sold * (price original - price sale - discount)
+    revenue = 0
+    # quality product sale
+    quality_product_sale = 0
+    for order in orders:
+        for order_detail in order.orderdetails_set.all():
+            quality_product_sale += order_detail.quantity
+    # get all product sold count
+    product_sold_count = 0
+    for product in Product.objects.all():
+        product_sold_count += product.sold
+
+    context = {
+        'customers': customers,
+        'orders': orders,
+        'sales': sales,
+        'revenue': revenue,
+        'quality_product_sale': quality_product_sale,
+        'product_sold_count': product_sold_count,
+    }
+    return render(request, 'dashboard/base/ad_base.html', context)
 
 
 # Pagination function
@@ -1448,8 +1476,8 @@ def export_product_csv(request):
 
     writer = csv.writer(response)
     writer.writerow(
-        ['ID', 'Product Name', 'Product Slug', 'Category','Brand', ' Price Original',
-         'Price', 'Old Price', 'Stock', 'Product Image', 'Sold','Description', 'Created At', 'Updated At'])
+        ['ID', 'Product Name', 'Product Slug', 'Category', 'Brand', ' Price Original',
+         'Price', 'Old Price', 'Stock', 'Product Image', 'Sold', 'Created Date', 'Updated Date'])
 
     products = Product.objects.all().order_by('id')
     for product in products:
@@ -1462,11 +1490,12 @@ def export_product_csv(request):
                          float(product.price) if product.price else '',
                          float(product.old_price) if product.old_price else '',
                          product.stock if product.stock else '',
-                         product.image.name if product.image else '',
+                         product.product_image.name if product.product_image else '',
                          product.sold if product.sold else '',
-                         product.description if product.description else '',
-                         product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
-                         product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else ''])
+                         product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                  '') if product.created_date else '',
+                         product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                  '') if product.updated_date else ''])
 
     return response
 
@@ -1485,8 +1514,8 @@ def export_product_excel(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['ID', 'Product Name', 'Product Slug', 'Category','Brand', ' Price Original',
-               'Price', 'Old Price', 'Stock', 'Product Image', 'Sold','Description', 'Created At', 'Updated At']
+    columns = ['ID', 'Product Name', 'Product Slug', 'Category', 'Brand', ' Price Original',
+               'Price', 'Old Price', 'Stock', 'Product Image', 'Sold', 'Created Date', 'Updated Date']
 
     for col_num, column_title in enumerate(columns):
         ws.write(row_num, col_num, column_title, font_style)
@@ -1507,11 +1536,10 @@ def export_product_excel(request):
             float(product.price) if product.price else '',
             float(product.old_price) if product.old_price else '',
             product.stock if product.stock else '',
-            product.image.name if product.image else '',
+            product.product_image.name if product.product_image else '',
             product.sold if product.sold else '',
-            product.description if product.description else '',
-            product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
-            product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else '',
+            product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_date else '',
+            product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_date else '',
         ]
         for col_num, cell_value in enumerate(row):
             ws.write(row_num, col_num, cell_value, font_style)
@@ -1540,17 +1568,19 @@ def export_product_json(request):
             'price': float(product.price) if product.price else '',
             'old_price': float(product.old_price) if product.old_price else '',
             'stock': product.stock if product.stock else '',
-            'image': product.image.name if product.image else '',
+            'product_image': product.product_image.name if product.product_image else '',
             'sold': product.sold if product.sold else '',
-            'description': product.description if product.description else '',
-            'created_at': product.created_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_at else '',
-            'updated_at': product.updated_at.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_at else '',
+            'created_date': product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                   '') if product.created_date else '',
+            'updated_date': product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                   '') if product.updated_date else '',
         }
         data.append(product_data)
 
     json.dump(data, response, indent=4)
 
     return response
+
 
 # Feedback Export
 @user_passes_test(is_admin, login_url='/auth/login/')
@@ -1570,7 +1600,8 @@ def export_feedback_csv(request):
                          feedback.mobile if feedback.mobile else '',
                          feedback.subject if feedback.subject else '',
                          feedback.message if feedback.message else '',
-                         feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if feedback.date_sent else ''])
+                         feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                  '') if feedback.date_sent else ''])
 
     return response
 
@@ -1616,7 +1647,6 @@ def export_feedback_excel(request):
     return response
 
 
-
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def export_feedback_json(request):
@@ -1634,7 +1664,8 @@ def export_feedback_json(request):
             'mobile': feedback.mobile if feedback.mobile else '',
             'subject': feedback.subject if feedback.subject else '',
             'message': feedback.message if feedback.message else '',
-            'date_sent': feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if feedback.date_sent else '',
+            'date_sent': feedback.date_sent.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                  '') if feedback.date_sent else '',
         }
         data.append(feedback_data)
 

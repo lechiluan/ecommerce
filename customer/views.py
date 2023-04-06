@@ -289,7 +289,8 @@ def remove_from_cart(request, slug):
 
     # Show success message and redirect to cart page
     messages.success(request, 'Product removed from cart successfully')
-    return redirect('/customer/cart/')
+    next_url = request.GET.get('next', '/customer/cart/')
+    return redirect(next_url)
 
 
 @login_required(login_url='/auth/login')
@@ -318,7 +319,8 @@ def add_quantity(request, slug):
         messages.success(request, 'Product out of stock')
 
     # Redirect to cart page
-    return redirect('/customer/cart/')
+    next_url = request.GET.get('next', '/customer/cart/')
+    return redirect(next_url)
 
 
 @login_required(login_url='/auth/login')
@@ -348,7 +350,8 @@ def remove_quantity(request, slug):
         messages.success(request, 'Product removed from cart successfully')
 
     # Redirect to cart page
-    return redirect('/customer/cart/')
+    next_url = request.GET.get('next', '/customer/cart/')
+    return redirect(next_url)
 
 
 @login_required(login_url='/auth/login')
@@ -394,8 +397,8 @@ def update_quantity(request, slug):
                 messages.success(request, 'Product quantity updated successfully')
 
     # Redirect to cart page
-    return redirect('/customer/cart/')
-
+    next_url = request.GET.get('next', '/customer/cart/')
+    return redirect(next_url)
 
 @login_required(login_url='/auth/login')
 def apply_coupon(request):
@@ -414,7 +417,8 @@ def apply_coupon(request):
                 # Check if coupon has already been applied to the cart items
                 if any(cart_item.coupon_applied for cart_item in cart_items):
                     messages.warning(request, 'Coupon has already been applied')
-                    return redirect('/customer/cart/')
+                    next_url = request.GET.get('next', '/customer/cart/')
+                    return redirect(next_url)
 
                 total_discount = 0
                 for cart_item in cart_items:
@@ -429,16 +433,20 @@ def apply_coupon(request):
                     total_discount += coupon.discount * cart_item.quantity
 
                 messages.success(request, f'Coupon {coupon.code} applied successfully. You saved (${total_discount})')
-                return redirect('/customer/cart/')
+                next_url = request.GET.get('next', '/customer/cart/')
+                return redirect(next_url)
             else:
                 messages.warning(request, 'Coupon is not applicable for this order')
-                return redirect('/customer/cart/')
+                next_url = request.GET.get('next', '/customer/cart/')
+                return redirect(next_url)
         except Coupon.DoesNotExist:
             messages.warning(request, 'Invalid coupon code')
-            return redirect('/customer/cart/')
+            next_url = request.GET.get('next', '/customer/cart/')
+            return redirect(next_url)
     else:
         messages.warning(request, 'Invalid request')
-        return redirect('/customer/cart/')
+        next_url = request.GET.get('next', '/customer/cart/')
+        return redirect(next_url)
 
 
 @login_required(login_url='/auth/login')
@@ -457,7 +465,8 @@ def remove_coupon(request):
         cart_item.save()
 
     messages.success(request, 'Coupon removed successfully')
-    return redirect('/customer/cart/')
+    next_url = request.GET.get('next', '/customer/cart/')
+    return redirect(next_url)
 
 
 # add to wishlist function for customer
@@ -608,12 +617,27 @@ def checkout(request):
                 'order': order,
             }
             return render(request, 'customer_cart/orders_success.html', context)
+        # Display Cart Items in the checkout page
+        cart_items = CartItem.objects.filter(customer=customer).order_by('-date_added')
+        total = sum(item.sub_total for item in cart_items)
+        total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in cart_items)
+        total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in cart_items)
+        #  check if any coupon is applied
+        if cart_items.filter(coupon_applied=True).exists():
+            code = cart_items[0].coupon.code if cart_items[0].coupon_applied is True else None
+            discount = sum(item.get_discount for item in cart_items)
+        else:
+            code = None
+            discount = 0
 
-        total = sum([cart_item.sub_total for cart_item in cart_items])
         context = {
-            'delivery_address': delivery_address,
             'cart_items': cart_items,
             'total': total,
+            'code': code,
+            'discount': discount,
+            'total_amount_without_coupon': total_amount_without_coupon,
+            'total_amount_with_coupon': total_amount_with_coupon,
+            'delivery_address': delivery_address,
             'payment_methods': payment_methods,
         }
         return render(request, 'customer_checkout/checkout.html', context)
@@ -700,4 +724,3 @@ def get_default_address(request):
         })
     except DeliveryAddress.DoesNotExist:
         return JsonResponse({'error': 'Address not found'}, status=404)
-

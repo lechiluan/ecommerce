@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-# from .emails import *
 import os
 import dotenv
 
@@ -27,7 +26,7 @@ EMAIl_FROM = os.environ.get('EMAIL_FROM')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 86400  # 24 hours to reset password
+PASSWORD_RESET_TIMEOUT = 259200  # 3 days for password reset link
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -170,10 +169,10 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # for big auto field
 
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/"  # for login redirect url after login
+LOGOUT_REDIRECT_URL = "/"  # for logout redirect url after logout
 
 # Configure tinymce editor for django
 TINYMCE_DEFAULT_CONFIG = {

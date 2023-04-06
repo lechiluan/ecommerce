@@ -108,6 +108,11 @@
                             Cart(0)</a>
                     </li>
                 {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/customer/checkout/"><i class="fa fa-crosshairs"
+                                                                  aria-hidden="true"></i>
+                        Checkout</a>
+                </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -127,10 +132,11 @@
                                 &nbsp;Change
                                 Password</a>
                             <a class="dropdown-item" href="/auth/delivery_address/"><i class="fa fa-map"
-                                                                              aria-hidden="true"></i>&nbsp;&nbsp;Delivery Address
-                                </a>
+                                                                                       aria-hidden="true"></i>&nbsp;&nbsp;Delivery
+                                Address
+                            </a>
                             <a class="dropdown-item" href="/customer/track_orders/"><i class="fa fa-history"
-                                                                                   aria-hidden="true"></i>&nbsp;&nbsp;Track
+                                                                                       aria-hidden="true"></i>&nbsp;&nbsp;Track
                                 Orders</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/auth/logout/"><i class="fa fa-sign-out"
