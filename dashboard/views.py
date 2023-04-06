@@ -1493,9 +1493,9 @@ def export_product_csv(request):
                          product.product_image.name if product.product_image else '',
                          product.sold if product.sold else '',
                          product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
-                                                                                  '') if product.created_date else '',
+                                                                                    '') if product.created_date else '',
                          product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
-                                                                                  '') if product.updated_date else ''])
+                                                                                    '') if product.updated_date else ''])
 
     return response
 
@@ -1571,9 +1571,9 @@ def export_product_json(request):
             'product_image': product.product_image.name if product.product_image else '',
             'sold': product.sold if product.sold else '',
             'created_date': product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
-                                                                                   '') if product.created_date else '',
+                                                                                       '') if product.created_date else '',
             'updated_date': product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
-                                                                                   '') if product.updated_date else '',
+                                                                                       '') if product.updated_date else '',
         }
         data.append(product_data)
 

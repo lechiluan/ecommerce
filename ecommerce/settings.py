@@ -26,7 +26,7 @@ EMAIl_FROM = os.environ.get('EMAIL_FROM')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 259200  # 3 days for password reset link
+PASSWORD_RESET_TIMEOUT = 259200
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
