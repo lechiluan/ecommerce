@@ -74,7 +74,7 @@ class Product(models.Model):
     sold = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
-    review_rate_agv = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0)
+    review_rate_average = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     review_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -244,7 +244,7 @@ class Review(models.Model):
     message_review = models.CharField(max_length=500)
     date_added = models.DateTimeField(auto_now_add=True, null=True)
     date_updated = models.DateTimeField(auto_now=True, null=True)
-    review_status = models.BooleanField(default=False)
+    review_status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.product.name

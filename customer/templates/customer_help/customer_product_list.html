@@ -142,11 +142,43 @@
                                 </div>
                                 <div class="content">
                                     <div class="rating">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star grey" aria-hidden="true"></i>
-                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        {% elif product.review_rate_average >= 2.0 and product.review_rate_average < 3.0 %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        {% elif product.review_rate_average >= 3.0 and product.review_rate_average < 4.0 %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        {% elif product.review_rate_average >= 4.0 and product.review_rate_average < 5.0 %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        {% elif product.review_rate_average == 5.0 %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                        {% endif %}
                                     </div>
                                     <div class="productName">
                                         <h3>{{ product.name }}</h3>

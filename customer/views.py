@@ -81,27 +81,24 @@ def paginator(request, objects):
 
 # Code for display product
 def product_details(request, slug):
-    customer = Customer.objects.get(user=request.user)
     product = Product.objects.get(slug=slug)
-    reviews = Review.objects.filter(product=product).order_by('-date_added')
+    reviews = Review.objects.filter(product=product, review_status=True).order_by('-date_added')
     get_review_count_for_product = Review.objects.filter(product=product).count()
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-    # Average rating
-    if get_review_count_for_product > 0:
-        get_review_rate = Review.objects.filter(product=product).aggregate(avg_rate=Avg('rate'))['avg_rate']
-        get_review_rate = round(get_review_rate, 1)
-    else:
-        get_review_rate = 0
 
     discount_price = product.old_price - product.price
-    reviews_customer = Review.objects.filter(product=product, customer=customer)
+    if request.user.is_authenticated:
+        customer = Customer.objects.get(user=request.user)
+        reviews_customer = Review.objects.filter(product=product, customer=customer)
+    else:
+        customer = None
+        reviews_customer = None
     context = {
         'discount_price': discount_price,
         'customer': customer,
         'reviews_customer': reviews_customer,
         'reviews': reviews,
         'product': product,
-        'get_review_rate': int(get_review_rate),
         'get_review_count_for_product': get_review_count_for_product,
         'related_products': related_products,
     }
@@ -116,7 +113,7 @@ def product_search(request):
         sort_by = request.GET.get('sort_by')
         filter_by_brand = request.GET.get('filter_by_brand')
         filter_by_category = request.GET.get('filter_by_category')
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-sold')
 
         # apply brand filter if selected
         if filter_by_brand and filter_by_category:
@@ -175,7 +172,7 @@ def product_search(request):
 # Display product by category
 def product_list_category(request, slug):
     if slug == 'all':
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-sold')
         page_object = paginator(request, products)
         context = {
             'products': page_object,
@@ -225,13 +222,25 @@ def add_review(request, slug):
             review.message_review = message_review
             review.review_status = 'True'
             review.save()
+            # Update product rating
+            review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
+            product.review_rate_average = review_rate_average.get('rate__avg', 0)
+            # Update product review count
+            product.review_count = Review.objects.filter(product=product).count()
+            product.save()
             messages.success(request, 'Review updated successfully. Thanks for your review to improve our service.')
             return redirect('/customer/product/details/' + slug)
         except Review.DoesNotExist:
             review = Review.objects.create(product=product, customer=customer, name=name, rate=rate,
                                            message_review=message_review)
             review.save()
-            messages.success(request, 'Review added successfully.')
+            # Update product rating
+            review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
+            product.review_rate_average = review_rate_average.get('rate__avg', 0)
+            # Update product review count
+            product.review_count = Review.objects.filter(product=product).count()
+            product.save()
+            messages.success(request, 'Review updated successfully. Thanks for your review to improve our service.')
             return redirect('/customer/product/details/' + slug)
     else:
         return redirect('/customer/product/details/' + slug)
@@ -240,12 +249,18 @@ def add_review(request, slug):
 @login_required(login_url='/auth/login')
 def edit_review(request, review_id):
     review = Review.objects.get(id=review_id)
+    product = review.product
     if request.method == 'POST':
         review.name = request.POST.get('name')
         review.rate = request.POST.get('rating')
         review.message_review = request.POST.get('message')
-        review.review_status = 'False'
+        review.review_status = 'True'
         review.save()
+        review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
+        product.review_rate_average = review_rate_average.get('rate__avg', 0)
+        # Update product review count
+        product.review_count = Review.objects.filter(product=product).count()
+        product.save()
         messages.success(request, 'Review updated successfully')
         return redirect('/customer/product/details/' + review.product.slug)
     else:
@@ -256,8 +271,12 @@ def edit_review(request, review_id):
 def delete_review(request, review_id):
     review = Review.objects.get(id=review_id)
     review.delete()
-    # Delete review to product review rate average and total review count
-    product = Product.objects.get(id=review.product.id)
+    # Update product rating
+    review_rate_average = Review.objects.filter(product=review.product).aggregate(Avg('rate'))
+    review.product.review_rate_average = review_rate_average.get('rate__avg', 0)
+    # Update product review count
+    review.product.review_count = Review.objects.filter(product=review.product).count()
+    review.product.save()
     messages.success(request, 'Review deleted successfully')
     return redirect('/customer/product/details/' + review.product.slug)
 

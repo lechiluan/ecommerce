@@ -206,6 +206,10 @@
             margin-bottom: 10px;
         }
 
+        .review-header .customer-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
         .form-group .customer-name {
             font-size: 1.2rem;
             margin-bottom: 10px;
@@ -357,43 +361,46 @@
                             <span class="content">{{ product.stock }}</span>
                         </div>
                         <div class="rating">
-                            <span class="label">Rating ({{ get_review_count_for_product }}):</span>
-                            {% if get_review_rate  == 0 %}
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                            {% elif get_review_rate  == 1 %}
+                            <span class="label">Rating ({{ product.review_count }}):</span>
+                            {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
-                            {% elif get_review_rate  == 2 %}
+                            {% elif product.review_rate_average >= 2.0 and product.review_rate_average < 3.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
-                            {% elif get_review_rate  == 3 %}
+                            {% elif product.review_rate_average >= 3.0 and product.review_rate_average < 4.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
-                            {% elif get_review_rate  == 4 %}
+                            {% elif product.review_rate_average >= 4.0 and product.review_rate_average < 5.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
-                            {% elif get_review_rate  == 5 %}
+                            {% elif product.review_rate_average == 5.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
+                            {% else %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            {% endif %}
+                            {% if product.review_count > 0 %}
+                                <span class="review-count">({{ product.review_rate_average }})</span>
                             {% endif %}
                         </div>
                         <form action="/customer/add_to_cart/{{ product.slug }}/" enctype="multipart/form-data"
@@ -443,7 +450,7 @@
                                             {% for review in reviews %}
                                                 <div class="review-card">
                                                     <div class="review-header">
-                                                        <div class="customer-name">{{ review.name }}</div>
+                                                        <div class="customer-name">{{ review.name }} ({{ review.customer.user.username }})</div>
                                                         <div class="rating">
                                                             {% if review.rate  == 1 %}
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
@@ -488,107 +495,114 @@
                                             {% include 'customer_help/404.html' %}
                                         {% endif %}
 
-                                        {% if reviews_customer %}
-                                            {% for review in reviews %}
-                                                {% if review.customer == customer %}
-                                                    <div class="add-review-form">
-                                                        <h3 class="add-new-review">Edit Your Review</h3>
-                                                        <form action="/customer/product/edit_review/{{ review.id }}/"
-                                                              method="post">
-                                                            {% csrf_token %}
-                                                            <div class="form-group">
-                                                                <label for="customer-name">Name:</label>
-                                                                <input type="text" id="customer-name" name="name"
-                                                                       class="customer-name"
-                                                                       value="{{ review.name }}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="rating">Rating:</label>
-                                                                <select id="rating" name="rating" class="rating-add"
-                                                                        required>
-                                                                    <option value="" class="">--Select--</option>
-                                                                    <option value="1" class="star-add"
-                                                                            {% if review.rate == 1 %}
-                                                                            selected{% endif %}>
-                                                                        &#9733;
-                                                                    </option>
-                                                                    <option value="2" class="star-add"
-                                                                            {% if review.rating == 2 %}
-                                                                            selected{% endif %}>
-                                                                        &#9733;&#9733;
-                                                                    </option>
-                                                                    <option value="3" class="star-add"
-                                                                            {% if review.rate == 3 %}
-                                                                            selected{% endif %}>
-                                                                        &#9733;&#9733;&#9733;
-                                                                    </option>
-                                                                    <option value="4" class="star-add"
-                                                                            {% if review.rate == 4 %}
-                                                                            selected{% endif %}>
-                                                                        &#9733;&#9733;&#9733;&#9733;
-                                                                    </option>
-                                                                    <option value="5" class="star-add"
-                                                                            {% if review.rate == 5 %}
-                                                                            selected{% endif %}>
-                                                                        &#9733;&#9733;&#9733;&#9733;&#9733;
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="review-message">Message:</label>
-                                                                <textarea id="review-message" name="message" rows="10"
-                                                                          style="height: 300px;"
-                                                                          required>{{ review.message_review }}</textarea>
-                                                            </div>
-                                                            <div class="btn-action">
-                                                                <button type="submit" class="submit-button">Update
-                                                                </button>
-                                                                <a href="/customer/product/delete_review/{{ review.id }}/"
-                                                                   class="btn btn-danger delete-button"
-                                                                   onclick="return confirm('Are you sure to delete this review?')">Delete</a>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                        {% if customer %}
+                                            {% if reviews_customer %}
+                                                {% for review in reviews %}
+                                                    {% if review.customer == customer %}
+                                                        <div class="add-review-form">
+                                                            <h3 class="add-new-review">Edit Your Review</h3>
+                                                            <form action="/customer/product/edit_review/{{ review.id }}/"
+                                                                  method="post">
+                                                                {% csrf_token %}
+                                                                <div class="form-group">
+                                                                    <label for="customer-name">Name:</label>
+                                                                    <input type="text" id="customer-name" name="name"
+                                                                           class="customer-name"
+                                                                           value="{{ review.name }}" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="rating">Rating:</label>
+                                                                    <select id="rating" name="rating" class="rating-add"
+                                                                            required>
+                                                                        <option value="" class="">--Select--</option>
+                                                                        <option value="1" class="star-add"
+                                                                                {% if review.rate == 1 %}
+                                                                                selected{% endif %}>
+                                                                            &#9733;
+                                                                        </option>
+                                                                        <option value="2" class="star-add"
+                                                                                {% if review.rating == 2 %}
+                                                                                selected{% endif %}>
+                                                                            &#9733;&#9733;
+                                                                        </option>
+                                                                        <option value="3" class="star-add"
+                                                                                {% if review.rate == 3 %}
+                                                                                selected{% endif %}>
+                                                                            &#9733;&#9733;&#9733;
+                                                                        </option>
+                                                                        <option value="4" class="star-add"
+                                                                                {% if review.rate == 4 %}
+                                                                                selected{% endif %}>
+                                                                            &#9733;&#9733;&#9733;&#9733;
+                                                                        </option>
+                                                                        <option value="5" class="star-add"
+                                                                                {% if review.rate == 5 %}
+                                                                                selected{% endif %}>
+                                                                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="review-message">Message:</label>
+                                                                    <textarea id="review-message" name="message"
+                                                                              rows="10"
+                                                                              style="height: 300px;"
+                                                                              required>{{ review.message_review }}</textarea>
+                                                                </div>
+                                                                <div class="btn-action">
+                                                                    <button type="submit" class="submit-button">Update
+                                                                    </button>
+                                                                    <a href="/customer/product/delete_review/{{ review.id }}/"
+                                                                       class="btn btn-danger delete-button"
+                                                                       onclick="return confirm('Are you sure to delete this review?')">Delete</a>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                <!-- Add Review -->
+                                                <div class="add-review-form">
+                                                    <h3 class="add-new-review">Add Your Review</h3>
+                                                    <form action="/customer/product/add_review/{{ product.slug }}/"
+                                                          method="post">
+                                                        {% csrf_token %}
+                                                        <div class="form-group">
+                                                            <label for="customer-name">Name:</label>
+                                                            <input type="text" id="customer-name" name="name"
+                                                                   class="customer-name" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="rating">Rating:</label>
+                                                            <select id="rating" name="rating" class="rating-add"
+                                                                    required>
+                                                                <option value="" class="">--Select--</option>
+                                                                <option value="1" class="star-add">&#9733;</option>
+                                                                <option value="2" class="star-add">&#9733;&#9733;
+                                                                </option>
+                                                                <option value="3" class="star-add">&#9733;&#9733;&#9733;
+                                                                </option>
+                                                                <option value="4" class="star-add">
+                                                                    &#9733;&#9733;&#9733;&#9733;
+                                                                </option>
+                                                                <option value="5" class="star-add">&#9733;&#9733;&#9733;&#9733;&#9733;
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="review-message">Message:</label>
+                                                            <textarea id="review-message" name="message" rows="10"
+                                                                      style="height: 300px;"
+                                                                      required></textarea>
+                                                        </div>
+                                                        <button type="submit" class="submit-button">Submit</button>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
                                         {% else %}
-                                            <!-- Add Review -->
-                                            <div class="add-review-form">
-                                                <h3 class="add-new-review">Add Your Review</h3>
-                                                <form action="/customer/product/add_review/{{ product.slug }}/"
-                                                      method="post">
-                                                    {% csrf_token %}
-                                                    <div class="form-group">
-                                                        <label for="customer-name">Name:</label>
-                                                        <input type="text" id="customer-name" name="name"
-                                                               class="customer-name" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="rating">Rating:</label>
-                                                        <select id="rating" name="rating" class="rating-add"
-                                                                required>
-                                                            <option value="" class="">--Select--</option>
-                                                            <option value="1" class="star-add">&#9733;</option>
-                                                            <option value="2" class="star-add">&#9733;&#9733;
-                                                            </option>
-                                                            <option value="3" class="star-add">&#9733;&#9733;&#9733;
-                                                            </option>
-                                                            <option value="4" class="star-add">
-                                                                &#9733;&#9733;&#9733;&#9733;
-                                                            </option>
-                                                            <option value="5" class="star-add">&#9733;&#9733;&#9733;&#9733;&#9733;
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="review-message">Message:</label>
-                                                        <textarea id="review-message" name="message" rows="10"
-                                                                  style="height: 300px;"
-                                                                  required></textarea>
-                                                    </div>
-                                                    <button type="submit" class="submit-button">Submit</button>
-                                                </form>
-                                            </div>
+                                            <button type="submit" class="submit-button"
+                                                    onclick="window.location.href='/auth/login/?next=/customer/product/details/{{ product.slug }}'">Login to add review
+                                            </button>
                                         {% endif %}
                                     </div>
                                 </div>

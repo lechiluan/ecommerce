@@ -282,6 +282,9 @@ def change_password(request):
 
 def logout(request):
     auth_logout(request)
+    # Clear Google Recaptcha session
+    if 'google_recaptcha' in request.session:
+        del request.session['google_recaptcha']
     messages.success(request, "You have logged out. See you again!")
     return redirect('/auth/login/')
 
