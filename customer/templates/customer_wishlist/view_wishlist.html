@@ -203,7 +203,9 @@
                                         <td><img class="img-thumbnail img-cart"
                                                  src="{{ MEDIA_URL }}{{ item.product.product_image.url }}"
                                                  alt="{{ item.product.name }}"></td>
-                                        <td>{{ item.product.name }}</td>
+                                        <td>
+                                            <a href="/customer/product/details/{{ item.product.slug }}/">{{ item.product.name }}</a>
+                                        </td>
                                         <td class="price">${{ item.product.price }}</td>
                                         <td>
                                             <a type="button" class="btn btn-sm delete-btn"

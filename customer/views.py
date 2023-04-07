@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,7 @@ from django.utils import timezone
 
 from .forms import FeedbackForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
-    OrderDetails, Wishlist, Payment
+    OrderDetails, Wishlist, Payment, Review
 from django.contrib.auth.models import User
 
 
@@ -80,10 +81,28 @@ def paginator(request, objects):
 
 # Code for display product
 def product_details(request, slug):
+    customer = Customer.objects.get(user=request.user)
     product = Product.objects.get(slug=slug)
+    reviews = Review.objects.filter(product=product).order_by('-date_added')
+    get_review_count_for_product = Review.objects.filter(product=product).count()
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    # Average rating
+    if get_review_count_for_product > 0:
+        get_review_rate = Review.objects.filter(product=product).aggregate(avg_rate=Avg('rate'))['avg_rate']
+        get_review_rate = round(get_review_rate, 1)
+    else:
+        get_review_rate = 0
+
+    discount_price = product.old_price - product.price
+    reviews_customer = Review.objects.filter(product=product, customer=customer)
     context = {
+        'discount_price': discount_price,
+        'customer': customer,
+        'reviews_customer': reviews_customer,
+        'reviews': reviews,
         'product': product,
+        'get_review_rate': int(get_review_rate),
+        'get_review_count_for_product': get_review_count_for_product,
         'related_products': related_products,
     }
     return render(request, 'customer_help/customer_product_details.html', context)
@@ -189,6 +208,58 @@ def product_list_brand(request, slug):
             'products': page_object,
         }
         return render(request, 'customer_help/customer_product_list.html', context)
+
+
+@login_required(login_url='/auth/login')
+def add_review(request, slug):
+    if request.method == 'POST':
+        product = Product.objects.get(slug=slug)
+        customer = request.user.customer
+        name = request.POST.get('name')
+        rate = request.POST.get('rating')
+        message_review = request.POST.get('message')
+        try:
+            review = Review.objects.get(product=product, customer=customer)
+            review.name = name
+            review.rate = rate
+            review.message_review = message_review
+            review.review_status = 'True'
+            review.save()
+            messages.success(request, 'Review updated successfully. Thanks for your review to improve our service.')
+            return redirect('/customer/product/details/' + slug)
+        except Review.DoesNotExist:
+            review = Review.objects.create(product=product, customer=customer, name=name, rate=rate,
+                                           message_review=message_review)
+            review.save()
+            messages.success(request, 'Review added successfully.')
+            return redirect('/customer/product/details/' + slug)
+    else:
+        return redirect('/customer/product/details/' + slug)
+
+
+@login_required(login_url='/auth/login')
+def edit_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    if request.method == 'POST':
+        review.name = request.POST.get('name')
+        review.rate = request.POST.get('rating')
+        review.message_review = request.POST.get('message')
+        review.review_status = 'False'
+        review.save()
+        messages.success(request, 'Review updated successfully')
+        return redirect('/customer/product/details/' + review.product.slug)
+    else:
+        return redirect('/customer/product/details/' + review.product.slug)
+
+
+@login_required(login_url='/auth/login')
+def delete_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    review.delete()
+    # Delete review to product review rate average and total review count
+    product = Product.objects.get(id=review.product.id)
+    messages.success(request, 'Review deleted successfully')
+    return redirect('/customer/product/details/' + review.product.slug)
 
 
 @login_required(login_url='/auth/login')
@@ -399,6 +470,7 @@ def update_quantity(request, slug):
     # Redirect to cart page
     next_url = request.GET.get('next', '/customer/cart/')
     return redirect(next_url)
+
 
 @login_required(login_url='/auth/login')
 def apply_coupon(request):

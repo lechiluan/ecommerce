@@ -204,7 +204,7 @@
                                         <span>Add to Cart</span>
                                     </li>
                                     <li>
-                                        <a href="/customer/product/details/{{ product.slug }}">
+                                        <a href="/customer/product/details/{{ product.slug }}/">
                                             <i class="fa fa-eye" aria-hidden="true"></i></a>
                                         <span>View Details</span>
                                     </li>
@@ -212,11 +212,43 @@
                             </div>
                             <div class="content">
                                 <div class="rating">
+                                    {% if product.get_average_rate == 1 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    {% elif product.get_average_rate == 2 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    {% elif product.get_average_rate == 3 %}
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                     <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    {% elif product.get_average_rate == 4 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star gray" aria-hidden="true"></i>
+                                    {% elif product.get_average_rate == 5 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    {% else %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    {% endif %}
                                 </div>
                                 <div class="productName">
                                     <h3>{{ product.name }}</h3>

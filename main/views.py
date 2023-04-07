@@ -2,6 +2,8 @@ from django.contrib.auth import authenticate, login as auth_login, update_sessio
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from django.db.models import Count, Avg
+
 # from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RegisterForm, LoginForm, UpdateProfileForm, ChangePasswordForm, ChangeEmailForm, \
     AddDeliveryAddressForm, UpdateDeliveryAddressForm
@@ -19,7 +21,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
-from .models import Customer, Product, Category, Brand, DeliveryAddress
+from .models import Customer, Product, Category, Brand, DeliveryAddress, Review
 
 
 # Create your views here.
@@ -142,10 +144,12 @@ def login(request, *args, **kwargs):
                 # check if admin redirect to admin page else redirect to user page
                 if user.is_superuser and user.is_staff and user.is_active:
                     messages.success(request, 'Welcome back administrator!')
-                    return redirect("/dashboard/")
+                    next_url = request.GET.get('next', '/dashboard/')
+                    return redirect(next_url)
                 else:
                     messages.success(request, 'Welcome back {}'.format(user.username))
-                    return redirect("/")
+                    next_url = request.GET.get('next', '/')
+                    return redirect(next_url)
             else:
                 username = form.cleaned_data['username']
                 user = User.objects.filter(username=username).first()

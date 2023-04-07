@@ -9,7 +9,9 @@ urlpatterns = [
     path('product/search/', views.product_search, name='search'),
     path('product/category/<str:slug>/', views.product_list_category, name='product_list_category'),
     path('product/brand/<str:slug>/', views.product_list_brand, name='product_list_brand'),
-
+    path('product/add_review/<str:slug>/', views.add_review, name='add_review'),
+    path('product/edit_review/<int:review_id>/', views.edit_review, name='edit_review'),
+    path('product/delete_review/<int:review_id>/', views.delete_review, name='delete_review'),
 
     path('add_to_wishlist/<str:slug>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('remove_from_wishlist/<str:slug>/', views.remove_from_wishlist, name='remove_from_wishlist'),

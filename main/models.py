@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Avg
 
 
 # Create your models here.
@@ -74,6 +74,8 @@ class Product(models.Model):
     sold = models.PositiveIntegerField(default=0)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
+    review_rate_agv = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0)
+    review_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -237,6 +239,7 @@ class Payment(models.Model):
 class Review(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=50, null=True)
     rate = models.PositiveIntegerField()
     message_review = models.CharField(max_length=500)
     date_added = models.DateTimeField(auto_now_add=True, null=True)

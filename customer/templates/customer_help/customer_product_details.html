@@ -3,14 +3,21 @@
 
 {% block style %}
     <style>
+        .form-title-product-details {
+            text-align: center;
+            color: #1253cc;
+            padding-bottom: 25px;
+        }
+
         .product-details {
-            padding: 50px 0;
+            padding: 20px;
             background-color: #ffffff;
         }
 
         .product-details img {
             max-width: 100%;
             height: auto;
+            border: 1px solid #ccc;
         }
 
         .product-details h1 {
@@ -26,7 +33,7 @@
         }
 
         .product-details .rating {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-bottom: 20px;
         }
 
@@ -38,33 +45,271 @@
             color: #c4c4c4;
         }
 
-        .product-details .form-group label {
-            font-size: 1.2rem;
+        .product-details .rating .label {
+            font-size: 1.3rem;
             font-weight: bold;
+            margin: 15px 15px 15px 0;
+        }
+
+        .content-display h2 {
+            font-weight: bold;
+            margin: 0 15px 20px 0;
+            color: #1253cc;
+        }
+
+        .content-display .label {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 15px 15px 15px 0;
+        }
+
+        .content-display .label .content {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        .content-display .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff2020;
+            margin-left: 15px;
+
+        }
+
+        .content-display .old-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #c4c4c4;
+            margin-left: 15px;
+            text-decoration: line-through;
+        }
+
+        .content-display .quantity-input {
+            width: 70px;
+            height: 40px;
+            border: 2px solid #ccc;
+            padding: 10px 10px 10px 25px;
+            font-size: 18px;
+            margin: 0 0 0 15px;
+        }
+
+        .content-display .quantity-input:focus {
+            outline: none;
+        }
+
+        .content-display .btn-add-cart {
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 15px 20px 15px 0;
+        }
+
+        .content-display .btn-add-cart:hover {
+            background-color: #3e8e41;
+        }
+
+        .content-display .btn-add-cart .fa {
+            margin-right: 5px;
+        }
+
+        .content-display .btn-add-wishlist {
+            background: #1253cc;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 15px 10px 15px 0;
+        }
+
+        .content-display .btn-add-wishlist:hover {
+            background-color: #0062cc;
+        }
+
+        .content-display .btn-add-wishlist .fa {
+            margin-right: 5px;
+        }
+
+        .content-display .btn-add-wishlist:focus {
+            outline: none;
+        }
+
+        .homepage h2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1253cc;
+        }
+
+        .details-container {
+            margin-top: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+
+        .col-md-12 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .tablinks {
+            background-color: #343A40;
+            color: #fff;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 12px 16px;
+            font-size: 18px;
+        }
+
+        .tablinks:focus {
+            outline: none;
+        }
+
+        .tablinks.active {
+            border: none;
+            outline: none;
+            background-color: #1253cc;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 2px solid #ccc;
+        }
+
+        .tabcontent.active {
+            display: block;
+        }
+
+        .review-section {
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .review-card {
+            border: 2px solid #ccc;
+            padding: 10px;
             margin-bottom: 10px;
         }
 
-        .product-details .form-group input {
-            width: 70px;
-            height: 40px;
-            font-size: 1.2rem;
-            text-align: center;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-right: 10px;
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-        .product-details .btn-primary {
+        .form-group .customer-name {
             font-size: 1.2rem;
-            font-weight: bold;
-            padding: 10px 30px;
+            margin-bottom: 10px;
+            text-align: left !important;
+        }
+
+        .rating-add {
+            font-size: 18px;
+            color: #FFC300;
+        }
+
+        .star-add {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .review-date {
+            color: #777;
+        }
+
+        .review-message {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .add-review-form {
+            background-color: #f5f5f5;
+            padding: 20px;
             margin-top: 20px;
-            transition: all 0.3s ease-in-out;
         }
 
-        .product-details .btn-primary:hover {
-            background-color: #ffc107;
-            border-color: #ffc107;
+        .add-review-form .add-new-review {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1253cc;
+        }
+
+        .add-review-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .add-review-form select, .add-review-form textarea, .add-review-form input[type="text"] {
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .add-review-form textarea {
+            height: 100px;
+        }
+
+        .add-review-form .submit-button:hover {
+            background-color: #3e8e41;
+        }
+
+        .btn-action {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .submit-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #3e8e41;
+        }
+
+        .submit-button:focus {
+            outline: none;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .delete-button:focus {
+            outline: none;
         }
 
     </style>
@@ -80,6 +325,7 @@
         <a href="/customer/product/details/{{ product.slug }}">{{ product.name }}</a>
     </div>
     <div class="product-details">
+        <h2 class="font-weight-bold mt-3 form-title-product-details">Product Details</h2>
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -88,106 +334,295 @@
                          class="img-fluid">
                 </div>
                 <div class="col-md-6">
-                    <h1>{{ product.name }}</h1>
-                    <p class="lead"></p>
-                    <p class="font-weight-bold">Brand: {{ product.brand.name }}</p>
-                    <p class="font-weight-bold">Category: {{ product.category.name }}</p>
-                    <div class="rating">
-                        <span class="font-weight-bold">Rating: </span>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star" aria-hidden="true"></i>
-                        <i class="fa fa-star grey" aria-hidden="true"></i>
-                        <i class="fa fa-star grey" aria-hidden="true"></i>
-                    </div>
-                    <p class="font-weight-bold">Price: $ {{ product.price }}</p>
-                    <p class="font-weight-bold">Old Price: {{ product.old_price }}</p>
-                    <p class="font-weight-bold">Stock: {{ product.stock }}</p>
-                    <div class="form-group">
-                        <label for="quantity">Quantity:</label>
+                    <div class="content-display">
+                        <h2>{{ product.name }}</h2>
+                        <div class="label">Brand:
+                            <span class="content">{{ product.brand }}</span>
+                        </div>
+
+                        <div class="label">Category:
+                            <span class="content">{{ product.category }}</span>
+                        </div>
+
+                        <div class="label">Discount Price:
+                            <span class="price">${{ product.price }}</span>
+                        </div>
+                        <div class="label">Old Price:
+                            <span class="old-price">${{ product.old_price }}</span>
+                        </div>
+                        <div class="label">Save Price:
+                            <span class="price">-${{ discount_price }}</span>
+                        </div>
+                        <div class="label">Stock:
+                            <span class="content">{{ product.stock }}</span>
+                        </div>
+                        <div class="rating">
+                            <span class="label">Rating ({{ get_review_count_for_product }}):</span>
+                            {% if get_review_rate  == 0 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            {% elif get_review_rate  == 1 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                            {% elif get_review_rate  == 2 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                            {% elif get_review_rate  == 3 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                            {% elif get_review_rate  == 4 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                            {% elif get_review_rate  == 5 %}
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            {% endif %}
+                        </div>
                         <form action="/customer/add_to_cart/{{ product.slug }}/" enctype="multipart/form-data"
                               method="post">
                             {% csrf_token %}
-                            <input type="number" class="quantity-input" name="quantity"
-                                   value="1" min="1" pattern="[0-9]*"
-                                   onkeydown="if (event.keyCode === 109 || event.keyCode === 189 || event.keyCode === 187 || event.keyCode === 107) return false;">
-                            <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                            <div class="label">Quantity:
+                                <span class="content">
+                                 <input type="number" class="quantity-input" name="quantity"
+                                        value="1" min="1" pattern="[0-9]*"
+                                        onkeydown="if (event.keyCode === 109 || event.keyCode === 189 || event.keyCode === 187 || event.keyCode === 107) return false;">
+                            </span>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-add-cart"><i class="fa fa-shopping-cart"
+                                                                                          aria-hidden="true"></i>Add to
+                                Cart
+                            </button>
+                            <a type="button" class="btn btn-primary btn-add-wishlist"
+                               href="/customer/add_to_wishlist/{{ product.slug }}/"><i class="fa fa-heart"
+                                                                                       aria-hidden="true"></i>Add to
+                                Wishlist</a>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Product Description</h2>
-                    <div id="product-description" class="form-display-description">
-                        {{ product.description }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% if related_products %}
-    <div class="homepage" id="product">
-        <h2>Related Products</h2>
-        {# Product Card #}
-        <div class="product-card">
-            <div class="card-main">
-                <div class="container">
-                    {% for product in related_products %}
-                        <div class="card">
-                            <div class="imgBx">
-                                <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
-                                <ul class="action">
-                                    <li>
-                                        <a href="/customer/add_to_wishlist/{{ product.slug }}/">
-                                            <i class="fa fa-heart" aria-hidden="true"></i></a>
-                                        <span>Add to WishList</span>
-                                    </li>
-                                    <li>
-                                        <a href="/customer/add_to_cart/{{ product.slug }}/">
-                                            <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
-                                        <span>Add to Cart</span>
-                                    </li>
-                                    <li>
-                                        <a href="/customer/product/details/{{ product.slug }}">
-                                            <i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        <span>View Details</span>
-                                    </li>
-                                </ul>
+            <div class="details-container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tabs">
+                            <div class="d-flex">
+                                <button class="tablinks active" onclick="openTab(event, 'description')">Description
+                                </button>
+                                <button class="tablinks" onclick="openTab(event, 'review')">Review
+                                    ({{ get_review_count_for_product }})
+                                </button>
                             </div>
-                            <div class="content">
-                                <div class="rating">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                            <div id="description" class="tabcontent" style="display: block;">
+                                <h2>Product Description</h2>
+                                <div id="product-description" class="">
+                                    {{ product.description }}
                                 </div>
-                                <div class="productName">
-                                    <h3>{{ product.name }}</h3>
-                                </div>
-                                <div class="price_rating">
-                                    <div class="price">
-                                        <h2>$ {{ product.price }}</h2>
-                                    </div>
-                                    <div class="old_price">
-                                        {% if product.old_price %}
-                                            <h2 class="old_price">$ {{ product.old_price }}</h2>
+                            </div>
+                            <div id="review" class="tabcontent" style="display: none;">
+                                <h2>Product Review</h2>
+                                <div id="product-description" class="">
+                                    <div class="review-section">
+                                        {% if reviews %}
+                                            {% for review in reviews %}
+                                                <div class="review-card">
+                                                    <div class="review-header">
+                                                        <div class="customer-name">{{ review.name }}</div>
+                                                        <div class="rating">
+                                                            {% if review.rate  == 1 %}
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                            {% elif review.rate  == 2 %}
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                            {% elif review.rate  == 3 %}
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                            {% elif review.rate  == 4 %}
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star grey" aria-hidden="true"></i>
+                                                            {% elif review.rate  == 5 %}
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="review-message">
+                                                        <p>{{ review.message_review }}</p>
+                                                    </div>
+                                                    <div class="review-date">{{ review.date_updated }}</div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            {% include 'customer_help/404.html' %}
+                                        {% endif %}
+
+                                        {% if reviews_customer %}
+                                            {% for review in reviews %}
+                                                {% if review.customer == customer %}
+                                                    <div class="add-review-form">
+                                                        <h3 class="add-new-review">Edit Your Review</h3>
+                                                        <form action="/customer/product/edit_review/{{ review.id }}/"
+                                                              method="post">
+                                                            {% csrf_token %}
+                                                            <div class="form-group">
+                                                                <label for="customer-name">Name:</label>
+                                                                <input type="text" id="customer-name" name="name"
+                                                                       class="customer-name"
+                                                                       value="{{ review.name }}" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="rating">Rating:</label>
+                                                                <select id="rating" name="rating" class="rating-add"
+                                                                        required>
+                                                                    <option value="" class="">--Select--</option>
+                                                                    <option value="1" class="star-add"
+                                                                            {% if review.rate == 1 %}
+                                                                            selected{% endif %}>
+                                                                        &#9733;
+                                                                    </option>
+                                                                    <option value="2" class="star-add"
+                                                                            {% if review.rating == 2 %}
+                                                                            selected{% endif %}>
+                                                                        &#9733;&#9733;
+                                                                    </option>
+                                                                    <option value="3" class="star-add"
+                                                                            {% if review.rate == 3 %}
+                                                                            selected{% endif %}>
+                                                                        &#9733;&#9733;&#9733;
+                                                                    </option>
+                                                                    <option value="4" class="star-add"
+                                                                            {% if review.rate == 4 %}
+                                                                            selected{% endif %}>
+                                                                        &#9733;&#9733;&#9733;&#9733;
+                                                                    </option>
+                                                                    <option value="5" class="star-add"
+                                                                            {% if review.rate == 5 %}
+                                                                            selected{% endif %}>
+                                                                        &#9733;&#9733;&#9733;&#9733;&#9733;
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="review-message">Message:</label>
+                                                                <textarea id="review-message" name="message" rows="10"
+                                                                          style="height: 300px;"
+                                                                          required>{{ review.message_review }}</textarea>
+                                                            </div>
+                                                            <div class="btn-action">
+                                                                <button type="submit" class="submit-button">Update
+                                                                </button>
+                                                                <a href="/customer/product/delete_review/{{ review.id }}/"
+                                                                   class="btn btn-danger delete-button"
+                                                                   onclick="return confirm('Are you sure to delete this review?')">Delete</a>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <!-- Add Review -->
+                                            <div class="add-review-form">
+                                                <h3 class="add-new-review">Add Your Review</h3>
+                                                <form action="/customer/product/add_review/{{ product.slug }}/"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <label for="customer-name">Name:</label>
+                                                        <input type="text" id="customer-name" name="name"
+                                                               class="customer-name" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="rating">Rating:</label>
+                                                        <select id="rating" name="rating" class="rating-add"
+                                                                required>
+                                                            <option value="" class="">--Select--</option>
+                                                            <option value="1" class="star-add">&#9733;</option>
+                                                            <option value="2" class="star-add">&#9733;&#9733;
+                                                            </option>
+                                                            <option value="3" class="star-add">&#9733;&#9733;&#9733;
+                                                            </option>
+                                                            <option value="4" class="star-add">
+                                                                &#9733;&#9733;&#9733;&#9733;
+                                                            </option>
+                                                            <option value="5" class="star-add">&#9733;&#9733;&#9733;&#9733;&#9733;
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="review-message">Message:</label>
+                                                        <textarea id="review-message" name="message" rows="10"
+                                                                  style="height: 300px;"
+                                                                  required></textarea>
+                                                    </div>
+                                                    <button type="submit" class="submit-button">Submit</button>
+                                                </form>
+                                            </div>
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {% endif %}
 {% endblock %}
 
 {% block scripts %}
     <script type="text/javascript">
+        document.getElementById("description").classList.add("active");
         document.getElementById("product-description").innerHTML = "{{ product.description|escapejs }}";
+
+        function openTab(event, tabName) {
+            // Get all elements with class="tabcontent" and hide them
+            let tabcontent = document.getElementsByClassName("tabcontent");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            let tablinks = document.getElementsByClassName("tablinks");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.classList.add("active");
+        }
+
     </script>
 {% endblock %}

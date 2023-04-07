@@ -292,7 +292,7 @@
                                         <td><img class="img-thumbnail img-cart"
                                                  src="{{ MEDIA_URL }}{{ cart_item.product.product_image.url }}"
                                                  alt="{{ cart_item.product.name }}"></td>
-                                        <td>{{ cart_item.product.name }}</td>
+                                        <td><a href="/customer/product/details/{{ cart_item.product.slug }}/">{{cart_item.product.name }}</a></td>
                                         <td class="quantity">
                                             <form action="/customer/update_quantity/{{ cart_item.product.slug }}/"
                                                   method="post" onsubmit="return checkQuantity(this);">
