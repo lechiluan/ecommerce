@@ -44,10 +44,10 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {% for category in categories %}
                             <a class="dropdown-item"
-                               href="/customer/product/category/{{ category.slug }}/">{{ category.name }}</a>
+                               href="/customer/product/category/{{ category.slug }}/">{{ category.name }}({{ category.get_products_count }})</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/category/all/">All products</a>
+                        <a class="dropdown-item" href="/customer/product/category/all/">All products({{ get_products }})</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -57,10 +57,10 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         {% for brand in brands %}
                             <a class="dropdown-item"
-                               href="/customer/product/brand/{{ brand.slug }}/">{{ brand.name }}</a>
+                               href="/customer/product/brand/{{ brand.slug }}/">{{ brand.name }}({{ brand.get_products_count }})</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/brand/all/">All products</a>
+                        <a class="dropdown-item" href="/customer/product/brand/all/">All products({{ get_products }})</a>
                     </div>
                 </li>
                 <li class="nav-item">

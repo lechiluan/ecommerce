@@ -40,6 +40,10 @@ class Category(models.Model):
     name = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
 
+    @property
+    def get_products_count(self):
+        return self.product_set.count() or 0
+
     def __str__(self):
         return self.name
 
@@ -52,6 +56,10 @@ class Brand(models.Model):
     name = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
     logo = models.ImageField(upload_to='brand_logo/', null=True, blank=True)
+
+    @property
+    def get_products_count(self):
+        return self.product_set.count() or 0
 
     def __str__(self):
         return self.name

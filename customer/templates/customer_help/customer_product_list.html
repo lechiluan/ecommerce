@@ -76,7 +76,7 @@
                                     <option value="">Filter by Brand</option>
                                     {% for brand in brands %}
                                         <option value="{{ brand.id }}"
-                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}</option>
+                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})</option>
                                     {% endfor %}
                                 </select>
 
@@ -88,7 +88,7 @@
                                     <option value="">Filter by Category</option>
                                     {% for category in categories %}
                                         <option value="{{ category.id }}"
-                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})</option>
                                     {% endfor %}
                                 </select>
                             </div>
