@@ -1,0 +1,52 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Payment details{% endblock %}
+{% block style %}
+    <style>
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/payment/">Payment Management</a>
+        <span> > </span>
+        <a href="/dashboard/payment/details/{{ payment.id }}/">Payment Details</a>
+    </div>
+    <h1 class="h3 mb-2 text-gray-800">Payment Details</h1>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h2 class="font-weight-bold mt-3 form-title">Details about the payment - {{ payment.customer.user.username }}</h2>
+            <li class="form-display"><strong>Payment ID</strong>: {{ payment.id }}</li>
+            <li class="form-display"><strong>Customer</strong>: {{ payment.customer.user.username }}</li>
+            <li class="form-display"><strong>Order ID</strong>: {{ payment.order.id }}</li>
+            <li class="form-display"><strong>Payment Method</strong>: {{ payment.payment_method }}</li>
+            <li class="form-display"><strong>Payment Status</strong>: {{ payment.payment_status }}</li>
+            <li class="form-display"><strong>Payment Total</strong>: {{ payment.total }}</li>
+            <li class="form-display"><strong>Transaction ID</strong>: {{ payment.transaction_id }}</li>
+            <li class="form-display"><strong>Payment Date</strong>: {{ payment.payment_date }}</li>
+
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/payment/">Back</a>
+                    <a type="button" class="btn btn-danger btn-block"
+                       href="/dashboard/feedback/delete/{{ feedback.id }}?t={{ timestamp }}"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                    <a type="button" class="btn btn-success btn-block"
+                       href="/dashboard/payment/update_status/{{ payment.id }}?t={{ timestamp }}">Update Status</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

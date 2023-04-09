@@ -38,6 +38,13 @@
             font-weight: bold;
         }
 
+        .rating .fa {
+            color: #ffd513;
+            cursor: pointer;
+            margin: 0 2px;
+            font-size: 18px;
+            font-weight: 500;
+        }
     </style>
 {% endblock %}
 
@@ -66,13 +73,17 @@
             <li class="form-display"><strong>ID</strong>: {{ product.id }}</li>
             <li class="form-display"><strong>Product Slug</strong>: {{ product.slug }}</li>
             <li class="form-display"><strong>Product Name</strong>: {{ product.name }}</li>
-            <li class="form-display"><strong>Product Price Original</strong>: {{ product.price_original }}</li>
-            <li class="form-display"><strong>Product Price</strong>: {{ product.price }}</li>
-            <li class="form-display"><strong>Product Old Price</strong>: {{ product.old_price }}</li>
+            <li class="form-display"><strong>Product Price Original</strong>: ${{ product.price_original }}</li>
+            <li class="form-display"><strong>Product Price</strong>: ${{ product.price }}</li>
+            <li class="form-display"><strong>Product Old Price</strong>: ${{ product.old_price }}</li>
             <li class="form-display"><strong>Product Category</strong>: {{ product.category }}</li>
             <li class="form-display"><strong>Product Brand</strong>: {{ product.brand }}</li>
             <li class="form-display"><strong>Product Stock</strong>: {{ product.stock }}</li>
-            <li class="form-display"><strong>Product Sold</strong>: {{ product.sold }}</li>
+            <li class="form-display"><strong>Product Profit</strong>: ${{ product.profit }}</li>
+            <li class="form-display"><strong>Product Rating</strong>: {{ product.review_count }}
+                ({{ product.review_rate_average }}/5.0<span
+                        class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>)
+            </li>
             <li class="form-display"><strong>Product Created Date</strong>: {{ product.created_date }}</li>
             <li class="form-display"><strong>Product Updated Date</strong>: {{ product.updated_date }}</li>
             <li class="form-display"><strong>Product Description</strong>:

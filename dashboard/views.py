@@ -3,6 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, update_session_auth_hash, logout as auth_logout
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Avg
+
 from .forms import UpdateProfileForm, ChangePasswordForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -19,9 +21,8 @@ from django.conf import settings
 from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
     UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm, \
-    AddCouponForm, UpdateCouponForm
-from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, \
-    DeliveryAddress
+    AddCouponForm, UpdateCouponForm, UpdateOrderStatusForm, UpdatePaymentStatusForm
+from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, Review
 import csv
 import xlwt
 import json
@@ -70,7 +71,7 @@ def dashboard(request):
 # Pagination function
 def paginator(request, objects):
     # Set the number of items per page
-    per_page = 5
+    per_page = 10
 
     # Create a Paginator object with the customers queryset and the per_page value
     page = Paginator(objects, per_page)
@@ -402,6 +403,7 @@ def search_customer(request):
                 address__icontains=search_query)
             users = [customer.user for customer in customers]
             page_object = paginator(request, users)
+            messages.success(request, 'Search results for: ' + search_query)
         if not users:
             messages.success(request, 'No customers found {} !'.format(search_query))
     else:
@@ -529,6 +531,7 @@ def search_category(request):
             categories = Category.objects.filter(name__icontains=search_query) | Category.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, categories)
+            messages.success(request, 'Search results for: ' + search_query)
         if not categories:
             messages.success(request, 'No categories found {} !'.format(search_query))
     else:
@@ -652,6 +655,7 @@ def search_brand(request):
             brands = Brand.objects.filter(name__icontains=search_query) | Brand.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, brands)
+            messages.success(request, 'Search results for: ' + search_query)
         if not brands:
             messages.success(request, 'No brands found {} !'.format(search_query))
     else:
@@ -729,6 +733,7 @@ def delete_product(request, product_id):
         return redirect('/dashboard/product/')
     product.delete()
     messages.success(request, 'Product {} deleted successfully!'.format(product.name))
+    return redirect('/dashboard/product/')
 
 
 # Delete selected products
@@ -775,6 +780,8 @@ def search_product(request):
             products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, products)
+            messages.success(request, 'Search results for: ' + search_query)
+
         if not products:
             messages.success(request, 'No products found {} !'.format(search_query))
     else:
@@ -901,6 +908,8 @@ def search_coupon(request):
                 amount__icontains=search_query) | Coupon.objects.filter(
                 is_active__icontains=search_query)
             page_object = paginator(request, coupons)
+            messages.success(request, 'Search results for: ' + search_query)
+
         if not coupons:
             messages.success(request, 'No coupons found {} !'.format(search_query))
     else:
@@ -938,6 +947,26 @@ def order_details(request, order_id):
     return render(request, 'dashboard/manage_order/order_details.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def update_order_status(request, order_id):
+    order = Orders.objects.get(id=order_id)
+    if request.method == 'POST':
+        form = UpdateOrderStatusForm(request.POST, order=order)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Order status updated successfully!')
+            if 'save_and_edit' in request.POST:
+                return redirect('/dashboard/order/update_status/' + str(order.id) + '/')
+            else:
+                return redirect('/dashboard/order/')
+    else:
+        order = Orders.objects.get(id=order_id)
+        form = UpdateOrderStatusForm(order=order)
+    context = {'form': form}
+    return render(request, 'dashboard/manage_order/update_order_status.html', context)
+
+
 # Delete order
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
@@ -947,8 +976,19 @@ def delete_order(request, order_id):
     except ObjectDoesNotExist:
         messages.warning(request, 'The order {} you are trying to delete does not exist!'.format(order_id))
         return redirect('/dashboard/order/')
+    # Update Product Sold Count, Stock, Profit
+
+    for order_detail in OrderDetails.objects.filter(order_id=order_id):
+        product = Product.objects.get(id=order_detail.product_id)
+        product.sold -= order_detail.quantity
+        product.stock += order_detail.quantity
+        product.profit -= order_detail.quantity * order_detail.price
+        product.save()
+
+    # Delete order
     order.delete()
     messages.success(request, 'Order {} deleted successfully!'.format(order_id))
+    return redirect('/dashboard/order/')
 
 
 # Delete selected orders
@@ -963,10 +1003,19 @@ def delete_selected_order(request, order_ids):
             for order_id in order_ids:
                 try:
                     order = Orders.objects.get(id=order_id)
+                    # Update Product Sold Count, Stock, Profit
+
+                    for order_detail in OrderDetails.objects.filter(order_id=order_id):
+                        product = Product.objects.get(id=order_detail.product_id)
+                        product.sold -= order_detail.quantity
+                        product.stock += order_detail.quantity
+                        product.profit -= order_detail.quantity * order_detail.price
+                        product.save()
+
                     order.delete()
-                    messages.success(request, 'Order deleted successfully!')
                 except ObjectDoesNotExist:
                     messages.warning(request, f'The order with ID {order_id} does not exist!')
+            messages.success(request, 'Order deleted successfully!')
             return redirect('/dashboard/order/')
         else:
             messages.warning(request, 'Please select at least one order to delete!')
@@ -999,6 +1048,8 @@ def search_order(request):
                 payment_status__icontains=search_query) | Orders.objects.filter(
                 order_status__icontains=search_query)
             page_object = paginator(request, orders)
+            messages.success(request, 'Search results for: ' + search_query)
+
         if not orders:
             messages.success(request, 'No orders found {} !'.format(search_query))
     else:
@@ -1086,6 +1137,8 @@ def search_feedback(request):
                 mobile__icontains=search_query) | Feedback.objects.filter(
                 date_sent__icontains=search_query)
             page_object = paginator(request, feedbacks)
+            messages.success(request, 'Search results for: ' + search_query)
+
         if not feedbacks:
             messages.success(request, 'No feedbacks found {} !'.format(search_query))
     else:
@@ -1674,6 +1727,208 @@ def export_feedback_json(request):
     return response
 
 
+# Payment Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_payment_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="payments.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Username', 'Order ID', 'Payment Method', 'Payment Status', 'Total', 'Transaction ID',
+                     'Payment Date'])
+
+    payments = Payment.objects.all().order_by('id')
+
+    for payment in payments:
+        writer.writerow([
+            payment.id if payment.id else '',
+            payment.customer.user.username if payment.customer.user.username else '',
+            payment.order.id if payment.order.id else '',
+            payment.payment_method if payment.payment_method else '',
+            payment.payment_status if payment.payment_status else '',
+            payment.total if payment.total else 0,
+            payment.transaction_id if payment.transaction_id else '',
+            payment.payment_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if payment.payment_date else '',
+        ])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_payment_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="payments.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Payments')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Username', 'Order ID', 'Payment Method', 'Payment Status', 'Total', 'Transaction ID',
+               'Payment Date']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    payments = Payment.objects.all().order_by('id')
+
+    for payment in payments:
+        row_num += 1
+        row = [
+            payment.id if payment.id else '',
+            payment.customer.user.username if payment.customer.user.username else '',
+            payment.order.id if payment.order.id else '',
+            payment.payment_method if payment.payment_method else '',
+            payment.payment_status if payment.payment_status else '',
+            payment.total if payment.total else 0,
+            payment.transaction_id if payment.transaction_id else '',
+            payment.payment_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if payment.payment_date else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_payment_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="payments.json"'
+
+    payments = Payment.objects.all().order_by('id')
+
+    data = []
+    for payment in payments:
+        payment_data = {
+            'id': payment.id if payment.id else '',
+            'username': payment.customer.user.username if payment.customer.user.username else '',
+            'order_id': payment.order.id if payment.order.id else '',
+            'payment_method': payment.payment_method if payment.payment_method else '',
+            'payment_status': payment.payment_status if payment.payment_status else '',
+            'total': float(payment.total) if payment.total else 0,
+            'transaction_id': payment.transaction_id if payment.transaction_id else '',
+            'payment_date': payment.payment_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                       '') if payment.payment_date else '',
+        }
+        data.append(payment_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
+# Review Export
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_review_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="reviews.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Username', 'Full Name', 'Product Name', 'Rating', 'Message Review', 'Date Added',
+                     'Date Update', 'Review Status'])
+
+    reviews = Review.objects.all().order_by('id')
+
+    for review in reviews:
+        writer.writerow([
+            review.id if review.id else '',
+            review.customer.user.username if review.customer.user.username else '',
+            review.name if review.name else '',
+            review.product.name if review.product.name else '',
+            review.rate if review.rate else '',
+            review.message_review if review.message_review else '',
+            review.date_added.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if review.date_added else '',
+            review.date_updated.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if review.date_updated else '',
+            review.review_status if review.review_status else '',
+        ])
+
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_review_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="reviews.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Reviews')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Username', 'Full Name', 'Product Name', 'Rating', 'Message Review', 'Date Added',
+               'Date Update', 'Review Status']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    reviews = Review.objects.all().order_by('id')
+
+    for review in reviews:
+        row_num += 1
+        row = [
+            review.id if review.id else '',
+            review.customer.user.username if review.customer.user.username else '',
+            review.name if review.name else '',
+            review.product.name if review.product.name else '',
+            review.rate if review.rate else '',
+            review.message_review if review.message_review else '',
+            review.date_added.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if review.date_added else '',
+            review.date_updated.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if review.date_updated else '',
+            review.review_status if review.review_status else '',
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def export_review_json(request):
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="reviews.json"'
+
+    reviews = Review.objects.all().order_by('id')
+
+    data = []
+    for review in reviews:
+        review_data = {
+            'id': review.id if review.id else '',
+            'username': review.customer.user.username if review.customer.user.username else '',
+            'full_name': review.name if review.name else '',
+            'product_name': review.product.name if review.product.name else '',
+            'rate': review.rate if review.rate else '',
+            'message_review': review.message_review if review.message_review else '',
+            'date_added': review.date_added.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                  '') if review.date_added else '',
+            'date_updated': review.date_updated.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                      '') if review.date_updated else '',
+            'review_status': review.review_status if review.review_status else '',
+        }
+        data.append(review_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
+
+
 # Order Export
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
@@ -1691,3 +1946,188 @@ def export_order_excel(request):
 @login_required(login_url='/auth/login/')
 def export_order_json(request):
     pass
+
+
+# Payment Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def payment_table(request):
+    payments = Payment.objects.all().order_by('-id')
+    page_object = paginator(request, payments)
+
+    context = {
+        'payments': page_object,
+    }
+    return render(request, 'dashboard/manage_payment/payment_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def payment_details(request, payment_id):
+    payment = Payment.objects.get(id=payment_id)
+    context = {
+        'payment': payment,
+    }
+    return render(request, 'dashboard/manage_payment/payment_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_payment(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search', '')
+        payments = Payment.objects.filter(customer__user__username__icontains=search_query) | Payment.objects.filter(
+            order__id__icontains=search_query) | Payment.objects.filter(
+            payment_method__icontains=search_query) | Payment.objects.filter(
+            payment_status__icontains=search_query) | Payment.objects.filter(
+            payment_date__icontains=search_query).order_by('-id')
+        page_object = paginator(request, payments)
+        messages.success(request, 'Search results for: ' + search_query)
+        context = {
+            'payments': page_object,
+            'search_query': search_query,
+        }
+        return render(request, 'dashboard/manage_payment/payment_table.html', context)
+    else:
+        return redirect('/dashboard/payment/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def update_payment_status(request, payment_id):
+    payment = Payment.objects.get(id=payment_id)
+    if request.method == 'POST':
+        form = UpdatePaymentStatusForm(request.POST, payment=payment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment status has been updated successfully.')
+            if 'save_and_update' in request.POST:
+                return redirect('/dashboard/payment/' + str(payment.id) + '/update/')
+            else:
+                return redirect('/dashboard/payment/')
+    else:
+        form = UpdatePaymentStatusForm(payment=payment)
+    context = {
+        'form': form,
+        'payment': payment,
+    }
+    return render(request, 'dashboard/manage_payment/update_payment_status.html', context)
+
+
+# Review Management
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def review_table(request):
+    reviews = Review.objects.all().order_by('-id')
+    page_object = paginator(request, reviews)
+    context = {
+        'reviews': page_object}
+    return render(request, 'dashboard/manage_review/review_table.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def review_details(request, review_id):
+    review = Review.objects.get(id=review_id)
+    context = {
+        'review': review,
+    }
+    return render(request, 'dashboard/manage_review/review_details.html', context)
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_review(request, review_id):
+    review = Review.objects.get(id=review_id)
+    review.delete()
+    # Update product rate
+    review_rate_average = Review.objects.filter(product=review.product).aggregate(Avg('rate'))
+    review.product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
+    # Update product review count
+    review.product.review_count = Review.objects.filter(product=review.product).count()
+    review.product.save()
+    messages.success(request, 'Review has been deleted successfully.')
+    return redirect('/dashboard/review/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def delete_selected_review(request, review_ids):
+    if request.method == 'POST':
+        # Get a list of user IDs to delete
+        review_ids = review_ids.split('+')
+        if review_ids:
+            for review_id in review_ids:
+                try:
+                    review = Review.objects.get(id=review_id)
+                    review.delete()
+                    # Update product rate
+                    review_rate_average = Review.objects.filter(product=review.product).aggregate(Avg('rate'))
+                    review.product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
+                    # Update product review count
+                    review.product.review_count = Review.objects.filter(product=review.product).count()
+                    review.product.save()
+                    messages.success(request, f'Review with ID {review_id} has been deleted successfully.')
+                except ObjectDoesNotExist:
+                    messages.warning(request, f'Review with ID {review_id} does not exist!')
+            return redirect('/dashboard/review/')
+        else:
+            messages.warning(request, 'Please select at least one review to delete.')
+    return redirect('/dashboard/review/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def search_review(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search')
+        if search_query is not None:
+            reviews = Review.objects.filter(customer__user__username__icontains=search_query) | Review.objects.filter(
+                product__name__icontains=search_query) | Review.objects.filter(
+                message_review__icontains=search_query) | Review.objects.filter(
+                review_status__icontains=search_query)
+            page_object = paginator(request, reviews)
+            messages.success(request, 'Search results for: ' + search_query)
+
+
+        else:
+            reviews = Review.objects.all()
+            page_object = paginator(request, reviews)
+
+        context = {
+            'reviews': page_object,
+            'search_query': search_query
+        }
+        return render(request, 'dashboard/manage_review/review_table.html', context)
+    else:
+        return redirect('/dashboard/review/')
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def change_review_status(request, review_id):
+    review = Review.objects.get(id=review_id)
+    if review.review_status:
+        review.review_status = False
+        review.save()
+        # Update product rate
+        review_rate_average = Review.objects.filter(product=review.product, review_status=True).aggregate(Avg('rate'))
+        review.product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
+        # Update product review count
+        review.product.review_count = Review.objects.filter(product=review.product, review_status=True).count()
+        review.product.save()
+        messages.success(request, 'Review status has been changed to Pending.')
+        return redirect('/dashboard/review/')
+
+    else:
+        review.review_status = True
+        review.save()
+        # Update product rate
+        review_rate_average = Review.objects.filter(product=review.product, review_status=True).aggregate(
+            Avg('rate')) or 0
+        review.product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
+        # Update product review count
+        review.product.review_count = Review.objects.filter(product=review.product, review_status=True).count() or 0
+        review.product.save()
+        messages.success(request, 'Review status has been changed to Approve.')
+        return redirect('/dashboard/review/')

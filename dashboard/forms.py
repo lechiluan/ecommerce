@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-from main.models import Category, Brand, Product, Coupon
+from main.models import Category, Brand, Product, Coupon, Orders, Payment
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
@@ -12,9 +12,9 @@ phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is
 
 def validate_image_size(value):
     filesize = value.size
-    max_size = 2 * 1024 * 1024
+    max_size = 10 * 1024 * 1024
     if filesize > max_size:
-        raise ValidationError(_('Image size too large. Maximum size allowed is 2 MB.'))
+        raise ValidationError(_('Image size too large. Maximum size allowed is 5MB.'))
 
 
 # Administrator Forms
@@ -27,7 +27,7 @@ class UpdateProfileForm(forms.ModelForm):
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
-                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                      help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = User
@@ -102,7 +102,7 @@ class UpdateCustomerForm(forms.ModelForm):
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
-                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                      help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
     is_active = forms.BooleanField(required=False, label='Active', initial=True)
     is_staff = forms.BooleanField(required=False, label='Staff', initial=False)
     is_superuser = forms.BooleanField(required=False, label='Superuser', initial=False)
@@ -232,7 +232,7 @@ class AddBrandForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload logo', widget=forms.FileInput,
-                            help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                            help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
@@ -266,7 +266,7 @@ class UpdateBrandForm(forms.Form):
     name = forms.CharField(required=True, max_length=40)
     description = forms.CharField(required=True)
     logo = forms.ImageField(required=True, label='Upload new logo', widget=forms.FileInput,
-                            help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                            help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Brand
@@ -318,9 +318,9 @@ class AddProductForm(forms.Form):
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
-    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 40}))
     product_image = forms.ImageField(required=True, label='Upload Product Image', widget=forms.FileInput,
-                                     help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                     help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = Product
@@ -373,9 +373,16 @@ class UpdateProductForm(forms.Form):
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
-    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 40}))
     product_image = forms.ImageField(required=True, label='Upload New Product Image', widget=forms.FileInput,
-                                     help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                     help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
+    # readonly sold
+    sold = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
+    profit = forms.DecimalField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
+    created_date = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'readonly': True}))
+    updated_date = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'readonly': True}))
+    review_rate_average = forms.DecimalField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
+    review_count = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
 
     class Meta:
         model = Product
@@ -397,6 +404,12 @@ class UpdateProductForm(forms.Form):
             self.fields['stock'].initial = self.product.stock
             self.fields['description'].initial = self.product.description
             self.fields['product_image'].initial = self.product.product_image
+            self.fields['sold'].initial = self.product.sold
+            self.fields['profit'].initial = self.product.profit
+            self.fields['created_date'].initial = self.product.created_date
+            self.fields['updated_date'].initial = self.product.updated_date
+            self.fields['review_rate_average'].initial = self.product.review_rate_average
+            self.fields['review_count'].initial = self.product.review_count
 
     def clean(self):
         cleaned_data = super().clean()
@@ -539,4 +552,45 @@ class UpdateCouponForm(forms.Form):
         self.coupon.save()
         return self.coupon
 
+
+class UpdateOrderStatusForm(forms.Form):
+    status = forms.ChoiceField(choices=Orders.STATUS, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Orders
+        fields = ['status']
+
+    def __init__(self, *args, **kwargs):
+        self.order = kwargs.pop('order')
+        super().__init__(*args, **kwargs)
+
+        if self.order:
+            self.fields['status'].initial = self.order.status
+
+    def save(self):
+        status = self.cleaned_data.get('status')
+        self.order.status = status
+        self.order.save()
+        return self.order
+
+
+class UpdatePaymentStatusForm(forms.Form):
+    payment_status = forms.ChoiceField(choices=Payment.PAYMENT_STATUS_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Payment
+        fields = ['payment_status']
+
+    def __init__(self, *args, **kwargs):
+        self.payment = kwargs.pop('payment')
+        super().__init__(*args, **kwargs)
+
+        if self.payment:
+            self.fields['payment_status'].initial = self.payment.payment_status
+
+    def save(self):
+        payment_status = self.cleaned_data.get('payment_status')
+        self.payment.payment_status = payment_status
+        self.payment.save()
+        return self.payment
 

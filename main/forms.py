@@ -13,9 +13,9 @@ phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is
 
 def validate_image_size(value):
     filesize = value.size
-    max_size = 2 * 1024 * 1024
+    max_size = 10 * 1024 * 1024
     if filesize > max_size:
-        raise ValidationError(_('Image size too large. Maximum size allowed is 2 MB.'))
+        raise ValidationError(_('Image size too large. Maximum size allowed is 10MB.'))
 
 
 class RegisterForm(UserCreationForm):
@@ -26,7 +26,7 @@ class RegisterForm(UserCreationForm):
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload avatar', widget=forms.FileInput,
-                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                      help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
     class Meta:
@@ -67,7 +67,7 @@ class UpdateProfileForm(forms.ModelForm):
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
     customer_image = forms.ImageField(required=False, label='Upload new avatar', widget=forms.FileInput,
-                                      help_text='(5MB max size)', error_messages={'invalid': 'Image files only'})
+                                      help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
 
     class Meta:
         model = User

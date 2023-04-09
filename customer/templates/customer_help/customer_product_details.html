@@ -1,5 +1,5 @@
 {% extends "main/base/base.html" %}
-{% block title %}Product Detail{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block style %}
     <style>
@@ -433,7 +433,7 @@
                                 <button class="tablinks active" onclick="openTab(event, 'description')">Description
                                 </button>
                                 <button class="tablinks" onclick="openTab(event, 'review')">Review
-                                    ({{ get_review_count_for_product }})
+                                    ({{ product.review_count}})
                                 </button>
                             </div>
                             <div id="description" class="tabcontent" style="display: block;">
@@ -505,13 +505,13 @@
                                                                   method="post">
                                                                 {% csrf_token %}
                                                                 <div class="form-group">
-                                                                    <label for="customer-name">Name:</label>
+                                                                    <label for="customer-name">Name*:</label>
                                                                     <input type="text" id="customer-name" name="name"
                                                                            class="customer-name"
                                                                            value="{{ review.name }}" required>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="rating">Rating:</label>
+                                                                    <label for="rating">Rating*:</label>
                                                                     <select id="rating" name="rating" class="rating-add"
                                                                             required>
                                                                         <option value="" class="">--Select--</option>
@@ -543,7 +543,7 @@
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="review-message">Message:</label>
+                                                                    <label for="review-message">Message*:</label>
                                                                     <textarea id="review-message" name="message"
                                                                               rows="10"
                                                                               style="height: 300px;"

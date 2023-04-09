@@ -1,6 +1,6 @@
 {% extends "dashboard/base/ad_base.html" %}
 
-{% block title %}Product Management{% endblock %}
+{% block title %}Review Management{% endblock %}
 {% block style %}
     <style>
         .rating .fa {
@@ -19,15 +19,15 @@
 
 
 {% block content %}
-    <h1 class="h2 mb-2 text-black-800 title-manage">Product Management</h1>
+    <h1 class="h2 mb-2 text-black-800 title-manage">Review Management</h1>
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
-        <a href="/dashboard/product/">Product Management</a>
+        <a href="/dashboard/review/">Review Management</a>
     </div>
     {# Searchbox bar right here#}
     <div class="search-form">
-        <form action="/dashboard/product/search/" method="post">
+        <form action="/dashboard/review/search/" method="post">
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
@@ -38,7 +38,7 @@
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
-                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/product/">
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/review/">
                         <i class="fas fa-times fa-sm"></i>
                     </a>
                 </div>
@@ -48,12 +48,7 @@
     {# End of searchbox bar#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/product/add/"
-               title="Add New"><img
-                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
-                    title="Add New"> Add New
-            </a>
-            <form id="delete-form" method="post" action="/dashboard/product/delete_selected/">
+            <form id="delete-form" method="post" action="/dashboard/review/delete_selected/">
                 {% csrf_token %}
                 <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
                         title="Delete Selected" name="delete_selected" data-submit-form><img
@@ -69,12 +64,12 @@
                 Export Data
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="/dashboard/product/export/csv/">Export to CSV</a>
-                <a class="dropdown-item" href="/dashboard/product/export/excel/">Export to Excel</a>
-                <a class="dropdown-item" href="/dashboard/product/export/json/">Export to JSON</a>
+                <a class="dropdown-item" href="/dashboard/review/export/csv/">Export to CSV</a>
+                <a class="dropdown-item" href="/dashboard/review/export/excel/">Export to Excel</a>
+                <a class="dropdown-item" href="/dashboard/review/export/json/">Export to JSON</a>
             </div>
         </div>
-        {% if products %}
+        {% if reviews %}
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-auto table-style">
@@ -83,35 +78,36 @@
                             <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Full Name</th>
                             <th scope="col">Product Name</th>
                             <th scope="col">Image</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Brand</th>
-                            <th scope="col">Price Original</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Old Price</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Sold</th>
-                            <th scope="col">Profit</th>
-                            <th scope="col">Rating</th>
+                            <th scope="col">Review Rate</th>
+                            <th scope="col">Message Review</th>
+                            <th scope="col">Date Added</th>
+                            <th scope="col">Date Updated</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Change Status</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for product in products %}
+                        {% for review in reviews %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_product"
-                                           value="{{ product.id }}"></td>
+                                <td><input type="checkbox" class="select-checkbox" name="selected_review"
+                                           value="{{ review.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ product.id }}</td>
-                                <td>{{ product.name }}</td>
+                                <td>{{ review.id }}</td>
+                                <td>{{ review.customer.user.username }}</td>
+                                <td>{{ review.name }}</td>
+                                <td>{{ review.product.name }}</td>
                                 <td>
                                     <div class="main-image-table">
-                                        {% if product.product_image %}
-                                            <img src="{{ MEDIA_URL }}{{ product.product_image.url }}"
+                                        {% if review.product.product_image %}
+                                            <img src="{{ MEDIA_URL }}{{ review.product.product_image.url }}"
                                                  alt="Product Image"
                                                  class="img-thumbnail image-table"
-                                                 title="Product image of {{ product.name }}"/>
+                                                 title="Product image of {{ review.product.name }}"/>
                                         {% else %}
                                             <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
                                                  alt="Default Image"
@@ -120,28 +116,54 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td>{{ product.category }}</td>
-                                <td>{{ product.brand }}</td>
-                                <td>${{ product.price_original }}</td>
-                                <td>${{ product.price }}</td>
-                                <td>${{ product.old_price }}</td>
-                                <td>{{ product.stock }}</td>
-                                <td>{{ product.sold }}</td>
-                                <td><strong>${{ product.profit }}</strong></td>
-                                <td>{{ product.review_count }} ({{ product.review_rate_average }}/5.0<span
-                                        class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>)
+                                <td>{% if review.rate == 1 %}
+                                    <span
+                                        class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                {% elif review.rate == 2 %}
+                                    <span class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                {% elif review.rate == 3 %}
+                                    <span
+                                        class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                {% elif review.rate == 4 %}
+                                    <span
+                                        class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                {% elif review.rate == 5 %}
+                                    <span class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i><i
+                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                {% endif %}
+
+                                </td>
+                                <td>{{ review.message_review }}</td>
+                                <td>{{ review.date_added }}</td>
+                                <td>{{ review.date_updated }}</td>
+                                {% if review.review_status %}
+                                    <td><img src="{% static 'dashboard/images/icons/icon-yes.svg' %}" alt="True"
+                                             style="width:20px;height: 20px;"
+                                             title="True"></td>
+                                {% else %}
+                                    <td><img src="{% static 'dashboard/images/icons/icon-no.svg' %}" alt="False"
+                                             style="width:20px;height: 20px;"
+                                             title="False"></td>
+                                {% endif %}
+                                <td><a type="button" class="btn btn-success"
+                                       href="/dashboard/review/change_status/{{ review.id }}/">Change Status</a>
                                 </td>
                                 <td class="action">
-                                    <a href="/dashboard/product/details/{{ product.id }}/"><img
+                                    <a href="/dashboard/review/details/{{ review.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"
                                             title="Details"></a>
-                                    <a href="/dashboard/product/update/{{ product.id }}/"><img
-                                            src="{% static 'dashboard/images/icons/edit.png' %}"
-                                            alt="Edit"
-                                            title="Edit"></a>
-                                    <a href="/dashboard/product/delete/{{ product.id }}?t={{ timestamp }}/"
-                                       onclick="return confirm('Are you sure?')"><img
+                                    <a href="/dashboard/review/delete/{{ review.id }}?t={{ timestamp }}/"
+                                       onclick="return confirm('Are you sure to delete this review?')"><img
                                             src="{% static 'dashboard/images/icons/delete.png' %}"
                                             alt="Delete"
                                             title="Delete"></a>
@@ -151,10 +173,10 @@
                         </tbody>
                     </table>
                 </div>
-                {% include 'dashboard/manage_product/pagination.html' %}
+                {% include 'dashboard/manage_review/pagination.html' %}
             </div>
         {% else %}
-            {% include 'dashboard/manage_product/404.html' %}
+            {% include 'dashboard/manage_review/404.html' %}
         {% endif %}
     </div>
 
@@ -176,7 +198,7 @@
                 // If no checkboxes are selected, prevent the form submission
                 if (checkboxes.length === 0) {
                     event.preventDefault();
-                    alert("Please select at least one product to delete.");
+                    alert("Please select at least one review to delete.");
                 } else {
                     // Show confirm dialog and proceed only if OK is clicked
                     let confirmed = confirm('Are you sure to delete this selected?');
@@ -185,7 +207,7 @@
                         let Ids = Array.from(checkboxes).map(function (checkbox) {
                             return checkbox.value;
                         });
-                        form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
+                        form.action = "/dashboard/review/delete_selected/" + Ids.join("+") + "/";
                         // Submit the form
                         form.submit();
                     }
@@ -208,7 +230,7 @@
                     .map(function (checkbox) {
                         return checkbox.value;
                     });
-                form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
+                form.action = "/dashboard/review/delete_selected/" + Ids.join("+") + "/";
             });
         });
     </script>

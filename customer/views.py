@@ -89,7 +89,7 @@ def product_details(request, slug):
     discount_price = product.old_price - product.price
     if request.user.is_authenticated:
         customer = Customer.objects.get(user=request.user)
-        reviews_customer = Review.objects.filter(product=product, customer=customer)
+        reviews_customer = Review.objects.filter(product=product, customer=customer, review_status=True)
     else:
         customer = None
         reviews_customer = None
@@ -224,7 +224,7 @@ def add_review(request, slug):
             review.save()
             # Update product rating
             review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
-            product.review_rate_average = review_rate_average.get('rate__avg', 0)
+            product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
             # Update product review count
             product.review_count = Review.objects.filter(product=product).count()
             product.save()
@@ -236,7 +236,7 @@ def add_review(request, slug):
             review.save()
             # Update product rating
             review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
-            product.review_rate_average = review_rate_average.get('rate__avg', 0)
+            product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
             # Update product review count
             product.review_count = Review.objects.filter(product=product).count()
             product.save()
@@ -257,7 +257,7 @@ def edit_review(request, review_id):
         review.review_status = 'True'
         review.save()
         review_rate_average = Review.objects.filter(product=product).aggregate(Avg('rate'))
-        product.review_rate_average = review_rate_average.get('rate__avg', 0)
+        product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
         # Update product review count
         product.review_count = Review.objects.filter(product=product).count()
         product.save()
@@ -273,7 +273,7 @@ def delete_review(request, review_id):
     review.delete()
     # Update product rating
     review_rate_average = Review.objects.filter(product=review.product).aggregate(Avg('rate'))
-    review.product.review_rate_average = review_rate_average.get('rate__avg', 0)
+    review.product.review_rate_average = review_rate_average.get('rate__avg', 0) or 0
     # Update product review count
     review.product.review_count = Review.objects.filter(product=review.product).count()
     review.product.save()
@@ -681,29 +681,30 @@ def checkout(request):
                 order=order,
                 payment_method=payment_method,
                 payment_status='Pending',
-                amount=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
+                total=sum([cart_item.sub_total for cart_item in cart_items]) - sum(
                     cart_item.discount for cart_item in cart_items),
-                transaction_id=transaction_id,
+                transaction_id=int(transaction_id),
             )
             # Update product stock and sold
             for cart_item in cart_items:
                 product = cart_item.product
                 product.stock -= cart_item.quantity
                 product.sold += cart_item.quantity
+                product.profit += cart_item.product.price - cart_item.product.price_original - cart_item.discount
                 product.save()
             # Delete cart items
             cart_items.delete()
             # Send email to admin
             # Get email is admin
-            customer = request.user.customer
-            order = Orders.objects.filter(customer=customer, status='Pending').last()
-            order_details = OrderDetails.objects.filter(order=order)
-            admin = User.objects.get(is_superuser=True)
-            send_email_order_admin(request, admin.email, order, order_details, customer)
-            # Send email to customer
-            send_email_order_customer(request, delivery_address.email, order, order_details, customer)
-            send_email_order_customer(request, user.email, order, order_details, customer)
-            messages.success(request, 'Order placed successfully')
+            # customer = request.user.customer
+            # order = Orders.objects.filter(customer=customer, status='Pending').last()
+            # order_details = OrderDetails.objects.filter(order=order)
+            # admin = User.objects.get(is_superuser=True)
+            # send_email_order_admin(request, admin.email, order, order_details, customer)
+            # # Send email to customer
+            # send_email_order_customer(request, delivery_address.email, order, order_details, customer)
+            # send_email_order_customer(request, user.email, order, order_details, customer)
+            # messages.success(request, 'Order placed successfully')
             context = {
                 'order': order,
             }

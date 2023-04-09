@@ -1,6 +1,6 @@
 {% extends "dashboard/base/ad_base.html" %}
 
-{% block title %}Feedback Management{% endblock %}
+{% block title %}Payment Management{% endblock %}
 {% block style %}
     <style>
 
@@ -13,25 +13,26 @@
 
 
 {% block content %}
-    <h1 class="h2 mb-2 text-black-800 title-manage">Feedback Management</h1>
+    <h1 class="h2 mb-2 text-black-800 title-manage">Payment Management</h1>
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
-        <a href="/dashboard/feedback/">Feedback Management</a>
+        <a href="/dashboard/payment/">Payment Management</a>
     </div>
     {# Searchbox bar right here#}
     <div class="search-form">
-        <form action="/dashboard/feedback/search/" method="post">
+        <form action="/dashboard/payment/search/" method="post">
             {% csrf_token %}
             <div class="input-group search-manage">
                 <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
-                       aria-label="Search" aria-describedby="basic-addon2" name="search"  {% if search_query %}value="{{ search_query }}"{% endif %}>
+                       aria-label="Search" aria-describedby="basic-addon2" name="search"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
                 <input type="hidden" name="t" value="{{ timestamp }}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search fa-sm"></i>
                     </button>
-                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/feedback/">
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/payment/">
                         <i class="fas fa-times fa-sm"></i>
                     </a>
                 </div>
@@ -41,14 +42,6 @@
     {# End of searchbox bar#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <form id="delete-form" method="post" action="/dashboard/feedback/delete_selected/">
-                {% csrf_token %}
-                <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
-                        title="Delete Selected" name="delete_selected" data-submit-form><img
-                        src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon" alt="Delete Selected"
-                        title="Delete Selected">Delete Selected
-                </button>
-            </form>
             <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
                     data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false"><img
@@ -57,12 +50,12 @@
                 Export Data
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="/dashboard/feedback/export/csv/">Export to CSV</a>
-                <a class="dropdown-item" href="/dashboard/feedback/export/excel/">Export to Excel</a>
-                <a class="dropdown-item" href="/dashboard/feedback/export/json/">Export to JSON</a>
+                <a class="dropdown-item" href="/dashboard/payment/export/csv/">Export to CSV</a>
+                <a class="dropdown-item" href="/dashboard/payment/export/excel/">Export to Excel</a>
+                <a class="dropdown-item" href="/dashboard/payment/export/json/">Export to JSON</a>
             </div>
         </div>
-        {% if feedbacks %}
+        {% if payments %}
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-auto table-style">
@@ -71,52 +64,67 @@
                             <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Mobile</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Message</th>
-                            <th scope="col">Date Sent</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Avatar</th>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Payment Total</th>
+                            <th scope="col">Transaction ID</th>
+                            <th scope="col">Payment Date</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for feedback in feedbacks %}
+                        {% for payment in payments %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_feedback"
-                                           value="{{ feedback.id }}"></td>
+                                <td><input type="checkbox" class="select-checkbox" name="selected_payment"
+                                           value="{{ payment.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ feedback.id }}</td>
-                                <td>{{ feedback.name }}</td>
-                                <td>{{ feedback.email }}</td>
-                                <td>{{ feedback.mobile }}</td>
-                                <td>{{ feedback.subject }}</td>
+                                <td>{{ payment.id }}</td>
+                                <td>{{ payment.customer.user.username }}</td>
+                                <td>
+                                    <div class="main-image-table">
+                                        {% if payment.customer.customer_image %}
+                                            <img src="{{ MEDIA_URL }}{{ payment.customer.customer_image.url }}"
+                                                 alt="Product Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Product image of {{ payment.customer.user.username }}"/>
+                                        {% else %}
+                                            <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                 alt="Default Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Default Image"/>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ payment.order.id }}</td>
+                                <td>{{ payment.payment_method }}</td>
+                                <td>{{ payment.payment_status }}</td>
+                                <td>{{ payment.total }}</td>
+                                <td>{{ payment.transaction_id }}</td>
+                                <td>{{ payment.payment_date }}</td>
                                 <td class="action">
-                                    <a href="/dashboard/feedback/details/{{ feedback.id }}/"><img
+                                    <a href="/dashboard/payment/details/{{ payment.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"
                                             title="Details"></a>
-                                </td>
-                                <td>{{ feedback.date_sent }}</td>
-                                <td class="action">
-                                    <a href="/dashboard/feedback/delete/{{ feedback.id }}?t={{ timestamp }}/"
-                                       onclick="return confirm('Are you sure?')"><img
-                                            src="{% static 'dashboard/images/icons/delete.png' %}"
-                                            alt="Delete"
-                                            title="Delete"></a>
+                                    <a href="/dashboard/payment/update_status/{{ payment.id }}/"><img
+                                            src="{% static 'dashboard/images/icons/edit.png' %}"
+                                            alt="Edit"
+                                            title="Edit"></a>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {% include 'dashboard/manage_feedback/pagination.html' %}
+                {% include 'dashboard/manage_payment/pagination.html' %}
             </div>
         {% else %}
-            {% include 'dashboard/manage_feedback/404.html' %}
+            {% include 'dashboard/manage_payment/404.html' %}
         {% endif %}
     </div>
-
 
 {% endblock %}
 
@@ -136,7 +144,7 @@
                 // If no checkboxes are selected, prevent the form submission
                 if (checkboxes.length === 0) {
                     event.preventDefault();
-                    alert("Please select at least one feedback to delete.");
+                    alert("Please select at least one payment to delete.");
                 } else {
                     // Show confirm dialog and proceed only if OK is clicked
                     let confirmed = confirm('Are you sure to delete this selected?');
@@ -145,7 +153,7 @@
                         let Ids = Array.from(checkboxes).map(function (checkbox) {
                             return checkbox.value;
                         });
-                        form.action = "/dashboard/feedback/delete_selected/" + Ids.join("+") + "/";
+                        form.action = "/dashboard/payment/delete_selected/" + Ids.join("+") + "/";
                         // Submit the form
                         form.submit();
                     }
@@ -159,11 +167,16 @@
                 // Set their checked property based on the select-all checkbox
                 objectCheckboxesAll.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
-                    let Ids = Array.from(objectCheckboxesAll).map(function (checkbox) {
+                });
+                // Update the action attribute of the form
+                let Ids = Array.from(objectCheckboxesAll)
+                    .filter(function (checkbox) {
+                        return checkbox.checked;
+                    })
+                    .map(function (checkbox) {
                         return checkbox.value;
                     });
-                    form.action = "/dashboard/feedback/delete_selected/" + Ids.join("+") + "/";
-                });
+                form.action = "/dashboard/payment/delete_selected/" + Ids.join("+") + "/";
             });
         });
     </script>

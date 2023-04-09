@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Avg
 
 
 # Create your models here.
@@ -80,6 +79,7 @@ class Product(models.Model):
     description = models.TextField(null=True, blank=True)
     product_image = models.ImageField(upload_to='product_image/', null=True, blank=True)
     sold = models.PositiveIntegerField(default=0)
+    profit = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0.0)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     review_rate_average = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
@@ -220,20 +220,21 @@ class Payment(models.Model):
         ('Paypal', 'Paypal'),
         ('Visa', 'Visa'),
         ('Master Card', 'Master Card'),
-        ('Payonner', 'Payonner'),
-        ('Masetro', 'Masetro'),
+        ('Pardoner', 'Pardoner'),
+        ('Maestro', 'Maestro'),
         ('Credit Card', 'Credit Card'),
         ('Debit Card', 'Debit Card')
     )
     PAYMENT_STATUS_CHOICES = (
         ('Pending', 'Pending'),
-        ('Paid', 'Paid')
+        ('Paid', 'Paid'),
+        ('Due', 'Due'),
     )
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     order = models.ForeignKey('Orders', on_delete=models.CASCADE, null=True)
     payment_method = models.CharField(max_length=50, null=True, choices=METHOD_CHOICES)
     payment_status = models.CharField(max_length=50, null=True, choices=PAYMENT_STATUS_CHOICES)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    total = models.DecimalField(max_digits=10, decimal_places=1, null=True)
     transaction_id = models.CharField(max_length=100, null=True)
     payment_date = models.DateTimeField(auto_now_add=True, null=True)
 

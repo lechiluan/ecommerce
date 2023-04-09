@@ -115,12 +115,12 @@
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"
                                             title="Details"></a>
-                                    <a href="/dashboard/order/update/{{ order.id }}/"><img
+                                    <a href="/dashboard/order/update_status/{{ order.id }}/"><img
                                             src="{% static 'dashboard/images/icons/edit.png' %}"
                                             alt="Edit"
                                             title="Edit"></a>
                                     <a href="/dashboard/order/delete/{{ order.id }}?t={{ timestamp }}/"
-                                       onclick="return confirm('Are you sure?')"><img
+                                       onclick="return confirm('Are you sure to delete this order?')"><img
                                             src="{% static 'dashboard/images/icons/delete.png' %}"
                                             alt="Delete"
                                             title="Delete"></a>

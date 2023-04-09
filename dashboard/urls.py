@@ -80,6 +80,11 @@ urlpatterns = [
     # Order URL
     path('order/', views.order_table, name='order_table'),
     path('order/details/<int:order_id>/', views.order_details, name='order_details'),
+    path('order/update_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
+    path('order/delete/<int:order_id>/', views.delete_order, name='delete_order'),
+    path('order/delete_selected/<str:order_ids>/', views.delete_selected_order,
+         name='delete_selected_order'),
+    path('order/search/', views.search_order, name='search_order'),
     path('order/export/csv/', views.export_order_csv, name='export_order_csv'),
     path('order/export/excel/', views.export_order_excel, name='export_order_excel'),
     path('order/export/json/', views.export_order_json, name='export_order_json'),
@@ -94,5 +99,26 @@ urlpatterns = [
     path('feedback/export/csv/', views.export_feedback_csv, name='export_feedback_csv'),
     path('feedback/export/excel/', views.export_feedback_excel, name='export_feedback_excel'),
     path('feedback/export/json/', views.export_feedback_json, name='export_feedback_json'),
+
+    # Payment URL
+    path('payment/', views.payment_table, name='payment_table'),
+    path('payment/details/<int:payment_id>/', views.payment_details, name='payment_details'),
+    path('payment/search/', views.search_payment, name='search_payment'),
+    path('payment/update_status/<int:payment_id>/', views.update_payment_status, name='update_payment_status'),
+    path('payment/export/csv/', views.export_payment_csv, name='export_payment_csv'),
+    path('payment/export/excel/', views.export_payment_excel, name='export_payment_excel'),
+    path('payment/export/json/', views.export_payment_json, name='export_payment_json'),
+
+    # Review URL
+    path('review/', views.review_table, name='review_table'),
+    path('review/details/<int:review_id>/', views.review_details, name='review_details'),
+    path('review/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    path('review/delete_selected/<str:review_ids>/', views.delete_selected_review,
+         name='delete_selected_review'),
+    path('review/search/', views.search_review, name='search_review'),
+    path('review/change_status/<int:review_id>/', views.change_review_status, name='change_review_status'),
+    path('review/export/csv/', views.export_review_csv, name='export_review_csv'),
+    path('review/export/excel/', views.export_review_excel, name='export_review_excel'),
+    path('review/export/json/', views.export_review_json, name='export_review_json'),
 
 ]

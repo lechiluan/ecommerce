@@ -420,7 +420,7 @@
                             <div class="inputBox">
                                 <span class="label">Select Delivery Address*</span>
                                 <select name="delivery_address" id="delivery_address" required>
-                                    <option value="0" disabled selected>Select Delivery Address - If any</option>
+                                    <option value="" disabled selected>Select Delivery Address - If any</option>
                                     {% for address in delivery_address %}
                                         {% if address.is_default %}
                                             <option value="{{ address.id }}" selected>{{ address.address }} (Default)
@@ -499,7 +499,7 @@
                         <div class="inputBox">
                             <span class="label">Payment Method*</span>
                             <select name="payment_method" id="payment_method" required>
-                                <option value="0" disabled selected>Select Payment Method</option>
+                                <option value="" disabled selected>Select Payment Method</option>
                                 {% for choice in payment_methods %}
                                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                                 {% endfor %}
@@ -515,6 +515,7 @@
                             <div class="inputBox">
                                 <span class="label">Card Type*</span>
                                 <select name="card" required>
+                                    <option value="" disabled selected>Select Card Type</option>
                                     <option value="visa">Visa</option>
                                     <option value="mastercard">Mastercard</option>
                                     <option value="payonner">Payonner</option>
