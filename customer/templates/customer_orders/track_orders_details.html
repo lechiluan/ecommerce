@@ -1,0 +1,597 @@
+{% extends "main/base/base.html" %}
+{% block title %}Track Order Details{% endblock %}
+
+{% block style %}
+    <style media="screen">
+        .track {
+            position: relative;
+            background-color: #ddd;
+            height: 7px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            margin-bottom: 60px;
+            margin-top: 50px;
+        }
+
+        .track .step {
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            width: 25%;
+            margin-top: -18px;
+            text-align: center;
+            position: relative
+        }
+
+        .track .step.active:before {
+            background: #1253cc;
+        }
+
+        .track .step::before {
+            height: 7px;
+            position: absolute;
+            content: "";
+            width: 100%;
+            left: 0;
+            top: 18px;
+        }
+
+        .track .step.active .icon {
+            background: #1253cc;
+            color: #fff;
+        }
+
+        .track .icon {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            position: relative;
+            border-radius: 100%;
+            background: #ddd;
+        }
+
+        .track .icon .fa {
+            font-size: 1.5em;
+            position: absolute;
+            left: 65%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+        }
+
+        .track .step.active .text {
+            font-weight: 400;
+            color: #000;
+        }
+
+        .track .text {
+            display: block;
+            margin-top: 7px;
+        }
+
+        .cart-container {
+            background: #ffffff;
+            padding: 20px;
+            font-size: 17px;
+            margin-bottom: 20px;
+        }
+
+        .cart-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-main thead {
+            background: #f5f5f5;
+        }
+
+        .table-main thead th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tbody td {
+            padding: 10px;
+        }
+
+        .table-main tbody td img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .table-main tbody td .quantity-input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .table-main tbody td .delete-btn {
+            width: 100%;
+        }
+
+        .table-main tfoot {
+            background: #f5f5f5;
+        }
+
+        .table-main tfoot th {
+            border: none;
+            padding: 10px;
+        }
+
+        .table-main tfoot td {
+            padding: 10px;
+        }
+
+        .table-main tfoot td .btn {
+            width: 100%;
+        }
+
+        /* Make the table rows alternate colors for better readability */
+        .table-main tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+
+        /* Style the plus/minus buttons and quantity input */
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 5px;
+            font-size: 16px;
+            height: 37px;
+        }
+
+        .minus-btn,
+        .plus-btn {
+            width: 37px;
+            height: 37px;
+            background-color: #1253cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .minus-btn:hover,
+        .plus-btn:hover {
+            background-color: #0062cc;
+        }
+
+        .minus-btn:focus,
+        .plus-btn:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+            border: none;
+        }
+
+        .quantity {
+            white-space: nowrap;
+        }
+
+        .quantity form {
+            display: inline-block;
+        }
+
+        .quantity .update-btn {
+            background-color: #1253cc;
+            border-color: #1253cc;
+            height: 37px;
+            margin-left: 5px;
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            border: none;
+        }
+
+        .delete-btn:hover {
+            background-color: transparent;
+            border: none;
+        }
+
+        .delete-btn:focus {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .delete-btn img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .quantity .update-btn:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+
+        /* Style the checkout button */
+        .action .btn-primary {
+            background-color: #1253cc;
+            border-color: #1253cc;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .action .btn-success {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .action .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+        .btn-primary:focus,
+        .btn-success:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+        }
+
+        .row {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+
+        .table-title {
+            background-color: #1253cc;
+        }
+
+        .table-coupon .btn-primary {
+            background-color: #1253cc;
+            border-color: #1253cc;
+        }
+
+        .table-coupon .btn-primary:hover {
+            background-color: #0062cc;
+            border-color: #0062cc;
+        }
+
+        .table-title tr th {
+            color: #fff;
+            padding: 10px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .table-coupon .form-control {
+            display: inline-block;
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .table-coupon .btn-primary {
+            display: block;
+            width: 100%;
+        }
+
+        .table-total tbody tr:hover {
+            background-color: #F5F9FA;
+        }
+
+        @media (min-width: 768px) {
+            .table-coupon .form-control {
+                display: inline-block;
+                width: 65%;
+                margin-right: 10px;
+                margin-bottom: 0;
+            }
+
+            .table-coupon .btn-primary {
+                display: inline-block;
+                width: 30%;
+            }
+        }
+
+        .table-cart {
+            margin-top: 10px;
+        }
+
+        .table-cart tbody tr:hover {
+            background-color: #F5F9FA;
+        }
+
+        .table-cart .img-cart {
+            width: 80px;
+            height: 80px;
+        }
+
+        .img-thumbnail {
+            max-width: none;
+        }
+
+        .table-cart .price {
+            color: #ff0000;
+            font-weight: 600;
+        }
+
+        .table-total .price {
+            color: #ff0000;
+            font-weight: 600;
+        }
+
+        .table-cart table thead {
+            background-color: #1253cc;
+            color: #fff;
+        }
+
+        .badge {
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/customer/track_orders/">Track Orders</a>
+        <span> > </span>
+        <a href="/customer/track_orders/details/{{ order.id }}">Track Order Details</a>
+    </div>
+
+    <div class="cart-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2 class="font-weight-bold form-title">Order Details</h2>
+                    <div class="container-main">
+                        <div class="track">
+                            {% if order.status == 'Pending' %}
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-spinner"></i> </span> <span
+                                        class="text">Order Pending</span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-check"></i> </span> <span
+                                        class="text"> Order Confirmed</span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-truck"></i> </span> <span
+                                        class="text"> Out for Delivery </span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-home"></i> </span> <span
+                                        class="text">Delivered</span></div>
+                            {% elif order.status == 'Order Confirmed' %}
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-spinner"></i> </span> <span
+                                        class="text">Order Pending</span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-truck"></i> </span> <span
+                                        class="text"> Out for Delivery </span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-home"></i> </span> <span
+                                        class="text">Delivered</span></div>
+                            {% elif order.status == 'Out for Delivery' %}
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-spinner"></i> </span> <span
+                                        class="text">Order Pending</span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-truck"></i> </span> <span class="text"> Out for Delivery </span>
+                                </div>
+                                <div class="step "><span class="icon"> <i style="padding-top:.2em; padding-right:.5em;"
+                                                                          class="fa fa-home"></i> </span> <span
+                                        class="text">Delivered</span></div>
+                            {% else %}
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-spinner"></i> </span> <span
+                                        class="text">Order Pending</span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-check"></i> </span> <span class="text"> Order Confirmed</span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-truck"></i> </span> <span class="text"> Out for Delivery </span>
+                                </div>
+                                <div class="step active"><span class="icon"> <i
+                                        style="padding-top:.2em; padding-right:.5em;"
+                                        class="fa fa-home"></i> </span> <span class="text">Delivered</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if order_details %}
+                        <div class="table-responsive table-cart">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Unit Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in order_details %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><img class="img-thumbnail img-cart"
+                                                 src="{{ MEDIA_URL }}{{ item.product.product_image.url }}"
+                                                 alt="{{ item.product.name }}">
+                                        </td>
+                                        <td>
+                                            <a href="/customer/product/details/{{ item.product.slug }}/">{{ item.product.name }}</a>
+                                        </td>
+                                        <td class="quantity">
+                                            {{ item.quantity }}
+                                        </td>
+                                        <td class="price">${{ item.price }}</td>
+                                        <td class="price">${{ item.sub_total }}</td>
+                                    </tr>
+                                    </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-bordered table-total">
+                                    <thead class="table-title">
+                                    <tr>
+                                        <th colspan="2">Delivery Address</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><strong>First Name</strong></td>
+                                        <td>{{ delivery_address.first_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Last Name</strong></td>
+                                        <td>{{ delivery_address.last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mobile</strong></td>
+                                        <td>{{ delivery_address.mobile }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email</strong></td>
+                                        <td>{{ delivery_address.email }}</td>
+                                    <tr>
+                                        <td><strong>Address</strong></td>
+                                        <td>{{ delivery_address.address }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>City</strong></td>
+                                        <td>{{ delivery_address.city }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>State</strong></td>
+                                        <td>{{ delivery_address.state }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Country</strong></td>
+                                        <td>{{ delivery_address.country }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Zip Code</strong></td>
+                                        <td>{{ delivery_address.zip_code }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-6">
+                                <table class="table table-bordered table-total">
+                                    <thead class="table-title">
+                                    <tr>
+                                        <th colspan="2">Order Total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="price">${{ total_amount_without_coupon }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shipping</strong></td>
+                                        <td class="price">Free</td>
+                                    </tr>
+
+                                    <tr>
+                                        {% if discount > 0 %}
+                                            <td><strong>Discount ({{ code }})</strong></td>
+                                            <td class="price">-${{ discount }}</td>
+                                        {% else %}
+                                            <td><strong>Discount (None)</strong></td>
+                                            <td class="price">$0.0</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total(USD)</strong></td>
+                                        <td class="price">${{ total_amount_with_coupon }}</td>
+                                    </tr>
+                                    <thead class="table-title">
+                                    <tr>
+                                        <th colspan="2">Payment</th>
+                                    </tr>
+                                    </thead>
+                                    <tr>
+                                        <td><strong>Payment Method</strong></td>
+                                        <td>{{ payment.payment_method }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payment Status</strong></td>
+                                        <td>
+                                            {% if payment.payment_status == 'Pending' %}
+                                                <span class="badge badge-warning">{{ payment.payment_status }}</span>
+                                            {% elif payment.payment_status == 'Paid' %}
+                                                <span class="badge badge-success">{{ payment.payment_status }}</span>
+                                            {% elif payment.payment_status == 'Due' %}
+                                                <span class="badge badge-danger">{{ payment.payment_status }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payment Total</strong></td>
+                                        <td class="price">${{ payment.total }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Transaction ID</strong></td>
+                                        <td>{{ payment.transaction_id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payment Date</strong></td>
+                                        <td>{{ payment.payment_date }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="action">
+                                    <a type="button" href="/customer/track_orders/download_invoice/{{ order.id }}/" target="_blank"
+                                       class="btn btn-primary btn-block bg-info border-info">Download Invoice</a>
+                                    <a type="button" href="/customer/track_orders/" class="btn btn-primary btn-block">Back
+                                        To Track Orders</a>
+                                    <a type="button" href="/" class="btn btn-success btn-block">Continue Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% include 'customer_orders/404.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'main/base/services.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

@@ -184,6 +184,23 @@ class OrderDetails(models.Model):
     coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, null=True, blank=True, default=None)
     coupon_applied = models.BooleanField(default=False, null=True, blank=True)
 
+    @property
+    def get_total_amount_without_coupon(self):
+        total = self.product.price * self.quantity
+        return total
+
+    @property
+    def get_discount(self):
+        return self.coupon.discount * self.quantity
+
+    @property
+    def get_total_amount_with_coupon(self):
+        total = self.product.price * self.quantity
+        if self.coupon_applied and self.coupon is not None:
+            return total - self.discount
+        else:
+            return total
+
     def __str__(self):
         return self.product.name
 

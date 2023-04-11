@@ -85,6 +85,7 @@ urlpatterns = [
     path('order/delete_selected/<str:order_ids>/', views.delete_selected_order,
          name='delete_selected_order'),
     path('order/search/', views.search_order, name='search_order'),
+    path('order/download_invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
     path('order/export/csv/', views.export_order_csv, name='export_order_csv'),
     path('order/export/excel/', views.export_order_excel, name='export_order_excel'),
     path('order/export/json/', views.export_order_json, name='export_order_json'),

@@ -122,12 +122,12 @@
                                 </td>
                                 <td>{{ product.category }}</td>
                                 <td>{{ product.brand }}</td>
-                                <td>${{ product.price_original }}</td>
-                                <td>${{ product.price }}</td>
-                                <td>${{ product.old_price }}</td>
+                                <td><strong class="money">${{ product.price_original }}</strong></td>
+                                <td><strong class="money">${{ product.price }}</strong></td>
+                                <td><strong class="money-old">${{ product.old_price }}</strong></td>
                                 <td>{{ product.stock }}</td>
                                 <td>{{ product.sold }}</td>
-                                <td><strong>${{ product.profit }}</strong></td>
+                                <td><strong class="money">${{ product.profit }}</strong></td>
                                 <td>{{ product.review_count }} ({{ product.review_rate_average }}/5.0<span
                                         class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>)
                                 </td>

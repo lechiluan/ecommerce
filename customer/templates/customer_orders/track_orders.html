@@ -1,92 +1,382 @@
 {% extends "main/base/base.html" %}
-{% block title %}Feedback{% endblock %}
+{% block title %}Track Orders{% endblock %}
 
 {% block style %}
-    <style media="screen">
-        .track {
+    <style>
+        /* Style for checkboxes */
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            display: inline-block;
+            position: relative;
+            background-color: #fafafa;
+            color: #666666;
+            top: 4px;
+            height: 18px;
+            width: 18px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        input[type="checkbox"]:checked:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none;
+        }
+
+        /* Style for select-all checkbox */
+        #select-all:checked ~ table tbody .select-checkbox:checked:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        #select-all:checked ~ table tbody .select-checkbox:checked {
+            background-color: #e6f9f4;
+        }
+
+        #select-all:checked ~ table thead th:first-child:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: -1px;
+            left: 1px;
+            font-size: 14px;
+            color: #19aa6e;
+        }
+
+        #select-all:checked ~ table thead th:first-child {
+            background-color: #e6f9f4;
+        }
+
+        .container-main .container {
+            padding: 0;
+        }
+
+        .card-header {
+            background-color: #fff;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .card-body {
+            margin: 15px 10px;
+        }
+
+        .card-body table tbody tr:hover {
+            background-color: #F5F9FA;
+        }
+
+        /* Table */
+        .action img {
+            width: 25px;
+            height: 25px;
+            margin-right: 3px;
+            margin-left: 3px;
+        }
+
+        td.action {
+            white-space: nowrap;
+            align-items: center;
+        }
+
+        .add-icon {
+            width: 25px;
+            height: 25px;
+            margin-right: 5px;
+        }
+
+        .search-manage {
+            background-color: #fff;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .table-style thead tr th {
+            white-space: nowrap;
+        }
+
+        .btn-block {
+            display: inline-block;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        /*pagination*/
+        .pagination {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 50px 0 60px;
-            background-color: #ddd;
-            height: 7px;
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-size: 12px;
-            width: 25%;
-            position: relative;
-        }
-
-        .step::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 2px;
-            background-color: #ccc;
-            width: 100%;
-            z-index: -1;
-        }
-
-        .step.active::before {
-            background-color: #7ad2ed;
-        }
-
-        .icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ddd;
-            color: #fff;
-        }
-
-        .step.active .icon {
-            background-color: #7ad2ed;
-        }
-
-        .text {
-            margin-top: 5px;
+            margin-top: 20px;
             font-size: 14px;
+        }
+
+        .pagination .left {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin: 0 3px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #ccc;
+        }
+
+        .pagination .current {
             font-weight: bold;
+            color: #fff;
+            background-color: #1253cc;
+        }
+
+        .pagination .disabled {
+            color: #999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .pagination .dots {
+            margin: 0 6px;
+            font-weight: bold;
+        }
+
+
+        /* Make Responsive */
+        @media (max-width: 1024px) {
+            .btn-block {
+                display: inline-block;
+                width: auto;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cardHeader h2 {
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .card-header {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .btn-block {
+                display: block;
+                width: 100%;
+                margin: 0.5rem auto;
+                float: none;
+            }
+
+            .float-right {
+                float: none;
+            }
+
+            /* Pagination */
+            .pagination {
+                flex-direction: column;
+            }
+
+            .pagination .left {
+                order: 2;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .pagination .right {
+                order: 3;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .pagination a,
+            .pagination span {
+                margin: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .details .recentOrders {
+                overflow-x: auto;
+            }
+
+            .details .recentOrders table {
+                width: 600px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .btn-block {
+                display: block;
+                width: 100%;
+                margin: 0.5rem auto;
+                float: none;
+            }
+
+            .float-right {
+                float: none;
+            }
+
+            /* Pagination */
+            .pagination {
+                flex-direction: column;
+            }
+
+            .pagination .left {
+                order: 2;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .pagination .right {
+                order: 3;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .pagination a,
+            .pagination span {
+                margin: 5px;
+            }
+        }
+
+        .badge {
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .money {
+            color: #ff2020;
         }
     </style>
 {% endblock %}
 
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
-
+{% load static %}
 {% block content %}
-    <div class="breadcrumb">
-        <a href="/">Home</a>
-        <span> > </span>
-        <a href="/customer/track_orders/">Track Orders</a>
-    </div>
     <div class="container-main">
-        <div class="track">
-            <div class="step active">
-                <span class="icon"><i class="fa fa-check"></i></span>
-                <span class="text">Order Placed</span>
+        <div class="container">
+            <h2 class="font-weight-bold form-title-address">Track Your Order</h2>
+            <div class="breadcrumb">
+                <a href="/">Home</a>
+                <span> > </span>
+                <a href="/customer/track_orders/">Track Orders</a>
             </div>
-            <div class="step">
-                <span class="icon"><i class="fa fa-spinner"></i></span>
-                <span class="text">Processing</span>
+            {# Searchbox bar right here#}
+            <div class="search-form-address">
+                <form action="/customer/track_orders/search/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group search-manage">
+                        <input type="text" class="form-control border-0 small search-manage-input"
+                               placeholder="Search for..."
+                               aria-label="Search" aria-describedby="basic-addon2" name="search"
+                               {% if search_query %}value="{{ search_query }}"{% endif %}>
+                        <input type="hidden" name="t" value="{{ timestamp }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                            <a type="button" class="btn btn-danger" id="clear-btn" href="/customer/track_orders/">
+                                <i class="fas fa-times fa-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="step">
-                <span class="icon"><i class="fa fa-truck"></i></span>
-                <span class="text">Shipped</span>
-            </div>
-            <div class="step">
-                <span class="icon"><i class="fa fa-box"></i></span>
-                <span class="text">Delivered</span>
+            {# End of searchbox bar#}
+            <div class="card shadow mb-4">
+                {% if orders %}
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-auto table-style">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select-all"></th>
+                                    <th scope="col">No.</th>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">Full Name</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Sub Total</th>
+                                    <th scope="col">Discount</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Details</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td><input type="checkbox" class="select-checkbox" name="selected_order"
+                                                   value="{{ order.id }}"></td>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.delivery_address.first_name }} {{ order.delivery_address.last_name }}</td>
+                                        <td>{{ order.order_date }}</td>
+                                        <td><strong class="money">${{ order.sub_total }}</strong></td>
+                                        <td><strong class="money">${{ order.total_discount }}</strong></td>
+                                        <td><strong class="money">${{ order.total_amount }}</strong></td>
+                                        <td>
+                                            {% if order.status == 'Pending' %}
+                                                <span class="badge badge-warning">{{ order.status }}</span>
+                                            {% elif order.status == 'Order Confirmed' %}
+                                                <span class="badge badge-info">{{ order.status }}</span>
+                                            {% elif order.status == 'Out for Delivery' %}
+                                                <span class="badge badge-primary">{{ order.status }}</span>
+                                            {% elif order.status == 'Delivered' %}
+                                                <span class="badge badge-success">{{ order.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="action">
+                                            <a href="/customer/track_orders/download_invoice/{{ order.id }}/" target="_blank">
+                                                <img src="{% static 'dashboard/images/icons/download.png' %}"
+                                                    alt="Download Invoice"
+                                                    title="Download Invoice"></a>
+                                            <a href="/customer/track_orders/details/{{ order.id }}/"><img
+                                                    src="{% static 'dashboard/images/icons/detail.png' %}"
+                                                    alt="Details"
+                                                    title="Details"></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% include 'customer_orders/pagination.html' %}
+                    </div>
+                {% else %}
+                    {% include 'customer_orders/404.html' %}
+                {% endif %}
             </div>
         </div>
     </div>

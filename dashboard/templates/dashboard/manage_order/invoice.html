@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <style>
+        /* Set up the page for printing */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* Style the body */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style the header */
+        .header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Style the main content */
+        .main {
+            padding: 10px;
+        }
+
+        /* Style the table */
+        table {
+            font-size: 15px;
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style the footer */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        p {
+            font-size: 15px;
+            margin: 0;
+            padding: 10px 50px 0 50px
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0;
+            padding: 10px 10px 0 0;
+        }
+        .price {
+            color: #ff2020;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>LCL Shop - Invoice #{{ order.id }}
+        of {{ order.delivery_address.first_name }} {{ order.delivery_address.last_name }}</h1>
+</div>
+<div class="main">
+    <h2 style="align-items: center; text-align: center;">Order Details</h2>
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for detail in order_details %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ detail.product.name }}</td>
+                <td>{{ detail.quantity }}</td>
+                <td><strong class="price">${{ detail.price }}</strong></td>
+                <td><strong class="price">${{ detail.sub_total }}</strong></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="4" style="text-align: right;"><strong>Subtotal:</strong></td>
+            <td><strong class="price">${{ total_amount_without_coupon }}</strong></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;"><strong>Shipping:</strong></td>
+            <td>Free</td>
+        </tr>
+        <tr>
+            {% if discount > 0 %}
+                <td colspan="4" style="text-align: right;"><strong>Discount ({{ code }}):</strong></td>
+                <td><strong class="price">-${{ discount }}</strong></td>
+            {% else %}
+                <td colspan="4" style="text-align: right;"><strong>Discount(None):</strong></td>
+                <td>$0.0</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: right;"><strong>Total(USD):</strong></td>
+            <td><strong class="price">${{ total_amount_with_coupon }}</strong></td>
+        </tr>
+    </table>
+    <h2 style="align-items: center; text-align: center;">Order Information</h2>
+    <p><strong>Order Number:</strong> {{ order.id }}</p>
+    <p><strong>Date:</strong> {{ order.order_date }}</p>
+    <p><strong>Order Status:</strong> {{ order.status }}</p>
+    <p><strong>Customer:</strong> {{ order.delivery_address.first_name }} {{ order.delivery_address.last_name }}</p>
+    <p><strong>Mobile:</strong> {{ order.delivery_address.mobile }}</p>
+    <p><strong>Email:</strong> {{ order.delivery_address.email }}</p>
+    <p><strong>Delivery
+        Address:</strong> {{ delivery_address.address }}, {{ delivery_address.city }}, {{ delivery_address.state }}, {{ delivery_address.country }}, {{ delivery_address.zip_code }}
+    </p>
+    <p><strong>Payment Method:</strong> {{ payment.payment_method }}</p>
+    <p><strong>Payment Status:</strong> {{ payment.payment_status }}</p>
+    <p><strong>Payment Total:</strong><strong class="price">${{ payment.total }}</strong></p>
+    <p><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+    <p><strong>Payment Date:</strong> {{ payment.payment_date }}</p>
+    <p><strong>Thank you for your business!</strong> If you have any questions, please contact us at
+        <a href="mailto:lclshop.dev@gmail.com">lclshop.dev@gmail.com</a> or call us at <a href="tel:0123456789">0123456789</a>
+    </p>
+    <br>
+</div>
+<div class="footer">
+    <p>LCL Shop - Thank you for your business!</p>
+</div>
+</body>
+</html>

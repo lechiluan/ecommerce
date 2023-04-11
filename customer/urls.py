@@ -31,6 +31,9 @@ urlpatterns = [
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('track_orders/', views.track_orders, name='track_orders'),
+    path('track_orders/details/<int:order_id>/', views.track_order_details, name='track_order_details'),
+    path('track_orders/download_invoice/<int:order_id>/', views.download_invoice, name='download_invoice'),
+
     path('get_address/<int:address_id>/', views.get_address, name='get_address'),
     path('get_default_address/', views.get_default_address, name='get_default_address'),
 ]

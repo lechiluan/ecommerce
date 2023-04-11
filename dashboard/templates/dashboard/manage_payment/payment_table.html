@@ -3,7 +3,12 @@
 {% block title %}Payment Management{% endblock %}
 {% block style %}
     <style>
-
+        .badge {
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
     </style>
 {% endblock %}
 
@@ -89,7 +94,7 @@
                                             <img src="{{ MEDIA_URL }}{{ payment.customer.customer_image.url }}"
                                                  alt="Product Image"
                                                  class="img-thumbnail image-table"
-                                                 title="Product image of {{ payment.customer.user.username }}"/>
+                                                 title="Avatar image of {{ payment.customer.user.username }}"/>
                                         {% else %}
                                             <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
                                                  alt="Default Image"
@@ -100,8 +105,16 @@
                                 </td>
                                 <td>{{ payment.order.id }}</td>
                                 <td>{{ payment.payment_method }}</td>
-                                <td>{{ payment.payment_status }}</td>
-                                <td>{{ payment.total }}</td>
+                                <td>
+                                    {% if payment.payment_status == 'Pending' %}
+                                        <span class="badge badge-warning">{{ payment.payment_status }}</span>
+                                    {% elif payment.payment_status == 'Paid' %}
+                                        <span class="badge badge-success">{{ payment.payment_status }}</span>
+                                    {% elif payment.payment_status == 'Due' %}
+                                        <span class="badge badge-danger">{{ payment.payment_status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong class="money">${{ payment.total }}</strong></td>
                                 <td>{{ payment.transaction_id }}</td>
                                 <td>{{ payment.payment_date }}</td>
                                 <td class="action">

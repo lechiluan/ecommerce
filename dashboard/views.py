@@ -22,11 +22,16 @@ from main.views import auth_login
 from .forms import AddCustomerForm, UpdateCustomerForm, UpdateCustomerPasswordForm, AddCategoryForm, \
     UpdateCategoryForm, AddBrandForm, UpdateBrandForm, AddProductForm, UpdateProductForm, ChangeEmailForm, \
     AddCouponForm, UpdateCouponForm, UpdateOrderStatusForm, UpdatePaymentStatusForm
-from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, Review
+from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Orders, OrderDetails, Payment, Review, \
+    DeliveryAddress
 import csv
 import xlwt
 import json
 from django.http import HttpResponse
+import io
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
 
 
 # Create your views here.
@@ -941,9 +946,31 @@ def order_table(request):
 def order_details(request, order_id):
     # Get data from orders and order_details
     order = Orders.objects.get(id=order_id)
-    order_detail = OrderDetails.objects.filter(order_id=order_id)
-    context = {'order': order,
-               'order_details': order_detail}
+    order_details = OrderDetails.objects.filter(order=order)
+    total = sum(item.sub_total for item in order_details)
+    total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in order_details)
+    total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in order_details)
+    #  check if any coupon is applied
+    if order_details.filter(coupon_applied=True).exists():
+        code = order_details[0].coupon.code if order_details[0].coupon_applied is True else None
+        discount = sum(item.get_discount for item in order_details)
+    else:
+        code = None
+        discount = 0
+    delivery_address = DeliveryAddress.objects.get(id=order.delivery_address.id)
+    payment = Payment.objects.get(order=order)
+    context = {
+        'order': order,
+        'order_details': order_details,
+        'total': total,
+        'code': code,
+        'discount': discount,
+        'total_amount_without_coupon': total_amount_without_coupon,
+        'total_amount_with_coupon': total_amount_with_coupon,
+        'delivery_address': delivery_address,
+        'payment': payment,
+    }
+
     return render(request, 'dashboard/manage_order/order_details.html', context)
 
 
@@ -956,10 +983,12 @@ def update_order_status(request, order_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Order status updated successfully!')
-            if 'save_and_edit' in request.POST:
+            if 'save_and_update' in request.POST:
                 return redirect('/dashboard/order/update_status/' + str(order.id) + '/')
             else:
-                return redirect('/dashboard/order/')
+                next_url = request.GET.get('next', '/dashboard/order/')
+                return redirect(next_url)
+
     else:
         order = Orders.objects.get(id=order_id)
         form = UpdateOrderStatusForm(order=order)
@@ -1034,19 +1063,22 @@ def search_order(request):
         else:
             orders = Orders.objects.filter(
                 id__icontains=search_query) | Orders.objects.filter(
-                first_name__icontains=search_query) | Orders.objects.filter(
-                last_name__icontains=search_query) | Orders.objects.filter(
-                email__icontains=search_query) | Orders.objects.filter(
-                phone__icontains=search_query) | Orders.objects.filter(
-                address__icontains=search_query) | Orders.objects.filter(
-                city__icontains=search_query) | Orders.objects.filter(
-                state__icontains=search_query) | Orders.objects.filter(
-                zipcode__icontains=search_query) | Orders.objects.filter(
-                country__icontains=search_query) | Orders.objects.filter(
-                payment_method__icontains=search_query) | Orders.objects.filter(
-                payment_id__icontains=search_query) | Orders.objects.filter(
-                payment_status__icontains=search_query) | Orders.objects.filter(
-                order_status__icontains=search_query)
+                customer__user__first_name__icontains=search_query) | Orders.objects.filter(
+                customer__user__last_name__icontains=search_query) | Orders.objects.filter(
+                customer__user__email__icontains=search_query) | Orders.objects.filter(
+                order_date__icontains=search_query) | Orders.objects.filter(
+                status__icontains=search_query) | Orders.objects.filter(
+                total_discount__icontains=search_query) | Orders.objects.filter(
+                total_amount__icontains=search_query) | Orders.objects.filter(
+                delivery_address__first_name__icontains=search_query) | Orders.objects.filter(
+                delivery_address__last_name__icontains=search_query) | Orders.objects.filter(
+                delivery_address__mobile__icontains=search_query) | Orders.objects.filter(
+                delivery_address__address__icontains=search_query) | Orders.objects.filter(
+                delivery_address__city__icontains=search_query) | Orders.objects.filter(
+                delivery_address__state__icontains=search_query) | Orders.objects.filter(
+                delivery_address__country__icontains=search_query) | Orders.objects.filter(
+                delivery_address__zip_code__icontains=search_query)
+
             page_object = paginator(request, orders)
             messages.success(request, 'Search results for: ' + search_query)
 
@@ -1058,6 +1090,53 @@ def search_order(request):
     context = {'orders': page_object,
                'search_query': search_query}
     return render(request, 'dashboard/manage_order/order_table.html', context)
+
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = io.BytesIO()
+    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return
+
+
+# Download invoice
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def download_invoice(request, order_id):
+    customer = request.user.customer
+    order = Orders.objects.get(customer=customer, id=order_id)
+    order_details = OrderDetails.objects.filter(order=order)
+    total = sum(item.sub_total for item in order_details)
+    total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in order_details)
+    total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in order_details)
+    #  check if any coupon is applied
+    if order_details.filter(coupon_applied=True).exists():
+        code = order_details[0].coupon.code if order_details[0].coupon_applied is True else None
+        discount = sum(item.get_discount for item in order_details)
+    else:
+        code = None
+        discount = 0
+    delivery_address = DeliveryAddress.objects.get(id=order.delivery_address.id)
+    payment = Payment.objects.get(order=order)
+    context = {
+        'order': order,
+        'order_details': order_details,
+        'total': total,
+        'code': code,
+        'discount': discount,
+        'total_amount_without_coupon': total_amount_without_coupon,
+        'total_amount_with_coupon': total_amount_with_coupon,
+        'delivery_address': delivery_address,
+        'payment': payment,
+    }
+    pdf = render_to_pdf('dashboard/manage_order/invoice.html', context)
+    filename = 'lclshop_invoice_{}.pdf'.format(order_id)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+    return response
 
 
 # Feedback Management
@@ -2004,7 +2083,8 @@ def update_payment_status(request, payment_id):
             if 'save_and_update' in request.POST:
                 return redirect('/dashboard/payment/' + str(payment.id) + '/update/')
             else:
-                return redirect('/dashboard/payment/')
+                next_url = request.GET.get('next', '/dashboard/payment/')
+                return redirect(next_url)
     else:
         form = UpdatePaymentStatusForm(payment=payment)
     context = {

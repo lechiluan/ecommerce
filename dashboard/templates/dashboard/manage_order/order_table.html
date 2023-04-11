@@ -3,7 +3,12 @@
 {% block title %}Order Management{% endblock %}
 {% block style %}
     <style>
-
+        .badge {
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
     </style>
 {% endblock %}
 
@@ -106,11 +111,26 @@
                                     </div>
                                 </td>
                                 <td>{{ order.order_date }}</td>
-                                <td>{{ order.sub_total }}</td>
-                                <td>{{ order.total_discount }}</td>
-                                <td>{{ order.total_amount }}</td>
-                                <td>{{ order.status }}</td>
+                                <td><strong class="money">${{ order.sub_total }}</strong></td>
+                                <td><strong class="money">${{ order.total_discount }}</strong></td>
+                                <td><strong class="money">${{ order.total_amount }}</strong></td>
+                                <td>
+                                    {% if order.status == 'Pending' %}
+                                        <span class="badge badge-warning">{{ order.status }}</span>
+                                    {% elif order.status == 'Order Confirmed' %}
+                                        <span class="badge badge-info">{{ order.status }}</span>
+                                    {% elif order.status == 'Out for Delivery' %}
+                                        <span class="badge badge-primary">{{ order.status }}</span>
+                                    {% elif order.status == 'Delivered' %}
+                                        <span class="badge badge-success">{{ order.status }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="action">
+                                    <a href="/dashboard/order/download_invoice/{{ order.id }}/" target="_blank">
+                                        <img
+                                            src="{% static 'dashboard/images/icons/download.png' %}"
+                                            alt="Download Invoice"
+                                            title="Download Invoice"></a>
                                     <a href="/dashboard/order/details/{{ order.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"
                                             alt="Details"

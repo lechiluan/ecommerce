@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
@@ -11,11 +10,15 @@ from django.db.models.query_utils import Q
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils import timezone
-
 from .forms import FeedbackForm
 from main.models import Customer, Category, Brand, Product, Coupon, Feedback, CartItem, DeliveryAddress, Orders, \
     OrderDetails, Wishlist, Payment, Review
 from django.contrib.auth.models import User
+import io
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
+from django.http import HttpResponse
 
 
 # Send email newsletter
@@ -772,13 +775,88 @@ def send_email_order_customer(request, email, order, order_details, customer):
 @login_required(login_url='/auth/login/')
 def track_orders(request):
     customer = request.user.customer
-    orders = Orders.objects.filter(customer=customer)
-    order_details = OrderDetails.objects.filter(id=orders)
-    context = {
-        'orders': orders,
-        'order_details': order_details,
-    }
+    orders = Orders.objects.filter(customer=customer).order_by('-id')
+    page_object = paginator(request, orders)
+    context = {'orders': page_object}
+
     return render(request, 'customer_orders/track_orders.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def track_order_details(request, order_id):
+    customer = request.user.customer
+    order = Orders.objects.get(customer=customer, id=order_id)
+    order_details = OrderDetails.objects.filter(order=order)
+    total = sum(item.sub_total for item in order_details)
+    total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in order_details)
+    total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in order_details)
+    #  check if any coupon is applied
+    if order_details.filter(coupon_applied=True).exists():
+        code = order_details[0].coupon.code if order_details[0].coupon_applied is True else None
+        discount = sum(item.get_discount for item in order_details)
+    else:
+        code = None
+        discount = 0
+    delivery_address = DeliveryAddress.objects.get(id=order.delivery_address.id)
+    payment = Payment.objects.get(order=order)
+    context = {
+        'order': order,
+        'order_details': order_details,
+        'total': total,
+        'code': code,
+        'discount': discount,
+        'total_amount_without_coupon': total_amount_without_coupon,
+        'total_amount_with_coupon': total_amount_with_coupon,
+        'delivery_address': delivery_address,
+        'payment': payment,
+    }
+    return render(request, 'customer_orders/track_orders_details.html', context)
+
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = io.BytesIO()
+    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return
+
+
+# download invoice
+@login_required(login_url='/auth/login/')
+def download_invoice(request, order_id):
+    customer = request.user.customer
+    order = Orders.objects.get(customer=customer, id=order_id)
+    order_details = OrderDetails.objects.filter(order=order)
+    total = sum(item.sub_total for item in order_details)
+    total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in order_details)
+    total_amount_with_coupon = sum(item.get_total_amount_with_coupon for item in order_details)
+    #  check if any coupon is applied
+    if order_details.filter(coupon_applied=True).exists():
+        code = order_details[0].coupon.code if order_details[0].coupon_applied is True else None
+        discount = sum(item.get_discount for item in order_details)
+    else:
+        code = None
+        discount = 0
+    delivery_address = DeliveryAddress.objects.get(id=order.delivery_address.id)
+    payment = Payment.objects.get(order=order)
+    context = {
+        'order': order,
+        'order_details': order_details,
+        'total': total,
+        'code': code,
+        'discount': discount,
+        'total_amount_without_coupon': total_amount_without_coupon,
+        'total_amount_with_coupon': total_amount_with_coupon,
+        'delivery_address': delivery_address,
+        'payment': payment,
+    }
+    pdf = render_to_pdf('customer_orders/invoice.html', context)
+    filename = 'lclshop_invoice_{}.pdf'.format(order_id)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+    return response
 
 
 def get_address(request, address_id):

@@ -27,7 +27,7 @@ from .models import Customer, Product, Category, Brand, DeliveryAddress, Review
 # Create your views here.
 def paginator(request, objects):
     # Set the number of items per page
-    per_page = 8
+    per_page = 12
 
     # Create a Paginator object with the customers queryset and the per_page value
     page = Paginator(objects, per_page)
