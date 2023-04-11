@@ -89,6 +89,9 @@ def product_details(request, slug):
     reviews = Review.objects.filter(product=product, review_status=True).order_by('-date_added')
     get_review_count_for_product = Review.objects.filter(product=product).count()
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    # Update view count
+    product.view_count += 1
+    product.save()
 
     discount_price = product.old_price - product.price
     if request.user.is_authenticated:

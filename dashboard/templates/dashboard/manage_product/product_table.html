@@ -94,6 +94,7 @@
                             <th scope="col">Sold</th>
                             <th scope="col">Profit</th>
                             <th scope="col">Rating</th>
+                            <th scope="col">Views</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -131,6 +132,7 @@
                                 <td>{{ product.review_count }} ({{ product.review_rate_average }}/5.0<span
                                         class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>)
                                 </td>
+                                <td>{{ product.view_count }}</td>
                                 <td class="action">
                                     <a href="/dashboard/product/details/{{ product.id }}/"><img
                                             src="{% static 'dashboard/images/icons/detail.png' %}"

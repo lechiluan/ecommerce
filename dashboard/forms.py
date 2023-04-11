@@ -383,6 +383,7 @@ class UpdateProductForm(forms.Form):
     updated_date = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'readonly': True}))
     review_rate_average = forms.DecimalField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
     review_count = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
+    view_count = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'readonly': True}))
 
     class Meta:
         model = Product
@@ -410,6 +411,7 @@ class UpdateProductForm(forms.Form):
             self.fields['updated_date'].initial = self.product.updated_date
             self.fields['review_rate_average'].initial = self.product.review_rate_average
             self.fields['review_count'].initial = self.product.review_count
+            self.fields['view_count'].initial = self.product.view_count
 
     def clean(self):
         cleaned_data = super().clean()
@@ -575,7 +577,8 @@ class UpdateOrderStatusForm(forms.Form):
 
 
 class UpdatePaymentStatusForm(forms.Form):
-    payment_status = forms.ChoiceField(choices=Payment.PAYMENT_STATUS_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    payment_status = forms.ChoiceField(choices=Payment.PAYMENT_STATUS_CHOICES,
+                                       widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Payment
@@ -593,4 +596,3 @@ class UpdatePaymentStatusForm(forms.Form):
         self.payment.payment_status = payment_status
         self.payment.save()
         return self.payment
-

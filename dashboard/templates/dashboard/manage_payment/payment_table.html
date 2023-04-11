@@ -66,7 +66,6 @@
                     <table class="table table-bordered table-auto table-style">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" id="select-all"></th>
                             <th scope="col">No.</th>
                             <th scope="col">ID</th>
                             <th scope="col">Username</th>
@@ -83,8 +82,6 @@
                         <tbody>
                         {% for payment in payments %}
                             <tr>
-                                <td><input type="checkbox" class="select-checkbox" name="selected_payment"
-                                           value="{{ payment.id }}"></td>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ payment.id }}</td>
                                 <td>{{ payment.customer.user.username }}</td>
@@ -143,54 +140,6 @@
 
 {% block scripts %}
     <script>
-        // Delete selected function
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get the form and the delete selected button
-            let form = document.getElementById("delete-form");
-            let deleteBtn = document.querySelector("[data-submit-form]");
-            let selectAllCheckbox = document.getElementById("select-all");
 
-            // Listen for the click event on the delete selected button
-            deleteBtn.addEventListener("click", function (event) {
-                // Get the selected checkboxes
-                let checkboxes = document.querySelectorAll(".select-checkbox:checked");
-                // If no checkboxes are selected, prevent the form submission
-                if (checkboxes.length === 0) {
-                    event.preventDefault();
-                    alert("Please select at least one payment to delete.");
-                } else {
-                    // Show confirm dialog and proceed only if OK is clicked
-                    let confirmed = confirm('Are you sure to delete this selected?');
-                    if (confirmed) {
-                        // Update the action attribute of the form
-                        let Ids = Array.from(checkboxes).map(function (checkbox) {
-                            return checkbox.value;
-                        });
-                        form.action = "/dashboard/payment/delete_selected/" + Ids.join("+") + "/";
-                        // Submit the form
-                        form.submit();
-                    }
-                }
-            });
-
-            // Listen for the click event on the select-all checkbox
-            selectAllCheckbox.addEventListener("click", function () {
-                // Get all the object checkboxes
-                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
-                // Set their checked property based on the select-all checkbox
-                objectCheckboxesAll.forEach(function (checkbox) {
-                    checkbox.checked = selectAllCheckbox.checked;
-                });
-                // Update the action attribute of the form
-                let Ids = Array.from(objectCheckboxesAll)
-                    .filter(function (checkbox) {
-                        return checkbox.checked;
-                    })
-                    .map(function (checkbox) {
-                        return checkbox.value;
-                    });
-                form.action = "/dashboard/payment/delete_selected/" + Ids.join("+") + "/";
-            });
-        });
     </script>
 {% endblock %}

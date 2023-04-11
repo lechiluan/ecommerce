@@ -84,6 +84,7 @@ class Product(models.Model):
     updated_date = models.DateTimeField(auto_now=True, null=True)
     review_rate_average = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     review_count = models.PositiveIntegerField(default=0)
+    view_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
