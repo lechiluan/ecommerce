@@ -325,7 +325,7 @@
                                     <th><input type="checkbox" id="select-all"></th>
                                     <th scope="col">No.</th>
                                     <th scope="col">Order ID</th>
-                                    <th scope="col">Full Name</th>
+                                    <th scope="col">Address</th>
                                     <th scope="col">Order Date</th>
                                     <th scope="col">Sub Total</th>
                                     <th scope="col">Discount</th>
@@ -341,7 +341,7 @@
                                                    value="{{ order.id }}"></td>
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ order.id }}</td>
-                                        <td>{{ order.delivery_address.first_name }} {{ order.delivery_address.last_name }}</td>
+                                        <td>{{ order.delivery_address.address }}</td>
                                         <td>{{ order.order_date }}</td>
                                         <td><strong class="money">${{ order.sub_total }}</strong></td>
                                         <td><strong class="money">${{ order.total_discount }}</strong></td>
@@ -358,14 +358,23 @@
                                             {% endif %}
                                         </td>
                                         <td class="action">
-                                            <a href="/customer/track_orders/download_invoice/{{ order.id }}/" target="_blank">
+                                            <a href="/customer/track_orders/download_invoice/{{ order.id }}/"
+                                               target="_blank">
                                                 <img src="{% static 'dashboard/images/icons/download.png' %}"
-                                                    alt="Download Invoice"
-                                                    title="Download Invoice"></a>
+                                                     alt="Download Invoice"
+                                                     title="Download Invoice"></a>
                                             <a href="/customer/track_orders/details/{{ order.id }}/"><img
                                                     src="{% static 'dashboard/images/icons/detail.png' %}"
                                                     alt="Details"
                                                     title="Details"></a>
+                                            {% if order.status == 'Pending' %}
+                                                <a href="/customer/track_orders/cancel_order/{{ order.id }}?t={{ timestamp }}/"
+                                                   onclick="return confirm('Are you sure to cancel this order?')"><img
+                                                        src="{% static 'dashboard/images/icons/delete.png' %}"
+                                                        alt="Cancel Order"
+                                                        title="Cancel Order"></a>
+
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -380,6 +389,9 @@
             </div>
         </div>
     </div>
+
+    {% include 'main/base/services.html' %}
+
 {% endblock %}
 
 {% block scripts %}

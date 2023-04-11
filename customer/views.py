@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.db.models import Avg
@@ -693,7 +694,8 @@ def checkout(request):
                 product = cart_item.product
                 product.stock -= cart_item.quantity
                 product.sold += cart_item.quantity
-                product.profit += cart_item.product.price - cart_item.product.price_original - cart_item.discount
+                product.profit += (cart_item.product.price - cart_item.product.price_original) \
+                                  * cart_item.quantity - cart_item.discount
                 product.save()
             # Delete cart items
             cart_items.delete()
@@ -783,6 +785,32 @@ def track_orders(request):
 
 
 @login_required(login_url='/auth/login/')
+def track_orders_search(request):
+    customer = request.user.customer
+    search_query = request.POST.get('search', '')
+    if request.method == 'POST':
+        if search_query == '':
+            messages.warning(request, 'Please enter a search term!')
+            return redirect('/dashboard/order/')
+        else:
+            orders = Orders.objects.filter(customer=customer, id__icontains=search_query).order_by('-id') | \
+                     Orders.objects.filter(customer=customer,
+                                           delivery_address__address__icontains=search_query).order_by('-id')
+
+            page_object = paginator(request, orders)
+
+        if not orders:
+            messages.success(request, 'No orders found {} !'.format(search_query))
+
+    else:
+        orders = Orders.objects.filter(customer=customer).order_by('-id')
+        page_object = paginator(request, orders)
+    context = {'orders': page_object,
+               'search_query': search_query}
+    return render(request, 'customer_orders/track_orders.html', context)
+
+
+@login_required(login_url='/auth/login/')
 def track_order_details(request, order_id):
     customer = request.user.customer
     order = Orders.objects.get(customer=customer, id=order_id)
@@ -857,6 +885,30 @@ def download_invoice(request, order_id):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     return response
+
+
+@login_required(login_url='/auth/login/')
+def cancel_order(request, order_id):
+    try:
+        customer = request.user.customer
+        order = Orders.objects.get(customer=customer, id=order_id, status='Pending')
+    except ObjectDoesNotExist:
+        messages.warning(request, 'The order {} you are trying to delete does not exist!'.format(order_id))
+        return redirect('/customer/track_orders/')
+    # Update Product Sold Count, Stock, Profit
+
+    for order_detail in OrderDetails.objects.filter(order_id=order_id):
+        product = Product.objects.get(id=order_detail.product_id)
+        product.sold -= order_detail.quantity
+        product.stock += order_detail.quantity
+        product.profit -= (order_detail.product.price - order_detail.product.price_original) \
+                          * order_detail.quantity - order_detail.discount
+        product.save()
+
+    # Delete order
+    order.delete()
+    messages.success(request, 'Order {} deleted successfully!'.format(order_id))
+    return redirect('/customer/track_orders/')
 
 
 def get_address(request, address_id):

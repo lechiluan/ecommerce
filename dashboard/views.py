@@ -408,7 +408,7 @@ def search_customer(request):
                 address__icontains=search_query)
             users = [customer.user for customer in customers]
             page_object = paginator(request, users)
-            messages.success(request, 'Search results for: ' + search_query)
+
         if not users:
             messages.success(request, 'No customers found {} !'.format(search_query))
     else:
@@ -536,7 +536,7 @@ def search_category(request):
             categories = Category.objects.filter(name__icontains=search_query) | Category.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, categories)
-            messages.success(request, 'Search results for: ' + search_query)
+
         if not categories:
             messages.success(request, 'No categories found {} !'.format(search_query))
     else:
@@ -660,7 +660,7 @@ def search_brand(request):
             brands = Brand.objects.filter(name__icontains=search_query) | Brand.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, brands)
-            messages.success(request, 'Search results for: ' + search_query)
+
         if not brands:
             messages.success(request, 'No brands found {} !'.format(search_query))
     else:
@@ -785,7 +785,6 @@ def search_product(request):
             products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(
                 description__icontains=search_query)
             page_object = paginator(request, products)
-            messages.success(request, 'Search results for: ' + search_query)
 
         if not products:
             messages.success(request, 'No products found {} !'.format(search_query))
@@ -913,7 +912,6 @@ def search_coupon(request):
                 amount__icontains=search_query) | Coupon.objects.filter(
                 is_active__icontains=search_query)
             page_object = paginator(request, coupons)
-            messages.success(request, 'Search results for: ' + search_query)
 
         if not coupons:
             messages.success(request, 'No coupons found {} !'.format(search_query))
@@ -1011,7 +1009,8 @@ def delete_order(request, order_id):
         product = Product.objects.get(id=order_detail.product_id)
         product.sold -= order_detail.quantity
         product.stock += order_detail.quantity
-        product.profit -= order_detail.quantity * order_detail.price
+        product.profit -= (order_detail.product.price - order_detail.product.price_original) \
+                          * order_detail.quantity - order_detail.discount
         product.save()
 
     # Delete order
@@ -1080,7 +1079,6 @@ def search_order(request):
                 delivery_address__zip_code__icontains=search_query)
 
             page_object = paginator(request, orders)
-            messages.success(request, 'Search results for: ' + search_query)
 
         if not orders:
             messages.success(request, 'No orders found {} !'.format(search_query))
@@ -1216,7 +1214,6 @@ def search_feedback(request):
                 mobile__icontains=search_query) | Feedback.objects.filter(
                 date_sent__icontains=search_query)
             page_object = paginator(request, feedbacks)
-            messages.success(request, 'Search results for: ' + search_query)
 
         if not feedbacks:
             messages.success(request, 'No feedbacks found {} !'.format(search_query))
@@ -2012,19 +2009,94 @@ def export_review_json(request):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def export_order_csv(request):
-    pass
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="orders.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Username', 'Order Date', 'Order Status', 'Sub Total', 'Total Discount', 'Total Amount'])
+
+    orders = Orders.objects.all().order_by('id')
+
+    for order in orders:
+        writer.writerow([
+            order.id if order.id else '',
+            order.customer.user.username if order.customer.user.username else '',
+            order.order_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if order.order_date else '',
+            order.status if order.status else '',
+            order.sub_total if order.sub_total else 0,
+            order.total_discount if order.total_discount else 0,
+            order.total_amount if order.total_amount else 0,
+        ])
+
+    return response
 
 
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def export_order_excel(request):
-    pass
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="orders.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Orders')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ID', 'Username', 'Order Date', 'Order Status', 'Sub Total', 'Total Discount', 'Total Amount']
+
+    for col_num, column_title in enumerate(columns):
+        ws.write(row_num, col_num, column_title, font_style)
+
+    font_style = xlwt.XFStyle()
+
+    orders = Orders.objects.all().order_by('id')
+
+    for order in orders:
+        row_num += 1
+        row = [
+            order.id if order.id else '',
+            order.customer.user.username if order.customer.user.username else '',
+            order.order_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if order.order_date else '',
+            order.status if order.status else '',
+            order.sub_total if order.sub_total else 0,
+            order.total_discount if order.total_discount else 0,
+            order.total_amount if order.total_amount else 0,
+        ]
+        for col_num, cell_value in enumerate(row):
+            ws.write(row_num, col_num, cell_value, font_style)
+
+    wb.save(response)
+    return response
 
 
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def export_order_json(request):
-    pass
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="orders.json"'
+
+    orders = Orders.objects.all().order_by('id')
+
+    data = []
+    for order in orders:
+        order_data = {
+            'id': order.id if order.id else '',
+            'username': order.customer.user.username if order.customer.user.username else '',
+            'order_date': order.order_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
+                                                                                 '') if order.order_date else '',
+            'status': order.status if order.status else '',
+            'sub_total': float(order.sub_total) if order.sub_total else 0,
+            'total_discount': float(order.total_discount) if order.total_discount else 0,
+            'total_amount': float(order.total_amount) if order.total_amount else 0,
+        }
+        data.append(order_data)
+
+    json.dump(data, response, indent=4)
+
+    return response
 
 
 # Payment Management
@@ -2061,7 +2133,7 @@ def search_payment(request):
             payment_status__icontains=search_query) | Payment.objects.filter(
             payment_date__icontains=search_query).order_by('-id')
         page_object = paginator(request, payments)
-        messages.success(request, 'Search results for: ' + search_query)
+
         context = {
             'payments': page_object,
             'search_query': search_query,
@@ -2167,7 +2239,7 @@ def search_review(request):
                 message_review__icontains=search_query) | Review.objects.filter(
                 review_status__icontains=search_query)
             page_object = paginator(request, reviews)
-            messages.success(request, 'Search results for: ' + search_query)
+
 
 
         else:
