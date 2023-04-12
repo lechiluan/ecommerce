@@ -2283,3 +2283,15 @@ def change_review_status(request, review_id):
         review.product.save()
         messages.success(request, 'Review status has been changed to Approve.')
         return redirect('/dashboard/review/')
+
+
+# Sale Statistics
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def sales_statistics(request):
+    sales = Orders.objects.all().order_by('-id')
+    page_object = paginator(request, sales)
+    context = {
+        'sales': page_object
+    }
+    return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)

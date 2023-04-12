@@ -660,6 +660,10 @@ def checkout(request):
             delivery_address = DeliveryAddress.objects.get(id=delivery_address_id)
             # Save payment method that customer selected
             payment_method = request.POST.get('payment_method')
+            total_profit = sum(
+                [(cart_item.product.price - cart_item.product.price_original) * cart_item.quantity - cart_item.discount for cart_item in
+                 cart_items])
+
             # Save orders
             order = Orders.objects.create(
                 customer=customer,
@@ -670,6 +674,9 @@ def checkout(request):
                     [cart_item.discount for cart_item in cart_items]),
                 delivery_address=delivery_address,
             )
+            order.profit_order = total_profit
+            order.save()
+
             # Save OrderDetails for each item in the cart
             for cart_item in cart_items:
                 OrderDetails.objects.create(

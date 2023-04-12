@@ -122,4 +122,6 @@ urlpatterns = [
     path('review/export/excel/', views.export_review_excel, name='export_review_excel'),
     path('review/export/json/', views.export_review_json, name='export_review_json'),
 
+    # Sales Statistics URL
+    path('sales_statistics/', views.sales_statistics, name='sales_statistics'),
 ]

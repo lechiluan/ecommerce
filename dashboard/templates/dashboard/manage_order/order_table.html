@@ -83,6 +83,7 @@
                             <th scope="col">Sub Total</th>
                             <th scope="col">Discount</th>
                             <th scope="col">Total</th>
+                            <th scope="col">Profit</th>
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -114,6 +115,7 @@
                                 <td><strong class="money">${{ order.sub_total }}</strong></td>
                                 <td><strong class="money">${{ order.total_discount }}</strong></td>
                                 <td><strong class="money">${{ order.total_amount }}</strong></td>
+                                <td><strong class="money">${{ order.profit_order }}</strong></td>
                                 <td>
                                     {% if order.status == 'Pending' %}
                                         <span class="badge badge-warning">{{ order.status }}</span>

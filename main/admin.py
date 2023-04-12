@@ -5,12 +5,48 @@ from main.models import Category, Feedback, Coupon, Customer, Product, Review, P
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
-# Register your models here.
+# Customize the admin site
 admin.site.register(Permission)
-admin.site.site_header = 'LCL Shop Admin Dashboard'
-admin.site.site_title = 'LCL Shop Admin Dashboard'
-admin.site.index_title = 'LCL Shop Admin Dashboard'
-admin.site.empty_value_display = '**Empty**'
+admin.site.index_title = 'LCL Shop - Admin Dashboard'
+admin.site.site_header = 'LCL Shop - Admin Dashboard'
+admin.site.site_title = 'LCL Shop - Admin Dashboard'
+
+
+class CustomUserAdmin(UserAdmin):
+    # Customize the display of fields in the admin list view
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser')
+
+    # Customize the available filters in the admin list view
+    list_filter = ('is_staff', 'is_superuser', 'groups')
+
+    # Customize the search fields available in the admin search bar
+    search_fields = ('username', 'email', 'first_name', 'last_name')
+
+    # Customize the default sorting order of items in the admin list view
+    ordering = ('username',)
+
+    # Customize the layout and order of fields on the User edit page
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    # Customize the layout of fields on the User add page
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2'),
+        }),
+    )
+
+
+# Unregister the default User admin
+admin.site.unregister(User)
+
+# Register the customized User admin
+admin.site.register(User, CustomUserAdmin)
 
 
 @admin.register(Customer)
@@ -54,7 +90,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'category', 'brand', 'price', 'old_price', 'stock', 'sold', 'view_count']
+    list_display = ['name', 'category', 'brand', 'price', 'old_price', 'stock', 'sold', 'view_count']
     search_fields = ['name', 'category__name', 'brand__name']
     list_filter = ['category', 'brand', 'price', 'old_price', 'stock']
     readonly_fields = ['get_id']

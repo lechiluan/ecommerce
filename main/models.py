@@ -166,6 +166,7 @@ class Orders(models.Model):
     sub_total = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     total_discount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    profit_order = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     delivery_address = models.ForeignKey('DeliveryAddress', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
