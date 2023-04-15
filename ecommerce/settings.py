@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',  # for sessions
     'django.contrib.messages',  # for messages
     'django.contrib.staticfiles',  # for static files
-    'debug_toolbar',  # for debug toolbar app hide it in production
     'main.apps.MainConfig',  # for main app
     'dashboard.apps.DashboardConfig',  # for dashboard app
     'customer.apps.CustomerConfig',  # for customer app
@@ -78,7 +77,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # for authentication
     'django.contrib.messages.middleware.MessageMiddleware',  # for messages middleware
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  # for clickjacking
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # for debug toolbar middleware
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -185,11 +183,6 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 TINYMCE_UPLOAD_DIR = 'uploads/'
 TINYMCE_UPLOAD_NAME = 'tinymce_upload'
-
-# Config for debug toolbar
-INTERNAL_IPS = [
-    '127.0.0.1'
-]
 
 # Config for google captcha
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
