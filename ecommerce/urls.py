@@ -35,7 +35,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),  # dashboard admin site custom
     path('auth/', include('main.urls')),  # auth site custom to process authentication
     path('customer/', include('customer.urls')),  # customer site custom to process customer data order, cart.
-    path('__debug__/', include('debug_toolbar.urls')),  # for debug toolbar
 ]
 
 if settings.DEBUG:
