@@ -703,6 +703,59 @@ td.action {
 }
 
 
+/* Filters */
+.filter-form {
+    background-color: #ffffff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.filter-form ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-form li {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.filter-form select {
+    margin-right: 5px;
+}
+
+.filter-form .form-row {
+    margin: 0;
+}
+
+.filter-form .form-row .col-auto {
+    padding: 0;
+}
+
+.filter-form .form-row .col-auto .btn-primary {
+    background-color: #1253cc;
+    border-color: #1253cc;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.filter-form .form-row .col-auto .btn {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Style for checkboxes */
 input[type="checkbox"] {
     -webkit-appearance: none;

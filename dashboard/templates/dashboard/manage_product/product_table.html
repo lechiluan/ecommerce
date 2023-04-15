@@ -45,6 +45,80 @@
             </div>
         </form>
     </div>
+    <div class="filter-form">
+        <form action="/dashboard/product/search/" method="GET">
+            {% csrf_token %}
+            <div class="form-row align-items-center">
+                <ul>
+                    <li>
+                        <div class="col-auto">
+                            <label class="sr-only" for="sort_by">Sort by</label>
+                            <select class="form-control" id="sort_by" name="sort_by">
+                                <option value="">Sort by</option>
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
+                                </option>
+                                <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
+                                    Best Seller
+                                </option>
+                                <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
+                                    Most Viewed
+                                </option>
+                                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
+                                    (A-Z)
+                                </option>
+                                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
+                                    (Z-A)
+                                </option>
+                                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
+                                    (low to high)
+                                </option>
+                                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
+                                    (high to low)
+                                </option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_brand" name="filter_by_brand">
+                                <option value="">Filter by Brand</option>
+                                {% for brand in brands %}
+                                    <option value="{{ brand.id }}"
+                                            {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_category" name="filter_by_category">
+                                <option value="">Filter by Category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}"
+                                            {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <a href="/dashboard/product/search/" type="button" class="btn btn-danger">Clear</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <input type="hidden" name="search" value="{{ request.GET.search }}">
+            <input type="hidden" name="t" value="{{ timestamp }}">
+        </form>
+    </div>
     {# End of searchbox bar#}
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -93,7 +167,7 @@
                             <th scope="col">Stock</th>
                             <th scope="col">Sold</th>
                             <th scope="col">Profit</th>
-                            <th scope="col">Rating</th>
+                            <th scope="col">Review</th>
                             <th scope="col">Views</th>
                             <th scope="col">Actions</th>
                         </tr>

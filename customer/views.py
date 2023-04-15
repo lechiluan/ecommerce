@@ -89,6 +89,8 @@ def product_details(request, slug):
     reviews = Review.objects.filter(product=product, review_status=True).order_by('-date_added')
     get_review_count_for_product = Review.objects.filter(product=product).count()
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    recommended_products = Product.objects.all().order_by('-view_count')[:4]
+
     # Update view count
     product.view_count += 1
     product.save()
@@ -108,6 +110,7 @@ def product_details(request, slug):
         'product': product,
         'get_review_count_for_product': get_review_count_for_product,
         'related_products': related_products,
+        'recommended_products': recommended_products,
     }
     return render(request, 'customer_help/customer_product_details.html', context)
 
@@ -146,6 +149,8 @@ def product_search(request):
             products = products.order_by('-created_date')
         elif sort_by == 'best_seller':
             products = products.order_by('-sold')
+        elif sort_by == 'most_viewed':
+            products = products.order_by('-view_count')
         elif sort_by == 'name_asc':
             products = products.order_by('name')
         elif sort_by == 'name_desc':
@@ -661,7 +666,8 @@ def checkout(request):
             # Save payment method that customer selected
             payment_method = request.POST.get('payment_method')
             total_profit = sum(
-                [(cart_item.product.price - cart_item.product.price_original) * cart_item.quantity - cart_item.discount for cart_item in
+                [(cart_item.product.price - cart_item.product.price_original) * cart_item.quantity - cart_item.discount
+                 for cart_item in
                  cart_items])
 
             # Save orders

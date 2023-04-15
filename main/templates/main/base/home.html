@@ -117,6 +117,9 @@
                                     <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
                                         Best Seller
                                     </option>
+                                    <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
+                                        Most Viewed
+                                    </option>
                                     <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
                                         (A-Z)
                                     </option>
@@ -138,7 +141,8 @@
                                     <option value="">Filter by Brand</option>
                                     {% for brand in brands %}
                                         <option value="{{ brand.id }}"
-                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})</option>
+                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -149,7 +153,8 @@
                                     <option value="">Filter by Category</option>
                                     {% for category in categories %}
                                         <option value="{{ category.id }}"
-                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})</option>
+                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -171,6 +176,8 @@
             </form>
         </div>
         {# End of Sort by bar #}
+        {% include 'main/base/best_selling_products.html' %}
+        {% include 'main/base/recommended_products.html' %}
         {# Product Card #}
         <div class="product-card">
             <div class="card-header">
@@ -180,7 +187,8 @@
             <div class="card-categories">
                 <ul>
                     {% for category in categories %}
-                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }} ({{ category.get_products_count }})</a></li>
+                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }}
+                            ({{ category.get_products_count }})</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -213,41 +221,41 @@
                             <div class="content">
                                 <div class="rating">
                                     {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
                                     {% elif product.review_rate_average >= 2.0 and product.review_rate_average < 3.0 %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
                                     {% elif product.review_rate_average >= 3.0 and product.review_rate_average < 4.0 %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
                                     {% elif product.review_rate_average >= 4.0 and product.review_rate_average < 5.0 %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
                                     {% elif product.review_rate_average == 5.0 %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
                                     {% else %}
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
                                     {% endif %}
                                 </div>
                                 <div class="productName">

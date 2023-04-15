@@ -1,0 +1,90 @@
+{# Product Card #}
+{% if best_selling_products %}
+    <div class="product-card">
+        <div class="card-header">
+            <h2>Best Selling Products</h2>
+        </div>
+        <div class="card-main">
+            <div class="container">
+                {% for product in best_selling_products %}
+                    <div class="card">
+                        <div class="imgBx">
+                            <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
+                            <ul class="action">
+                                <li>
+                                    <a href="/customer/add_to_wishlist/{{ product.id }}/{{ customer.slug }}"><i
+                                            class="fa fa-heart" aria-hidden="true"></i></a>
+                                    <span>Add to WishList</span>
+                                </li>
+                                <li>
+                                    <a href="/customer/add_to_cart/{{ product.slug }}/"><i
+                                            class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                                    <span>Add to Cart</span>
+                                </li>
+                                <li>
+                                    <a href="/customer/product/details/{{ product.slug }}"><i class="fa fa-eye"
+                                                                                              aria-hidden="true"></i></a>
+                                    <span>View Details</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="content">
+                            <div class="rating">
+                                {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                {% elif product.review_rate_average >= 2.0 and product.review_rate_average < 3.0 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                {% elif product.review_rate_average >= 3.0 and product.review_rate_average < 4.0 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                {% elif product.review_rate_average >= 4.0 and product.review_rate_average < 5.0 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star grey" aria-hidden="true"></i>
+                                {% elif product.review_rate_average == 5.0 %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                {% else %}
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                {% endif %}
+                            </div>
+                            <div class="productName">
+                                <h3>{{ product.name }}</h3>
+                            </div>
+                            <div class="price_rating">
+                                <div class="price">
+                                    <h2>$ {{ product.price }}</h2>
+                                </div>
+                                <div class="old_price">
+                                    {% if product.old_price %}
+                                        <h2 class="old_price">$ {{ product.old_price }}</h2>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

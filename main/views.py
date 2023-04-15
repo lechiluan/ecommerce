@@ -27,7 +27,7 @@ from .models import Customer, Product, Category, Brand, DeliveryAddress, Review
 # Create your views here.
 def paginator(request, objects):
     # Set the number of items per page
-    per_page = 12
+    per_page = 8
 
     # Create a Paginator object with the customers queryset and the per_page value
     page = Paginator(objects, per_page)
@@ -46,9 +46,15 @@ def home(request):
     categories = Category.objects.all().order_by('id')
     brands = Brand.objects.all().order_by('id')
     page_object = paginator(request, products)
+    best_selling_products = Product.objects.all().order_by('-sold')[:4]
+    recommended_products = Product.objects.all().order_by('-view_count')[:4]
+
     context = {'products': page_object,
                'categories': categories,
-               'brands': brands}
+               'brands': brands,
+               'best_selling_products': best_selling_products,
+               'recommended_products': recommended_products
+               }
     return render(request, 'main/base/base.html', context)
 
 

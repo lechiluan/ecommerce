@@ -89,7 +89,7 @@
             width: 70px;
             height: 40px;
             border: 2px solid #ccc;
-            padding: 10px 10px 10px 25px;
+            padding: 10px 5px 10px 25px;
             font-size: 18px;
             margin: 0 0 0 15px;
         }
@@ -210,6 +210,7 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
+
         .form-group .customer-name {
             font-size: 1.2rem;
             margin-bottom: 10px;
@@ -361,7 +362,7 @@
                             <span class="content">{{ product.stock }}</span>
                         </div>
                         <div class="rating">
-                            <span class="label">Rating ({{ product.review_count }}):</span>
+                            <span class="label">Review ({{ product.review_count }}):</span>
                             {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star grey" aria-hidden="true"></i>
@@ -433,7 +434,7 @@
                                 <button class="tablinks active" onclick="openTab(event, 'description')">Description
                                 </button>
                                 <button class="tablinks" onclick="openTab(event, 'review')">Review
-                                    ({{ product.review_count}})
+                                    ({{ product.review_count }})
                                 </button>
                             </div>
                             <div id="description" class="tabcontent" style="display: block;">
@@ -450,7 +451,9 @@
                                             {% for review in reviews %}
                                                 <div class="review-card">
                                                     <div class="review-header">
-                                                        <div class="customer-name">{{ review.name }} ({{ review.customer.user.username }})</div>
+                                                        <div class="customer-name">{{ review.name }}
+                                                            ({{ review.customer.user.username }})
+                                                        </div>
                                                         <div class="rating">
                                                             {% if review.rate  == 1 %}
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
@@ -601,7 +604,8 @@
                                             {% endif %}
                                         {% else %}
                                             <button type="submit" class="submit-button"
-                                                    onclick="window.location.href='/auth/login/?next=/customer/product/details/{{ product.slug }}'">Login to add review
+                                                    onclick="window.location.href='/auth/login/?next=/customer/product/details/{{ product.slug }}'">
+                                                Login to add review
                                             </button>
                                         {% endif %}
                                     </div>
@@ -615,7 +619,7 @@
     </div>
 
     {% include 'customer_help/related_products.html' %}
-
+    {% include 'main/base/recommended_products.html' %}
 {% endblock %}
 
 {% block scripts %}

@@ -776,24 +776,68 @@ def product_details(request, product_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_product(request):
-    search_query = request.POST.get('search', '')
-    if request.method == 'POST':
-        if search_query == '':
-            messages.warning(request, 'Please enter a search term!')
-            return redirect('/dashboard/product/')
-        else:
-            products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(
-                description__icontains=search_query)
-            page_object = paginator(request, products)
+    if request.method == 'GET':
+        # get the search query from the request
+        search_query = request.GET.get('search')
+        sort_by = request.GET.get('sort_by')
+        filter_by_brand = request.GET.get('filter_by_brand')
+        filter_by_category = request.GET.get('filter_by_category')
+        products = Product.objects.all().order_by('-sold')
 
-        if not products:
-            messages.success(request, 'No products found {} !'.format(search_query))
+        # apply brand filter if selected
+        if filter_by_brand and filter_by_category:
+            products = products.filter(brand__id=filter_by_brand, category__id=filter_by_category)
+            page_obj = paginator(request, products)
+        elif filter_by_brand:
+            products = products.filter(brand__id=filter_by_brand)
+            page_obj = paginator(request, products)
+        # apply category filter if selected
+        elif filter_by_category:
+            products = products.filter(category__id=filter_by_category)
+            page_obj = paginator(request, products)
+        # apply search filter if search query exists
+        if search_query:
+            products = products.filter(
+                Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(
+                    category__name__icontains=search_query) | Q(
+                    brand__name__icontains=search_query) | Q(slug__icontains=search_query)
+            )
+            page_obj = paginator(request, products)
+        # apply sorting based on selected option
+        if sort_by == 'newest':
+            products = products.order_by('-created_date')
+        elif sort_by == 'best_seller':
+            products = products.order_by('-sold')
+        elif sort_by == 'most_viewed':
+            products = products.order_by('-view_count')
+        elif sort_by == 'name_asc':
+            products = products.order_by('name')
+        elif sort_by == 'name_desc':
+            products = products.order_by('-name')
+        elif sort_by == 'price_asc':
+            products = products.order_by('price')
+        elif sort_by == 'price_desc':
+            products = products.order_by('-price')
+        if filter_by_brand:
+            filter_by_brand = int(filter_by_brand)
+        if filter_by_category:
+            filter_by_category = int(filter_by_category)
+        page_obj = paginator(request, products)
+        context = {
+            'products': page_obj,
+            'search_query': search_query,
+            'sort_by': sort_by,
+            'filter_by_brand': filter_by_brand,
+            'filter_by_category': filter_by_category,
+        }
+        return render(request, 'dashboard/manage_product/product_table.html', context=context)
     else:
         products = Product.objects.all()
         page_object = paginator(request, products)
-    context = {'products': page_object,
-               'search_query': search_query}
-    return render(request, 'dashboard/manage_product/product_table.html', context)
+        context = {
+            'products': page_object,
+        }
+        return render(request, 'dashboard/manage_product/product_table.html', context=context)
 
 
 # Coupon Management
