@@ -13,7 +13,7 @@ joblib==1.2.0
 legacy==0.1.6
 MarkupSafe==2.1.2
 mathparse==0.1.2
-Pillow==0.5.1
+Pillow==9.5.0
 Pint==0.20.1
 pip==23.0.1
 psycopg2==2.9.5
