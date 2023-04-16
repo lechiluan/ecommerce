@@ -50,7 +50,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = True
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'lclshop.herokuapp.com', 'lclshop.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://lclshop.up.railway.app', 'https://lclshop.herokuapp.com']
 
 # Application definition
 
