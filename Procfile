@@ -1,1 +1,1 @@
-web: gunicorn ecommerce.wsgi  --env DJANGO_SETTINGS_MODULE=ecommerce.settings.production
+web: gunicorn ecommerce.wsgi  --env DJANGO_SETTINGS_MODULE=ecommerce.settings
