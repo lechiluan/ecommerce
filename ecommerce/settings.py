@@ -153,7 +153,7 @@ STATICFILES_DIRS = [(BASE_DIR / 'static'),
                     (BASE_DIR / 'main/static'),
                     (BASE_DIR / 'dashboard/static'),
                     (BASE_DIR / 'customer/static')]  # use to find static files
-# STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
