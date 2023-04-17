@@ -32,6 +32,10 @@ import io
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 from django.template import Context
+from django.db.models.functions import TruncMonth
+from django.db.models import Sum
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
 
 
 # Create your views here.
@@ -2339,3 +2343,5 @@ def sales_statistics(request):
         'sales': page_object
     }
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
+
+
