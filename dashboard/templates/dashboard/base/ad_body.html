@@ -1,12 +1,12 @@
 {% block style %}
-
+    {{ form.media }}
 {% endblock %}
 {% block content %}
     <div class="cardBox">
         <div class="mycard">
             <div>
-                <div class="numbers">1.042</div>
-                <div class="cardName">Daily Views</div>
+                <div class="numbers">{{ view_count }}</div>
+                <div class="cardName">Views</div>
             </div>
             <div class="iconBox">
                 <i class="fa fa-eye" aria-hidden="true"></i>
@@ -14,20 +14,20 @@
         </div>
         <div class="mycard">
             <div>
-                <div class="numbers">${{ sales }}</div>
-                <div class="cardName">Sales</div>
+                <div class="numbers">{{ product_sold_count }}</div>
+                <div class="cardName">Solds</div>
             </div>
             <div class="iconBox">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <i class="fa fa-cart-plus" aria-hidden="true"></i>
             </div>
         </div>
         <div class="mycard">
             <div>
-                <div class="numbers">203</div>
-                <div class="cardName">Comments</div>
+                <div class="numbers">${{ sales }}</div>
+                <div class="cardName">Total Sales</div>
             </div>
             <div class="iconBox">
-                <i class="fa fa-comment" aria-hidden="true"></i>
+                <i class="fa fa-money" aria-hidden="true"></i>
             </div>
         </div>
         <div class="mycard">
@@ -42,137 +42,72 @@
     </div>
 
     <div class="details">
-        <div class="recentOrders">
-            <div class="cardHeader">
-                <h2>Recent Orders</h2>
-                <a href="#" class="btnView">View All</a>
+        {% if orders %}
+            <div class="recentOrders">
+                <div class="cardHeader">
+                    <h2>Recent Orders</h2>
+                    <a href="/dashboard/order/" class="btnView">View All</a>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Price</td>
+                        <td>Payment</td>
+                        <td>Status</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.customer.user.username }}</td>
+                            <td>${{ order.total_amount }}</td>
+                            <td>{{ order.payment.payment_status }}</td>
+                            {% if order.status == 'Pending' %}
+                                <td><span class="status pending">{{ order.status }}</span></td>
+                            {% elif order.status == "Order Confirmed" %}
+                                <td><span class="status confirm">{{ order.status }}</span></td>
+                            {% elif order.status == 'Out for Delivery' %}
+                                <td><span class="status delivery">{{ order.status }}</span></td>
+                            {% else %}
+                                <td><span class="status delivered">{{ order.status }}</span></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <table>
-                <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Price</td>
-                    <td>Payment</td>
-                    <td>Status</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status delivered">Delivered</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Due</td>
-                    <td><span class="status return">Return</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status inprogress">In Progress</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status delivered">Delivered</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status pending">Pending</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Due</td>
-                    <td><span class="status return">Return</span></td>
-                </tr>
-                <tr>
-                    <td>Start Refigerator</td>
-                    <td>$1,000</td>
-                    <td>Paid</td>
-                    <td><span class="status inprogress">In Progress</span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="recentCustomers">
-            <div class="cardHeader">
-                <h2>Recent Customers</h2>
+        {% endif %}
+        {% if users %}
+            <div class="recentCustomers">
+                <div class="cardHeader">
+                    <h2>Recent Customers</h2>
+                </div>
+                <table>
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td style="width:60px;">
+                                {% for customer in customers %}
+                                    {% if customer.user == user %}
+                                        {% if customer.customer_image %}
+                                            <div class="imgBx">{% load static %}<img
+                                                    src="{{ MEDIA_URL }}{{ customer.customer_image.url }}">
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td><h4>
+                                {{ user.first_name }}{{ user.last_name }}<br><span>{{ user.username }}</span>
+                            </h4></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <table>
-                <tbody>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img
-                                src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                <tr>
-                    <td style="width:60px;">
-                        <div class="imgBx">{% load static %}<img src="{% static 'dashboard/images/dashboard/user.jpg' %}">
-                        </div>
-                    </td>
-                    <td><h4>David <br><span>Italy</span></h4></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+            </div>
+        {% endif %}
 {% endblock %}
 
 {% block scripts %}

@@ -349,7 +349,7 @@
                             <span class="content">{{ product.category }}</span>
                         </div>
 
-                        <div class="label">Discount Price:
+                        <div class="label">Price:
                             <span class="price">${{ product.price }}</span>
                         </div>
                         <div class="label">Old Price:
@@ -620,6 +620,7 @@
 
     {% include 'customer_help/related_products.html' %}
     {% include 'main/base/recommended_products.html' %}
+    {% include 'main/base/services.html' %}
 {% endblock %}
 
 {% block scripts %}

@@ -47,7 +47,8 @@
                                href="/customer/product/category/{{ category.slug }}/">{{ category.name }}({{ category.get_products_count }})</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/category/all/">All products({{ get_products }})</a>
+                        <a class="dropdown-item" href="/customer/product/category/all/">All
+                            products({{ get_products }})</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -60,7 +61,8 @@
                                href="/customer/product/brand/{{ brand.slug }}/">{{ brand.name }}({{ brand.get_products_count }})</a>
                         {% endfor %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/customer/product/brand/all/">All products({{ get_products }})</a>
+                        <a class="dropdown-item" href="/customer/product/brand/all/">All
+                            products({{ get_products }})</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -103,7 +105,7 @@
                 {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="/customer/checkout/"><i class="fa fa-crosshairs"
-                                                                  aria-hidden="true"></i>
+                                                                      aria-hidden="true"></i>
                         Checkout</a>
                 </li>
                 {% if user.is_authenticated %}
@@ -124,7 +126,7 @@
                                                                                       aria-hidden="true"></i>&nbsp;
                                 &nbsp;Change
                                 Password</a>
-                            <a class="dropdown-item" href="/auth/delivery_address/"><i class="fa fa-map"
+                            <a class="dropdown-item" href="/auth/delivery_address/"><i class="fa fa-map-marker"
                                                                                        aria-hidden="true"></i>&nbsp;&nbsp;Delivery
                                 Address
                             </a>

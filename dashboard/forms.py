@@ -92,6 +92,8 @@ class AddCustomerForm(UserCreationForm):
             self.add_error('email', 'Email already exists')
         if customer_image:
             validate_image_size(customer_image)
+        if not customer_image:
+            self.cleaned_data['customer_image'] = 'customer_image/default.jpg'
 
 
 class UpdateCustomerForm(forms.ModelForm):

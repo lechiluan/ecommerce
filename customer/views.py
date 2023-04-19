@@ -117,33 +117,33 @@ def product_details(request, slug):
 
 # Search product and filter product
 def product_search(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         # get the search query from the request
-        search_query = request.GET.get('search')
-        sort_by = request.GET.get('sort_by')
-        filter_by_brand = request.GET.get('filter_by_brand')
-        filter_by_category = request.GET.get('filter_by_category')
+        search_query = request.POST.get('search')
+        sort_by = request.POST.get('sort_by')
+        filter_by_brand = request.POST.get('filter_by_brand')
+        filter_by_category = request.POST.get('filter_by_category')
         products = Product.objects.all().order_by('-sold')
+        sort_price = request.POST.get('sort_price')
 
         # apply brand filter if selected
         if filter_by_brand and filter_by_category:
             products = products.filter(brand__id=filter_by_brand, category__id=filter_by_category)
-            page_obj = paginator(request, products)
+
         elif filter_by_brand:
             products = products.filter(brand__id=filter_by_brand)
-            page_obj = paginator(request, products)
+
         # apply category filter if selected
         elif filter_by_category:
             products = products.filter(category__id=filter_by_category)
-            page_obj = paginator(request, products)
+
         # apply search filter if search query exists
         if search_query:
             products = products.filter(
-                Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(
+                Q(name__icontains=search_query) | Q(
                     category__name__icontains=search_query) | Q(
                     brand__name__icontains=search_query) | Q(slug__icontains=search_query)
             )
-            page_obj = paginator(request, products)
         # apply sorting based on selected option
         if sort_by == 'newest':
             products = products.order_by('-created_date')
@@ -159,6 +159,18 @@ def product_search(request):
             products = products.order_by('price')
         elif sort_by == 'price_desc':
             products = products.order_by('-price')
+
+        if sort_price == 'less_100':
+            products = products.filter(price__lte=100)
+        elif sort_price == '100_500':
+            products = products.filter(price__gte=100, price__lte=500)
+        elif sort_price == '500_1000':
+            products = products.filter(price__gte=500, price__lte=1000)
+        elif sort_price == '1000_2000':
+            products = products.filter(price__gte=1000, price__lte=2000)
+        elif sort_price == 'greater_2000':
+            products = products.filter(price__gte=2000)
+
         if filter_by_brand:
             filter_by_brand = int(filter_by_brand)
         if filter_by_category:
@@ -170,6 +182,7 @@ def product_search(request):
             'sort_by': sort_by,
             'filter_by_brand': filter_by_brand,
             'filter_by_category': filter_by_category,
+            'sort_price': sort_price,
         }
         return render(request, 'customer_help/customer_product_list.html', context)
     else:
@@ -363,6 +376,8 @@ def view_cart(request):
         code = None
         discount = 0
 
+    recommended_products = Product.objects.all().order_by('-view_count')[:4]
+
     context = {
         'cart_items': cart_items,
         'total': total,
@@ -370,6 +385,7 @@ def view_cart(request):
         'discount': discount,
         'total_amount_without_coupon': total_amount_without_coupon,
         'total_amount_with_coupon': total_amount_with_coupon,
+        'recommended_products': recommended_products,
     }
     return render(request, 'customer_cart/view_cart.html', context)
 
@@ -593,8 +609,10 @@ def add_to_wishlist(request, slug):
 def view_wishlist(request):
     customer = request.user.customer
     wishlists = Wishlist.objects.filter(customer=customer).order_by('-date_added')
+    recommended_products = Product.objects.all().order_by('-view_count')[:4]
     context = {
         'wishlists': wishlists,
+        'recommended_products': recommended_products
     }
     return render(request, 'customer_wishlist/view_wishlist.html', context)
 
@@ -742,7 +760,7 @@ def checkout(request):
         else:
             code = None
             discount = 0
-
+        recommended_products = Product.objects.all().order_by('-view_count')[:4]
         context = {
             'cart_items': cart_items,
             'total': total,
@@ -752,6 +770,7 @@ def checkout(request):
             'total_amount_with_coupon': total_amount_with_coupon,
             'delivery_address': delivery_address,
             'payment_methods': payment_methods,
+            'recommended_products': recommended_products,
         }
         return render(request, 'customer_checkout/checkout.html', context)
 

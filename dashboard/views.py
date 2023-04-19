@@ -47,15 +47,21 @@ def is_admin(user):
 @login_required(login_url='/auth/login/')
 def dashboard(request):
     # get all recent customers last login
-    customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('-last_login')[:10]
+    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:10]
+
+    customers = Customer.objects.all()
+
     # get all recent orders
-    orders = Orders.objects.all().order_by('-id')[:10]
+    orders = Orders.objects.all().order_by('-order_date')[:10]
     # get all recent sales
     sales = 0
     for order in orders:
         sales += order.total_amount
     # get revenue = sold * (price original - price sale - discount)
     revenue = 0
+    for order in orders:
+        revenue += order.profit_order
+
     # quality product sale
     quality_product_sale = 0
     for order in orders:
@@ -66,13 +72,23 @@ def dashboard(request):
     for product in Product.objects.all():
         product_sold_count += product.sold
 
+    number_customer = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+
+    # get all view_count of product
+    view_count = 0
+    for product in Product.objects.all():
+        view_count += product.view_count
+
     context = {
+        'users': users,
         'customers': customers,
         'orders': orders,
         'sales': sales,
         'revenue': revenue,
+        'view_count': view_count,
         'quality_product_sale': quality_product_sale,
         'product_sold_count': product_sold_count,
+        'number_customer': number_customer,
     }
     return render(request, 'dashboard/base/ad_base.html', context)
 
@@ -780,33 +796,29 @@ def product_details(request, product_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def search_product(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         # get the search query from the request
-        search_query = request.GET.get('search')
-        sort_by = request.GET.get('sort_by')
-        filter_by_brand = request.GET.get('filter_by_brand')
-        filter_by_category = request.GET.get('filter_by_category')
+        search_query = request.POST.get('search', '')
+        sort_by = request.POST.get('sort_by')
+        filter_by_brand = request.POST.get('filter_by_brand')
+        filter_by_category = request.POST.get('filter_by_category')
         products = Product.objects.all().order_by('-sold')
+        sort_price = request.POST.get('sort_price')
+
+        if search_query:
+            products = products.filter(name__icontains=search_query) | products.filter(
+                category__name__icontains=search_query) | products.filter(brand__name__icontains=search_query)
 
         # apply brand filter if selected
         if filter_by_brand and filter_by_category:
             products = products.filter(brand__id=filter_by_brand, category__id=filter_by_category)
-            page_obj = paginator(request, products)
+
         elif filter_by_brand:
             products = products.filter(brand__id=filter_by_brand)
-            page_obj = paginator(request, products)
         # apply category filter if selected
         elif filter_by_category:
             products = products.filter(category__id=filter_by_category)
-            page_obj = paginator(request, products)
-        # apply search filter if search query exists
-        if search_query:
-            products = products.filter(
-                Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(
-                    category__name__icontains=search_query) | Q(
-                    brand__name__icontains=search_query) | Q(slug__icontains=search_query)
-            )
-            page_obj = paginator(request, products)
+
         # apply sorting based on selected option
         if sort_by == 'newest':
             products = products.order_by('-created_date')
@@ -822,6 +834,18 @@ def search_product(request):
             products = products.order_by('price')
         elif sort_by == 'price_desc':
             products = products.order_by('-price')
+
+        if sort_price == 'less_100':
+            products = products.filter(price__lte=100)
+        elif sort_price == '100_500':
+            products = products.filter(price__gte=100, price__lte=500)
+        elif sort_price == '500_1000':
+            products = products.filter(price__gte=500, price__lte=1000)
+        elif sort_price == '1000_2000':
+            products = products.filter(price__gte=1000, price__lte=2000)
+        elif sort_price == 'greater_2000':
+            products = products.filter(price__gte=2000)
+
         if filter_by_brand:
             filter_by_brand = int(filter_by_brand)
         if filter_by_category:
@@ -833,6 +857,7 @@ def search_product(request):
             'sort_by': sort_by,
             'filter_by_brand': filter_by_brand,
             'filter_by_category': filter_by_category,
+            'sort_price': sort_price,
         }
         return render(request, 'dashboard/manage_product/product_table.html', context=context)
     else:
@@ -1152,8 +1177,7 @@ def render_to_pdf(template_src, context_dict):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def download_invoice(request, order_id):
-    customer = request.user.customer
-    order = Orders.objects.get(customer=customer, id=order_id)
+    order = Orders.objects.get(id=order_id)
     order_details = OrderDetails.objects.filter(order=order)
     total = sum(item.sub_total for item in order_details)
     total_amount_without_coupon = sum(item.get_total_amount_without_coupon for item in order_details)
@@ -1179,7 +1203,7 @@ def download_invoice(request, order_id):
         'payment': payment,
     }
     pdf = render_to_pdf('dashboard/manage_order/invoice.html', context)
-    filename = 'lclshop_invoice_{}.pdf'.format(order_id)
+    filename = 'LCLShop_invoice_{}.pdf'.format(order_id)
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
     return response
@@ -2343,5 +2367,3 @@ def sales_statistics(request):
         'sales': page_object
     }
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
-
-

@@ -81,7 +81,7 @@
     <div class="homepage" id="product">
         {# Searchbox bar right here#}
         <div class="search-form">
-            <form action="/customer/product/search/" method="GET">
+            <form action="/customer/product/search/" method="POST">
                 {% csrf_token %}
                 <div class="input-group search-manage">
                     <input type="text" class="form-control border-0 small search-manage-input"
@@ -103,7 +103,7 @@
         {# End of searchbox bar #}
         {# Sort by bar right here#}
         <div class="filter-form">
-            <form action="/customer/product/search/" method="GET">
+            <form action="/customer/product/search/" method="POST">
                 {% csrf_token %}
                 <div class="form-row align-items-center">
                     <ul>
@@ -156,6 +156,30 @@
                                                 {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
                                         </option>
                                     {% endfor %}
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <label class="sr-only" for="sort_by">Price</label>
+                                <select class="form-control" id="sort_price" name="sort_price">
+                                    <option value="">Filter by Price</option>
+                                    <option value="less_100" {% if sort_price == 'less_100' %}selected{% endif %}>
+                                        Less than $100
+                                    </option>
+                                    <option value="100_500" {% if sort_price == '100_500' %}selected{% endif %}>
+                                        $100 - $500
+                                    </option>
+                                    <option value="500_1000" {% if sort_price == '500_1000' %}selected{% endif %}>$500 -
+                                        $1000
+                                    </option>
+                                    <option value="1000_2000" {% if sort_price == '1000_2000' %}selected{% endif %}>
+                                        $1000 - $2000
+                                    </option>
+                                    <option value="greater_2000"
+                                            {% if sort_price == 'greater_2000' %}selected{% endif %}>
+                                        Greater than $2000
+                                    </option>
                                 </select>
                             </div>
                         </li>

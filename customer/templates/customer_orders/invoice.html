@@ -74,6 +74,7 @@
             margin: 0;
             padding: 10px 10px 0 0;
         }
+
         .price {
             color: #ff2020;
         }
@@ -130,6 +131,7 @@
     <p><strong>Date:</strong> {{ order.order_date }}</p>
     <p><strong>Order Status:</strong> {{ order.status }}</p>
     <p><strong>Customer:</strong> {{ order.delivery_address.first_name }} {{ order.delivery_address.last_name }}</p>
+    <p><strong>Username:</strong> {{ order.customer.user.username }}</p>
     <p><strong>Mobile:</strong> {{ order.delivery_address.mobile }}</p>
     <p><strong>Email:</strong> {{ order.delivery_address.email }}</p>
     <p><strong>Delivery
@@ -137,7 +139,7 @@
     </p>
     <p><strong>Payment Method:</strong> {{ payment.payment_method }}</p>
     <p><strong>Payment Status:</strong> {{ payment.payment_status }}</p>
-    <p><strong>Payment Total:</strong><strong class="price">${{ payment.total }}</strong></p>
+    <p><strong>Payment Total:</strong><strong class="price"> ${{ payment.total }}</strong></p>
     <p><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
     <p><strong>Payment Date:</strong> {{ payment.payment_date }}</p>
     <p><strong>Thank you for your business!</strong> If you have any questions, please contact us at

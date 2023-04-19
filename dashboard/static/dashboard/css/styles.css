@@ -327,25 +327,28 @@
     color: #fff;
     border-radius: 4px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: bold;
     letter-spacing: 1px;
 }
 
-.delivered {
-    background: #8de02c;
-}
 
 .pending {
-    background: #f9ca3f;
+    background: #FFC107;
 }
 
-.return {
-    background: #f00;
+.confirm {
+    background: #0DCAF0;
 }
 
-.inprogress {
-    background: #1795ce;
+.delivery {
+    background: #007BFF;
 }
+
+.
+.delivered {
+    background: #198754;
+}
+
 
 .details .recentCustomers {
     position: relative;
