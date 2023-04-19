@@ -74,7 +74,7 @@ class Product(models.Model):
     brand = models.ForeignKey('Brand', on_delete=models.CASCADE, null=True)
     price_original = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
-    old_price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    old_price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0.0)
     stock = models.PositiveIntegerField()
     description = models.TextField(null=True, blank=True)
     product_image = models.ImageField(upload_to='product_image/', null=True, blank=True)

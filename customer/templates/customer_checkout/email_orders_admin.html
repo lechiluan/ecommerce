@@ -39,7 +39,7 @@
     <h3>New order from LCL Shop</h3>
     <p>Hi Administrator,</p>
     <p>An order has been placed on {{ domain }} by {{ customer.user.username }} - {{ customer.user.email }}. Please
-        login to the admin dashboard to view the order details.</p>
+        login to the admin dashboard to view the order details. <a href="{{ domain }}/dashboard/order/details/{{ order.id }}">Click here</a> to see details</p>
     <p>Order details:</p>
     <table>
         <thead>

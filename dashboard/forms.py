@@ -318,7 +318,7 @@ class AddProductForm(forms.Form):
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
     price_original = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
-    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
+    old_price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
     description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 40}))
     product_image = forms.ImageField(required=True, label='Upload Product Image', widget=forms.FileInput,
@@ -373,7 +373,7 @@ class UpdateProductForm(forms.Form):
     brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=True, empty_label="Select Brand")
     price_original = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
-    old_price = forms.DecimalField(required=False, max_digits=10, decimal_places=1)
+    old_price = forms.DecimalField(required=True, max_digits=10, decimal_places=1)
     stock = forms.IntegerField(required=True)
     description = forms.CharField(required=True, widget=TinyMCE(attrs={'cols': 80, 'rows': 40}))
     product_image = forms.ImageField(required=True, label='Upload New Product Image', widget=forms.FileInput,
