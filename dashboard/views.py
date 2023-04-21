@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, update_session_auth_hash, logout as auth_logout
@@ -27,7 +28,7 @@ from main.models import Customer, Category, Brand, Product, Coupon, Feedback, Or
 import csv
 import xlwt
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import io
 from xhtml2pdf import pisa
 from django.template.loader import get_template
@@ -35,7 +36,12 @@ from django.template import Context
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
 from django.views.generic import TemplateView
-from chartjs.views.lines import BaseLineChartView
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import date, timedelta
+import numpy as np
+import pandas as pd
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 
 # Create your views here.
@@ -47,20 +53,23 @@ def is_admin(user):
 @login_required(login_url='/auth/login/')
 def dashboard(request):
     # get all recent customers last login
-    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:10]
+    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:8]
 
     customers = Customer.objects.all()
 
     # get all recent orders
     orders = Orders.objects.all().order_by('-order_date')[:10]
+
+    payments = Payment.objects.all()
     # get all recent sales
     sales = 0
     for order in orders:
         sales += order.total_amount
     # get revenue = sold * (price original - price sale - discount)
-    revenue = 0
+
+    profit = 0
     for order in orders:
-        revenue += order.profit_order
+        profit += order.profit_order
 
     # quality product sale
     quality_product_sale = 0
@@ -79,16 +88,53 @@ def dashboard(request):
     for product in Product.objects.all():
         view_count += product.view_count
 
+    # total customers
+    total_customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+    # total orders
+    total_orders = Orders.objects.all().count()
+    # total products
+    total_products = Product.objects.all().count()
+    # total discounts used by customers
+    total_discounts = 0
+    for order in Orders.objects.all():
+        total_discounts += order.total_discount
+
+    # Profit Ratio
+    total_profit_ratio = profit / sales * 100
+    # Just get one decimal
+    total_profit_ratio = round(total_profit_ratio, 1)
+    # total feedback
+    total_feedback = Feedback.objects.all().count()
+    # total review
+    total_review = Review.objects.all().count()
+    # total payment
+    total_payment = Payment.objects.all().count()
+    # total review rate
+    total_review_rate = Review.objects.all().aggregate(Avg('rate'))
+    total_review_rate = total_review_rate['rate__avg']
+    # Just get one decimal
+    total_review_rate = round(total_review_rate, 1)
+
     context = {
         'users': users,
         'customers': customers,
         'orders': orders,
         'sales': sales,
-        'revenue': revenue,
+        'profit': profit,
         'view_count': view_count,
         'quality_product_sale': quality_product_sale,
         'product_sold_count': product_sold_count,
         'number_customer': number_customer,
+        'payments': payments,
+        'total_customers': total_customers,
+        'total_orders': total_orders,
+        'total_products': total_products,
+        'total_discounts': total_discounts,
+        'total_profit_ratio': total_profit_ratio,
+        'total_feedback': total_feedback,
+        'total_review': total_review,
+        'total_payment': total_payment,
+        'total_review_rate': total_review_rate,
     }
     return render(request, 'dashboard/base/ad_base.html', context)
 
@@ -96,7 +142,7 @@ def dashboard(request):
 # Pagination function
 def paginator(request, objects):
     # Set the number of items per page
-    per_page = 10
+    per_page = 5
 
     # Create a Paginator object with the customers queryset and the per_page value
     page = Paginator(objects, per_page)
@@ -108,6 +154,12 @@ def paginator(request, objects):
     page_obj = page.get_page(page_number)
     return page_obj
 
+
+
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
+def chatbot(request):
+    return render(request, 'dashboard/chatbot/chatbot.html')
 
 # Administration Account
 # Change email address
@@ -143,6 +195,7 @@ def change_email(request):
 
 # send email to verify new email
 def send_verify_new_email(request, user):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'Update your account.'
     message = render_to_string('dashboard/account/verify_new_email.html', {
@@ -150,7 +203,7 @@ def send_verify_new_email(request, user):
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': update_email_token.make_token(user),
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [user.email]
     form_email = 'LCL Shop <lclshop.dev@gmail.com>'
@@ -2361,9 +2414,151 @@ def change_review_status(request, review_id):
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def sales_statistics(request):
-    sales = Orders.objects.all().order_by('-id')
-    page_object = paginator(request, sales)
+    # get all recent customers last login
+    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:10]
+
+    customers = Customer.objects.all()
+
+    # get all recent orders
+    orders = Orders.objects.all()
+
+    payments = Payment.objects.all()
+    # get all recent sales
+    sales = 0
+    for order in orders:
+        sales += order.total_amount
+    # get revenue = sold * (price original - price sale - discount)
+    profit = 0
+    for order in orders:
+        profit += order.profit_order
+
+    # quality product sale
+    quality_product_sale = 0
+    for order in orders:
+        for order_detail in order.orderdetails_set.all():
+            quality_product_sale += order_detail.quantity
+    # get all product sold count
+    product_sold_count = 0
+    for product in Product.objects.all():
+        product_sold_count += product.sold
+
+    number_customer = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+
+    # get all view_count of product
+    view_count = 0
+    for product in Product.objects.all():
+        view_count += product.view_count
+
+    # total customers
+    total_customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+    # total orders
+    total_orders = Orders.objects.all().count()
+    # total products
+    total_products = Product.objects.all().count()
+    # total discounts used by customers
+    total_discounts = 0
+    for order in Orders.objects.all():
+        total_discounts += order.total_discount
+
+    # Profit Ratio
+    total_profit_ratio = profit / sales * 100
+    # Just get one decimal
+    total_profit_ratio = round(total_profit_ratio, 1)
+    # total feedback
+    total_feedback = Feedback.objects.all().count()
+    # total review
+    total_review = Review.objects.all().count()
+    # total payment
+    total_payment = Payment.objects.all().count()
+    # total review rate
+    total_review_rate = Review.objects.all().aggregate(Avg('rate'))
+    total_review_rate = total_review_rate['rate__avg']
+    # Just get one decimal
+    total_review_rate = round(total_review_rate, 1)
+
+    # Get all orders in this month
+    orders_this_month = orders.filter(order_date__month=datetime.now().month)
+    # Get all orders in this year
+    orders_this_year = orders.filter(order_date__year=datetime.now().year)
+    # Get all orders in this week
+    orders_this_week = orders.filter(order_date__week=datetime.now().isocalendar()[1])
+    # Get all orders in this day
+    orders_this_day = orders.filter(order_date__day=datetime.now().day)
+    # Get all orders in this hour
+    orders_this_hour = orders.filter(order_date__hour=datetime.now().hour)
+
+    # Chart
+    data_profit = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
+        total_profit=Sum('profit_order')).order_by('month')
+    labels = [d['month'].strftime('%B %Y') for d in data_profit]
+    profit_values = [d['total_profit'] for d in data_profit]
+    profit_values = [float(i) for i in profit_values]
+
+    # Sales values
+    data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
+        total_sales=Sum('total_amount')).order_by('month')
+    sales_values = [d['total_sales'] for d in data_sales]
+    sales_values = [float(i) for i in sales_values]
+
+    # Forecasted sales for next month
+    last_month = data_sales[len(data_sales) - 1]['month']
+    next_month = last_month + pd.DateOffset(months=1)
+    next_month_label = next_month.strftime('%B %Y')
+    data_df = pd.DataFrame({'sales': sales_values}, index=pd.to_datetime(labels, format='%B %Y'))
+    data_df = data_df.asfreq('MS')
+    fit = ExponentialSmoothing(data_df).fit()
+    forecast = fit.forecast(1)
+    next_month_sales = forecast[0]
+    next_month_sales = float(next_month_sales)
+    # round it to 1 decimal
+    next_month_sales = round(next_month_sales, 1)
+    sales_values.append(next_month_sales)
+
+    # Forecasted profit for next month
+    last_month = data_profit[len(data_profit) - 1]['month']
+    next_month = last_month + pd.DateOffset(months=1)
+    next_month_label = next_month.strftime('%B %Y')
+    data_df = pd.DataFrame({'profit': profit_values}, index=pd.to_datetime(labels, format='%B %Y'))
+    data_df = data_df.asfreq('MS')
+    fit = ExponentialSmoothing(data_df).fit()
+    forecast = fit.forecast(1)
+    next_month_revenue = forecast[0]
+    # convert to float
+    next_month_revenue = float(next_month_revenue)
+    # round it to 1 decimal
+    next_month_revenue = round(next_month_revenue, 1)
+    profit_values.append(next_month_revenue)
+
+    # Add forecasted revenue label to labels list
+    labels.append(next_month_label + ' (Forecasted)')
+
     context = {
-        'sales': page_object
+        'users': users,
+        'customers': customers,
+        'sales': sales,
+        'profit': profit,
+        'view_count': view_count,
+        'quality_product_sale': quality_product_sale,
+        'product_sold_count': product_sold_count,
+        'number_customer': number_customer,
+        'payments': payments,
+        'total_customers': total_customers,
+        'total_orders': total_orders,
+        'total_products': total_products,
+        'total_discounts': total_discounts,
+        'total_profit_ratio': total_profit_ratio,
+        'total_feedback': total_feedback,
+        'total_review': total_review,
+        'total_payment': total_payment,
+        'total_review_rate': total_review_rate,
+        'orders': orders,
+        'orders_this_month': orders_this_month,
+        'orders_this_year': orders_this_year,
+        'orders_this_week': orders_this_week,
+        'orders_this_day': orders_this_day,
+        'orders_this_hour': orders_this_hour,
+        'labels': labels,
+        'profit_values': profit_values,
+        'sales_values': sales_values,
     }
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)

@@ -3,25 +3,43 @@
 {% endblock %}
 {% block content %}
     <div class="cardBox">
-        <div class="mycard">
+        <a class="mycard" href="/dashboard/product/">
             <div>
                 <div class="numbers">{{ view_count }}</div>
-                <div class="cardName">Views</div>
+                <div class="cardName">Total Views</div>
             </div>
             <div class="iconBox">
                 <i class="fa fa-eye" aria-hidden="true"></i>
             </div>
-        </div>
-        <div class="mycard">
+        </a>
+        <a class="mycard" href="/dashboard/customer/">
+            <div>
+                <div class="numbers">{{ total_customers }}</div>
+                <div class="cardName">Total Customers</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/product/">
+            <div>
+                <div class="numbers">{{ total_products }}</div>
+                <div class="cardName">Total Products</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-desktop" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/product/">
             <div>
                 <div class="numbers">{{ product_sold_count }}</div>
-                <div class="cardName">Solds</div>
+                <div class="cardName">Total Sold</div>
             </div>
             <div class="iconBox">
                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
             </div>
-        </div>
-        <div class="mycard">
+        </a>
+        <a class="mycard" href="/dashboard/order/">
             <div>
                 <div class="numbers">${{ sales }}</div>
                 <div class="cardName">Total Sales</div>
@@ -29,16 +47,73 @@
             <div class="iconBox">
                 <i class="fa fa-money" aria-hidden="true"></i>
             </div>
-        </div>
-        <div class="mycard">
+        </a>
+        <a class="mycard" href="/dashboard/order/">
             <div>
-                <div class="numbers">${{ revenue }}</div>
-                <div class="cardName">Revenue</div>
+                <div class="numbers">${{ profit }}</div>
+                <div class="cardName">Total Profit</div>
             </div>
             <div class="iconBox">
                 <i class="fa fa-usd" aria-hidden="true"></i>
             </div>
-        </div>
+        </a>
+
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">{{ total_profit_ratio }}%</div>
+                <div class="cardName">Total Profit Ratio</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-percent" aria-hidden="true"></i>
+            </div>
+        </a>
+
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">-${{ total_discounts }}
+                </div>
+                <div class="cardName">Total Discounts</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-qrcode" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">{{ total_orders }}</div>
+                <div class="cardName">Total Orders</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-truck" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/feedback/">
+            <div>
+                <div class="numbers">{{ total_feedback }}</div>
+                <div class="cardName">Total Feedback</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/review/">
+            <div>
+                <div class="numbers">{{ total_review }} - {{ total_review_rate }}</div>
+                <div class="cardName">Total Review</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/payment/">
+            <div>
+                <div class="numbers">{{ total_payment }}</div>
+                <div class="cardName">Total Payment</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+            </div>
+        </a>
     </div>
 
     <div class="details">
@@ -51,10 +126,10 @@
                 <table>
                     <thead>
                     <tr>
-                        <td>Name</td>
-                        <td>Price</td>
-                        <td>Payment</td>
-                        <td>Status</td>
+                        <td>Username</td>
+                        <td>Total</td>
+                        <td>Payment Status</td>
+                        <td>Order Status</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -62,7 +137,19 @@
                         <tr>
                             <td>{{ order.customer.user.username }}</td>
                             <td>${{ order.total_amount }}</td>
-                            <td>{{ order.payment.payment_status }}</td>
+                            <td>
+                                {% for payment in payments %}
+                                    {% if payment.order == order %}
+                                        {% if payment.payment_status == 'Pending' %}
+                                            <span class="status pending">{{ payment.payment_status }}</span>
+                                        {% elif payment.payment_status == 'Paid' %}
+                                            <span class="status delivered">{{ payment.payment_status }}</span>
+                                        {% else %}
+                                            <span class="status canceled">{{ payment.payment_status }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
                             {% if order.status == 'Pending' %}
                                 <td><span class="status pending">{{ order.status }}</span></td>
                             {% elif order.status == "Order Confirmed" %}

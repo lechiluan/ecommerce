@@ -1,0 +1,36 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Chatbot Management{% endblock %}
+
+{% block style %}
+    <style>
+        .btn{
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <h1 class="h2 mb-2 text-black-800 title-manage">Chatbot Management</h1>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/chatbot/">Chatbot Management</a>
+    </div>
+    <iframe width="100%" height="650px" allow="microphone;"
+            src="https://console.dialogflow.com/api-client/demo/embedded/7461e607-656b-4851-b86c-2208460f74d2"></iframe>
+
+    <a type="button" class="btn btn-primary" href='https://dialogflow.cloud.google.com/' target="blank">Chatbot Management In Dialogflow</a>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}

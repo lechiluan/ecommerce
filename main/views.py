@@ -106,6 +106,7 @@ def privacy_policy(request):
 
 
 def send_email_activate_account(request, user):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'Activate your account.'
     message = render_to_string('registration/register/account_activation_email.html', {
@@ -113,7 +114,7 @@ def send_email_activate_account(request, user):
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [user.email]
     form_email = 'LCL Shop <lclshop.dev@gmail.com>'
@@ -176,6 +177,7 @@ def login(request, *args, **kwargs):
 
 
 def send_verify_new_email(request, user):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'Update your account.'
     message = render_to_string('registration/profile/verify_new_email.html', {
@@ -183,7 +185,7 @@ def send_verify_new_email(request, user):
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': update_email_token.make_token(user),
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [user.email]
     form_email = 'LCL Shop <lclshop.dev@gmail.com>'
@@ -305,6 +307,7 @@ def password_reset_request(request):
                 for user in associated_users:
                     subject = "Password Reset Requested"
                     email_template_name = "registration/password/password_reset_email.html"
+                    protocol = 'http' if request.scheme == 'http' else 'https'
                     site = get_current_site(request)
                     c = {
                         "email": user.email,
@@ -313,7 +316,7 @@ def password_reset_request(request):
                         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                         "user": user,
                         'token': password_reset_token.make_token(user),
-                        'protocol': 'http',
+                        'protocol': protocol,
                     }
                     email = render_to_string(email_template_name, c)
                     form_email = 'LCL Shop <lclshop.dev@gmail.com>'

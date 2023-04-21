@@ -218,6 +218,8 @@
     justify-content: space-between;
     cursor: pointer;
     border-radius: 10px;
+    text-decoration: none;
+    color:black;
 }
 
 .cardBox .mycard .numbers {
@@ -344,11 +346,13 @@
     background: #007BFF;
 }
 
-.
 .delivered {
-    background: #198754;
+    background: #28A745;
 }
 
+.canceled {
+    background: #DC3545;
+}
 
 .details .recentCustomers {
     position: relative;

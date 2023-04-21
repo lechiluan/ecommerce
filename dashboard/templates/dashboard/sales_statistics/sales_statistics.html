@@ -1,9 +1,33 @@
 {% extends "dashboard/base/ad_base.html" %}
 
-{% block title %}Sale Report{% endblock %}
+{% block title %}Sales Statistics{% endblock %}
+
 {% block style %}
     <style>
+        .chart {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #ccc;
+            margin: 15px auto;
+            background: #ffffff;
+            max-height: 750px;
+            width: 100%;
+            padding: 0 20px 20px 20px;
+        }
 
+        .title-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .title-table {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
     </style>
 {% endblock %}
 
@@ -12,17 +36,341 @@
 {% load static %}
 
 {% block content %}
+    <h1 class="h2 mb-2 text-black-800 title-manage">Sales Statistics</h1>
     <div class="breadcrumb">
         <a href="/dashboard/">Home</a>
         <span> > </span>
         <a href="/dashboard/sales_statistics/">Sales Statistics</a>
     </div>
-    <h1 class="h3 mb-2 text-gray-800">Sales Statistics</h1>
-    <div class="card shadow mb-4">
-        <div class="card-body">
+    <h3 class="h3 mb-2 text-gray-800 title-chart">Sales and Profit per monthly</h3>
+    <canvas id="chart_forecast" class="chart"></canvas>
 
+    <div class="filter-form">
+        <form action="/dashboard/product/search/" method="POST">
+            {% csrf_token %}
+            <div class="form-row align-items-center">
+                <ul>
+                    <li>
+                        <div class="col-auto">
+                            <label class="sr-only" for="sort_by">Sort by</label>
+                            <select class="form-control" id="sort_by" name="sort_by">
+                                <option value="">Sort by</option>
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
+                                </option>
+                                <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
+                                    Best Seller
+                                </option>
+                                <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
+                                    Most Viewed
+                                </option>
+                                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
+                                    (A-Z)
+                                </option>
+                                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
+                                    (Z-A)
+                                </option>
+                                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
+                                    (low to high)
+                                </option>
+                                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
+                                    (high to low)
+                                </option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_brand" name="filter_by_brand">
+                                <option value="">Filter by Brand</option>
+                                {% for brand in brands %}
+                                    <option value="{{ brand.id }}"
+                                            {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_category" name="filter_by_category">
+                                <option value="">Filter by Category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}"
+                                            {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <a href="/dashboard/product/search/" type="button" class="btn btn-danger">Clear</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <input type="hidden" name="search" value="{{ request.GET.search }}">
+            <input type="hidden" name="t" value="{{ timestamp }}">
+        </form>
+    </div>
+
+    <div class="cardBox">
+        <a class="mycard" href="/dashboard/product/">
+            <div>
+                <div class="numbers">{{ view_count }}</div>
+                <div class="cardName">Total Views</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/customer/">
+            <div>
+                <div class="numbers">{{ total_customers }}</div>
+                <div class="cardName">Total Customers</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/product/">
+            <div>
+                <div class="numbers">{{ total_products }}</div>
+                <div class="cardName">Total Products</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-desktop" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/product/">
+            <div>
+                <div class="numbers">{{ product_sold_count }}</div>
+                <div class="cardName">Total Sold</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">${{ sales }}</div>
+                <div class="cardName">Total Sales</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-money" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">${{ profit }}</div>
+                <div class="cardName">Total Profit</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-usd" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">{{ total_profit_ratio }}%
+                </div>
+                <div class="cardName">Total Revenue Ratio</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-percent" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">-${{ total_discounts }}
+                </div>
+                <div class="cardName">Total Discounts</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-qrcode" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/order/">
+            <div>
+                <div class="numbers">{{ total_orders }}</div>
+                <div class="cardName">Total Orders</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-truck" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/feedback/">
+            <div>
+                <div class="numbers">{{ total_feedback }}</div>
+                <div class="cardName">Total Feedback</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/review/">
+            <div>
+                <div class="numbers">{{ total_review }} - {{ total_review_rate }}</div>
+                <div class="cardName">Total Review</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/payment/">
+            <div>
+                <div class="numbers">{{ total_payment }}</div>
+                <div class="cardName">Total Payment</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+            </div>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Best Selling Products</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Views</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Product 1</td>
+                            <td>100</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Profitable Products</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Views</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Product 1</td>
+                            <td>100</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Most Viewed Products</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Views</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Product 1</td>
+                            <td>100</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Rated Products</h3>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Views</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Product 1</td>
+                            <td>100</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ labels }}
+    {{ profit_values }}
+    {{ sales_values }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('chart_forecast').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels|safe }},
+                    datasets: [
+                        {
+                            label: 'Sales per month',
+                            data: {{ sales_values|safe }},
+                            backgroundColor: '#1253cc',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Profit per month',
+                            data: {{ profit_values|safe }},
+                            backgroundColor: 'rgb(1,152,64)',
+                            borderColor: 'rgba(0,255,106,0.76)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Sales and Profit per month'
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    return '$' + value;
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+
+
+
 {% endblock %}
 
 {% block scripts %}

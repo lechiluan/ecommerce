@@ -10,6 +10,7 @@ urlpatterns = [
     path('change_email/', views.change_email, name='change_email'),
     path('activate_email_admin/<uidb64>/<token>/', views.activate_new_email_admin, name='activate_email_admin'),
     path('logout/', views.logout, name='logout'),
+    path('chatbot/', views.chatbot, name='chatbot'),
 
     # Customer URL
     path('customer/', views.customer_table, name='user_customer_table'),

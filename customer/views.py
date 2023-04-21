@@ -38,12 +38,13 @@ def send_email_newsletter(request):
 
 
 def send_email(request, email):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'Register newsletter.'
     message = render_to_string('registration/register/email_newsletter.html', {
         'domain': current_site.domain,
         'email': email,
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [email]
     form_email = 'LCL Shop <lclshop.dev@gmail.com>'
@@ -776,6 +777,7 @@ def checkout(request):
 
 
 def send_email_order_admin(request, email, order, order_details, customer):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'New order placed.'
     message = render_to_string('customer_checkout/email_orders_admin.html', {
@@ -783,7 +785,7 @@ def send_email_order_admin(request, email, order, order_details, customer):
         'order': order,
         'order_details': order_details,
         'customer': customer,
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [email]
     from_email = 'LCL Shop <lclshop.dev@gmail.com>'
@@ -793,6 +795,7 @@ def send_email_order_admin(request, email, order, order_details, customer):
 
 
 def send_email_order_customer(request, email, order, order_details, customer):
+    protocol = 'http' if request.scheme == 'http' else 'https'
     current_site = get_current_site(request)
     mail_subject = 'Order placed successfully.'
     message = render_to_string('customer_checkout/email_orders_customer.html', {
@@ -800,7 +803,7 @@ def send_email_order_customer(request, email, order, order_details, customer):
         'order': order,
         'order_details': order_details,
         'customer': customer,
-        'protocol': 'http',
+        'protocol': protocol,
     })
     to_email = [email]
     from_email = 'LCL Shop <lclshop.dev@gmail.com>'
