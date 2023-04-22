@@ -339,7 +339,7 @@
 }
 
 .confirm {
-    background: #0DCAF0;
+    background: rgba(14, 227, 96, 0.34);
 }
 
 .delivery {
@@ -347,7 +347,7 @@
 }
 
 .delivered {
-    background: #28A745;
+    background: #1253cc;
 }
 
 .canceled {
