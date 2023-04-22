@@ -119,6 +119,15 @@
     <div class="cardBox">
         <a class="mycard" href="/dashboard/product/">
             <div>
+                <div class="numbers">{{ total_products }}</div>
+                <div class="cardName">Total Products</div>
+            </div>
+            <div class="iconBox">
+                <i class="fa fa-desktop" aria-hidden="true"></i>
+            </div>
+        </a>
+        <a class="mycard" href="/dashboard/product/">
+            <div>
                 <div class="numbers">{{ view_count }}</div>
                 <div class="cardName">Total Views</div>
             </div>
@@ -135,15 +144,7 @@
                 <i class="fa fa-user" aria-hidden="true"></i>
             </div>
         </a>
-        <a class="mycard" href="/dashboard/product/">
-            <div>
-                <div class="numbers">{{ total_products }}</div>
-                <div class="cardName">Total Products</div>
-            </div>
-            <div class="iconBox">
-                <i class="fa fa-desktop" aria-hidden="true"></i>
-            </div>
-        </a>
+
         <a class="mycard" href="/dashboard/product/">
             <div>
                 <div class="numbers">{{ product_sold_count }}</div>
@@ -212,7 +213,7 @@
         <a class="mycard" href="/dashboard/review/">
             <div>
                 <div class="numbers">{{ total_review }} - {{ total_review_rate }}</div>
-                <div class="cardName">Total Review</div>
+                <div class="cardName">Total Review - Ratings</div>
             </div>
             <div class="iconBox">
                 <i class="fa fa-star" aria-hidden="true"></i>

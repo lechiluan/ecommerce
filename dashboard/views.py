@@ -2580,48 +2580,78 @@ def sales_statistics(request):
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
 
 
+@user_passes_test(is_admin, login_url='/auth/login/')
+@login_required(login_url='/auth/login/')
 def sales_statistics_filter(request):
     if request.method == 'POST':
-        # get all recent customers last login
-        users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:10]
-
-        customers = Customer.objects.all()
 
         # apply filters
         start_datetime = request.POST.get('start_datetime')
         end_datetime = request.POST.get('end_datetime')
-
         month = request.POST.get('month')
         year = request.POST.get('year')
 
         if month != 'all' and year != 'all' and month != '' and year != '':
             orders = Orders.objects.filter(order_date__month=month, order_date__year=year)
+            reviews = Review.objects.filter(date_added__month=month, date_added__year=year)
+            payments = Payment.objects.filter(payment_date__month=month, payment_date__year=year)
+            feedbacks = Feedback.objects.filter(date_sent__month=month, date_sent__year=year)
+            users = User.objects.filter(date_joined__month=month, date_joined__year=year, is_staff=False,
+                                        is_superuser=False, is_active=True)
             messages.success(request, 'Data filtered successfully')
         elif month == 'all' and year != 'all' and year != '':
             orders = Orders.objects.filter(order_date__year=year)
+            reviews = Review.objects.filter(date_added__year=year)
+            payments = Payment.objects.filter(payment_date__year=year)
+            feedbacks = Feedback.objects.filter(date_sent__year=year)
+            users = User.objects.filter(date_joined__year=year, is_staff=False, is_superuser=False, is_active=True)
             messages.success(request, 'Data filtered successfully')
         elif month != 'all' and year == 'all' and month != '':
             orders = Orders.objects.filter(order_date__month=month)
+            reviews = Review.objects.filter(date_added__month=month)
+            payments = Payment.objects.filter(payment_date__month=month)
+            feedbacks = Feedback.objects.filter(date_sent__month=month)
+            users = User.objects.filter(date_joined__month=month, is_staff=False, is_superuser=False, is_active=True)
             messages.success(request, 'Data filtered successfully')
         elif start_datetime != '' and end_datetime != '':
             orders = Orders.objects.filter(order_date__range=(start_datetime, end_datetime))
+            reviews = Review.objects.filter(date_added__range=(start_datetime, end_datetime))
+            payments = Payment.objects.filter(payment_date__range=(start_datetime, end_datetime))
+            feedbacks = Feedback.objects.filter(date_sent__range=(start_datetime, end_datetime))
+            users = User.objects.filter(date_joined__range=(start_datetime, end_datetime), is_staff=False,
+                                        is_superuser=False, is_active=True)
             messages.success(request, 'Data filtered successfully')
         elif start_datetime != '' and end_datetime == '':
             orders = Orders.objects.filter(order_date__gte=start_datetime)
+            reviews = Review.objects.filter(date_added__gte=start_datetime)
+            payments = Payment.objects.filter(payment_date__gte=start_datetime)
+            feedbacks = Feedback.objects.filter(date_sent__gte=start_datetime)
+            users = User.objects.filter(date_joined__gte=start_datetime, is_staff=False, is_superuser=False,
+                                        is_active=True)
             messages.success(request, 'Data filtered successfully')
         elif start_datetime == '' and end_datetime != '':
             orders = Orders.objects.filter(order_date__lte=end_datetime)
+            reviews = Review.objects.filter(date_added__lte=end_datetime)
+            payments = Payment.objects.filter(payment_date__lte=end_datetime)
+            feedbacks = Feedback.objects.filter(date_sent__lte=end_datetime)
+            users = User.objects.filter(date_joined__lte=end_datetime, is_staff=False, is_superuser=False,
+                                        is_active=True)
             messages.success(request, 'Data filtered successfully')
         else:
             messages.warning(request, 'Please select a filter')
             orders = Orders.objects.all()
+            reviews = Review.objects.all()
+            payments = Payment.objects.all()
+            feedbacks = Feedback.objects.all()
+            users = User.objects.filter(is_staff=False, is_superuser=False, is_active=True)
 
         if orders.count() == 0:
             messages.warning(request, 'No data for this filter')
             orders = Orders.objects.all()
-
-        payments = Payment.objects.all()
-        # get all recent sales
+            reviews = Review.objects.all()
+            payments = Payment.objects.all()
+            feedbacks = Feedback.objects.all()
+            users = User.objects.filter(is_staff=False, is_superuser=False, is_active=True)
 
         sales = 0
         for order in orders:
@@ -2631,49 +2661,57 @@ def sales_statistics_filter(request):
         for order in orders:
             profit += order.profit_order
 
+        # Profit Ratio
+        total_profit_ratio = profit / sales * 100
+        # Just get one decimal
+        total_profit_ratio = round(total_profit_ratio, 1)
+        # total orders
+        total_orders = orders.count()
+        # total discounts used by customers
+        total_discounts = 0
+        for order in orders:
+            total_discounts += order.total_discount
+
         # quality product sale
         quality_product_sale = 0
         for order in orders:
             for order_detail in order.orderdetails_set.all():
                 quality_product_sale += order_detail.quantity
+
+        # total customers
+        total_customers = users.count()
+
+        # total feedback
+        total_feedback = feedbacks.count()
+        # total review
+        total_review = reviews.count()
+        # total payment
+        total_payment = payments.count()
+
+        # total review rate
+        total_review_rate = reviews.aggregate(Avg('rate'))
+        total_review_rate = total_review_rate['rate__avg']
+
+        # Just get one decimal
+        if total_review_rate is not None:
+            total_review_rate = round(total_review_rate, 1)
+        else:
+            total_review_rate = 0
+
+        # total products
+        total_products = Product.objects.all().count()
         # get all product sold count
         product_sold_count = 0
-        for product in Product.objects.all():
-            product_sold_count += product.sold
+        for order in orders:
+            for order_detail in order.orderdetails_set.all():
+                product_sold_count += order_detail.quantity
 
-        number_customer = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+        number_customer = users.count()
 
         # get all view_count of product
         view_count = 0
         for product in Product.objects.all():
             view_count += product.view_count
-
-        # total customers
-        total_customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
-        # total orders
-        total_orders = Orders.objects.all().count()
-        # total products
-        total_products = Product.objects.all().count()
-        # total discounts used by customers
-        total_discounts = 0
-        for order in Orders.objects.all():
-            total_discounts += order.total_discount
-
-        # Profit Ratio
-        total_profit_ratio = profit / sales * 100
-        # Just get one decimal
-        total_profit_ratio = round(total_profit_ratio, 1)
-        # total feedback
-        total_feedback = Feedback.objects.all().count()
-        # total review
-        total_review = Review.objects.all().count()
-        # total payment
-        total_payment = Payment.objects.all().count()
-        # total review rate
-        total_review_rate = Review.objects.all().aggregate(Avg('rate'))
-        total_review_rate = total_review_rate['rate__avg']
-        # Just get one decimal
-        total_review_rate = round(total_review_rate, 1)
 
         # Top 10 Best Selling Products
         top_10_best_selling_products = Product.objects.all().order_by('-sold')[:10]
@@ -2745,13 +2783,13 @@ def sales_statistics_filter(request):
             list_month.append(order.order_date.month)
         list_month = list(set(list_month))
         list_month.sort(reverse=True)
+
         if year != '':
-            int(year)
+            year = int(year)
         if month != '':
-            int(month)
+            month = int(month)
+
         context = {
-            'users': users,
-            'customers': customers,
             'sales': sales,
             'profit': profit,
             'view_count': view_count,
