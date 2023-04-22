@@ -40,6 +40,11 @@ if os.path.isfile(dotenv_file):
 # UPDATE secret key
 SECRET_KEY = os.environ['SECRET_KEY']
 
+# SECURITY TO USE HTTPS
+# SESSION_COOKIE_SECURE = True  # for https only, it uses to secure session
+# CSRF_COOKIE_SECURE = True  # for https only, it uses to secure csrf token
+# SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
