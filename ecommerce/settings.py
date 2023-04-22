@@ -46,7 +46,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
@@ -79,7 +79,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',  # for messages middleware
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  # for clickjacking
 ]
-
 ROOT_URLCONF = 'ecommerce.urls'
 
 TEMPLATES = [
@@ -157,6 +156,7 @@ STATICFILES_DIRS = [(BASE_DIR / 'static'),
                     (BASE_DIR / 'dashboard/static'),
                     (BASE_DIR / 'customer/static')]  # use to find static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # use to collect static files use when use public hosting
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
