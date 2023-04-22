@@ -164,7 +164,7 @@ CLOUDINARY = {
   'api_key': os.environ.get('CLOUDINARY_API_KEY'),
   'api_secret': os.environ.get('CLOUDINARY_API_SECRET'),
 }
-MEDIA_URL = 'https://res.cloudinary.com/{cloud_name}/image/upload/media/'.format(**CLOUDINARY)
+MEDIA_URL = 'https://res.cloudinary.com/hsflo3cmj/image/upload/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Connect to bootstrap4 for crispy forms
