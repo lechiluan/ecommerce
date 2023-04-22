@@ -18,8 +18,7 @@ import dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Email Configuration
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# SECURITY WARNING: keep the secret key used in production secret!
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
@@ -42,12 +41,12 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY TO USE HTTPS
-# SESSION_COOKIE_SECURE = True  # for https only, it uses to secure session
-# CSRF_COOKIE_SECURE = True  # for https only, it uses to secure csrf token
-# SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
+SESSION_COOKIE_SECURE = True  # for https only, it uses to secure session
+CSRF_COOKIE_SECURE = True  # for https only, it uses to secure csrf token
+SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'lclshop.herokuapp.com', 'lclshop.up.railway.app']
@@ -185,7 +184,7 @@ TINYMCE_DEFAULT_CONFIG = {
 TINYMCE_UPLOAD_DIR = 'uploads/'
 TINYMCE_UPLOAD_NAME = 'tinymce_upload'
 
-# Config for google captcha
+# Config for Google Captcha
 RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
