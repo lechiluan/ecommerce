@@ -46,8 +46,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-DEBUG404 = True
+DEBUG = True
 
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
