@@ -9,7 +9,7 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer', unique=True)
     mobile = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=40, null=True)
-    customer_image = CloudinaryField('customer_image', null=True, blank=True, default='customer_image/default_dvapof.jpg')
+    customer_image = CloudinaryField('customer_image', null=True, blank=True)
 
     @property
     def get_name(self):
