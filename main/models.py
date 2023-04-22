@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 
 # Create your models here.
@@ -8,8 +9,7 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer', unique=True)
     mobile = models.CharField(max_length=20, null=True)
     address = models.CharField(max_length=40, null=True)
-    customer_image = models.ImageField(upload_to='customer_image/', null=True, blank=True,
-                                       default='customer_image/default.jpg')
+    customer_image = CloudinaryField('customer_image', null=True, blank=True, default='customer_image/default_dvapof.jpg')
 
     @property
     def get_name(self):
@@ -54,7 +54,7 @@ class Brand(models.Model):
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     name = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
-    logo = models.ImageField(upload_to='brand_logo/', null=True, blank=True)
+    logo = CloudinaryField('brand_logo', null=True, blank=True, default='logo/default_logo.png')
 
     @property
     def get_products_count(self):
@@ -77,7 +77,7 @@ class Product(models.Model):
     old_price = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0.0)
     stock = models.PositiveIntegerField()
     description = models.TextField(null=True, blank=True)
-    product_image = models.ImageField(upload_to='product_image/', null=True, blank=True)
+    product_image = CloudinaryField('product_image', null=True, blank=True)
     sold = models.PositiveIntegerField(default=0)
     profit = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True, default=0.0)
     created_date = models.DateTimeField(auto_now_add=True, null=True)

@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'crispy_forms',  # for crispy forms
     'tinymce',  # for tinymce editor
     'captcha',  # for google captcha
+    'cloudinary',  # for cloudinary
 ]
 
 MIDDLEWARE = [
@@ -163,8 +164,11 @@ CLOUDINARY = {
   'cloud_name': os.environ.get('CLOUDINARY_CLOUD_NAME'),
   'api_key': os.environ.get('CLOUDINARY_API_KEY'),
   'api_secret': os.environ.get('CLOUDINARY_API_SECRET'),
+  'upload_prefix': 'media',
+  'secure': True
 }
-MEDIA_URL = 'https://res.cloudinary.com/hsflo3cmj/image/upload/media/'
+
+MEDIA_URL = 'https://res.cloudinary.com/{cloud_name}/image/upload/media/'.format(cloud_name=CLOUDINARY['cloud_name'])
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Connect to bootstrap4 for crispy forms
