@@ -365,7 +365,7 @@
                                                     alt="Details"
                                                     title="Details"></a>
                                             {% if order.status == 'Pending' %}
-                                                <a href="/customer/track_orders/cancel_order/{{ order.id }}?t={{ timestamp }}/"
+                                                <a href="/customer/track_orders/cancel_order/{{ order.id }}//"
                                                    onclick="return confirm('Are you sure to cancel this order?')"><img
                                                         src="{% static 'dashboard/images/icons/delete.png' %}"
                                                         alt="Cancel Order"

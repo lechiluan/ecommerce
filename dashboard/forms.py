@@ -71,7 +71,7 @@ class AddCustomerForm(UserCreationForm):
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar')
+    customer_image = forms.ImageField(required=True, label='Upload avatar')
     is_active = forms.BooleanField(required=False, label='Active', initial=True)
     is_staff = forms.BooleanField(required=False, label='Staff', initial=False)
     is_superuser = forms.BooleanField(required=False, label='Superuser', initial=False)
@@ -92,8 +92,6 @@ class AddCustomerForm(UserCreationForm):
             self.add_error('email', 'Email already exists')
         if customer_image:
             validate_image_size(customer_image)
-        if not customer_image:
-            self.cleaned_data['customer_image'] = 'customer_image/default.jpg'
 
 
 class UpdateCustomerForm(forms.ModelForm):

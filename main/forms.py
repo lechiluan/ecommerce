@@ -25,7 +25,7 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField()
     address = forms.CharField(max_length=40, required=True)
     mobile = forms.CharField(validators=[phone_regex], max_length=20, required=True)
-    customer_image = forms.ImageField(required=False, label='Upload avatar', widget=forms.FileInput,
+    customer_image = forms.ImageField(required=True, label='Upload avatar', widget=forms.FileInput,
                                       help_text='(10MB max size)', error_messages={'invalid': 'Image files only'})
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
@@ -45,8 +45,6 @@ class RegisterForm(UserCreationForm):
             self.add_error('email', 'Email already exists')
         if customer_image:
             validate_image_size(customer_image)
-        if not customer_image:
-            self.cleaned_data['customer_image'] = 'customer_image/default.jpg'
 
 
 class LoginForm(forms.Form):
