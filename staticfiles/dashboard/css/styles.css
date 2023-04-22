@@ -218,6 +218,8 @@
     justify-content: space-between;
     cursor: pointer;
     border-radius: 10px;
+    text-decoration: none;
+    color:black;
 }
 
 .cardBox .mycard .numbers {
@@ -327,24 +329,29 @@
     color: #fff;
     border-radius: 4px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: bold;
     letter-spacing: 1px;
 }
 
-.delivered {
-    background: #8de02c;
-}
 
 .pending {
-    background: #f9ca3f;
+    background: #FFC107;
 }
 
-.return {
-    background: #f00;
+.confirm {
+    background: #0DCAF0;
 }
 
-.inprogress {
-    background: #1795ce;
+.delivery {
+    background: #007BFF;
+}
+
+.delivered {
+    background: #28A745;
+}
+
+.canceled {
+    background: #DC3545;
 }
 
 .details .recentCustomers {
@@ -1080,8 +1087,8 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 .button-scroll {
     display: none;
     position: fixed;
-    bottom: 25px;
-    right: 90px;
+    bottom: 30px;
+    right: 45px;
     z-index: 99;
     border: none;
     outline: none;
