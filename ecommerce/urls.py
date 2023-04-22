@@ -37,4 +37,4 @@ urlpatterns = [
     path('customer/', include('customer.urls')),  # customer site custom to process customer data order, cart.
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # for media folder
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
