@@ -327,7 +327,7 @@
     <div class="breadcrumb">
         <a href="/">Home</a>
         <span> > </span>
-        <a href="/customer/product/details/{{ product.slug }}">{{ product.name }}</a>
+        <a href="/{{ product.slug }}/">{{ product.name }}</a>
     </div>
     <div class="product-details">
         <h2 class="font-weight-bold mt-3 form-title-product-details">Product Details</h2>
@@ -604,7 +604,7 @@
                                             {% endif %}
                                         {% else %}
                                             <button type="submit" class="submit-button"
-                                                    onclick="window.location.href='/auth/login/?next=/customer/product/details/{{ product.slug }}'">
+                                                    onclick="window.location.href='/auth/login/?next=/{{ product.slug }}/'">
                                                 Login to add review
                                             </button>
                                         {% endif %}
