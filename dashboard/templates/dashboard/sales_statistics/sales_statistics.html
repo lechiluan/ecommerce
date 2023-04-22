@@ -28,6 +28,21 @@
             align-items: center;
             padding: 5px;
         }
+
+        .link-details {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .link-details:hover {
+            color: #000000;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .value-table {
+            font-weight: bold;
+        }
     </style>
 {% endblock %}
 
@@ -46,63 +61,45 @@
     <canvas id="chart_forecast" class="chart"></canvas>
 
     <div class="filter-form">
-        <form action="/dashboard/product/search/" method="POST">
+        <form action="/dashboard/sales_statistics/filter/" method="POST">
             {% csrf_token %}
             <div class="form-row align-items-center">
                 <ul>
                     <li>
                         <div class="col-auto">
-                            <label class="sr-only" for="sort_by">Sort by</label>
-                            <select class="form-control" id="sort_by" name="sort_by">
-                                <option value="">Sort by</option>
-                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
-                                </option>
-                                <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
-                                    Best Seller
-                                </option>
-                                <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
-                                    Most Viewed
-                                </option>
-                                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
-                                    (A-Z)
-                                </option>
-                                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
-                                    (Z-A)
-                                </option>
-                                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
-                                    (low to high)
-                                </option>
-                                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
-                                    (high to low)
-                                </option>
+                            <input type="datetime-local" class="form-control" id="start_date" name="start_datetime"
+                                   {% if start_datetime %}value="{{ start_datetime }}"{% endif %}>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime"
+                                   {% if end_datetime %}value="{{ end_datetime }}"{% endif %}>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" name="month">
+                                <option value="">Select Month</option>
+                                {% for month in list_month %}
+                                    <option value="{{ month }}"
+                                            {% if month == month_selected %}selected{% endif %}>{{ month }}</option>
+                                {% endfor %}
+                                <option value="all">All</option>
                             </select>
                         </div>
                     </li>
                     <li>
                         <div class="col-auto">
-                            <select class="form-control" id="filter_by_brand" name="filter_by_brand">
-                                <option value="">Filter by Brand</option>
-                                {% for brand in brands %}
-                                    <option value="{{ brand.id }}"
-                                            {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
-                                    </option>
+                            <select class="form-control" name="year">
+                                <option value="">Select Year</option>
+                                {% for year in list_year %}
+                                    <option value="{{ year }}"
+                                            {% if year == year_selected %}selected{% endif %}>{{ year }}</option>
                                 {% endfor %}
-                            </select>
-
-                        </div>
-                    </li>
-                    <li>
-                        <div class="col-auto">
-                            <select class="form-control" id="filter_by_category" name="filter_by_category">
-                                <option value="">Filter by Category</option>
-                                {% for category in categories %}
-                                    <option value="{{ category.id }}"
-                                            {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
-                                    </option>
-                                {% endfor %}
+                                <option value="all">All</option>
                             </select>
                         </div>
-                    </li>
                     <li>
                         <div class="col-auto">
                             <button type="submit" class="btn btn-primary">Apply</button>
@@ -110,7 +107,7 @@
                     </li>
                     <li>
                         <div class="col-auto">
-                            <a href="/dashboard/product/search/" type="button" class="btn btn-danger">Clear</a>
+                            <a href="/dashboard/sales_statistics/" type="button" class="btn btn-danger">Clear</a>
                         </div>
                     </li>
                 </ul>
@@ -119,7 +116,6 @@
             <input type="hidden" name="t" value="{{ timestamp }}">
         </form>
     </div>
-
     <div class="cardBox">
         <a class="mycard" href="/dashboard/product/">
             <div>
@@ -234,97 +230,125 @@
     </div>
 
     <div class="row">
-        <div class="col">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Best Selling Products</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Views</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Product 1</td>
-                            <td>100</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        {% if top_10_best_selling_products %}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Best Selling Products</h3>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td>No.</td>
+                                <th>Product Name</th>
+                                <th>Sold</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in top_10_best_selling_products %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="/dashboard/product/details/{{ product.id }}/"
+                                           class="link-details">{{ product.name }}</a></td>
+                                    <td class="value-table">{{ product.sold }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Profitable Products</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Views</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Product 1</td>
-                            <td>100</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        {% endif %}
+        {% if top_10_profitable_products %}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Profitable Products</h3>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td>No.</td>
+                                <th>Product Name</th>
+                                <th>Profit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in top_10_profitable_products %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="/dashboard/product/details/{{ product.id }}/"
+                                           class="link-details">{{ product.name }}</a></td>
+                                    <td class="value-table" style="color: #ff2020">${{ product.profit }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <div class="row">
-        <div class="col">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Most Viewed Products</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Views</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Product 1</td>
-                            <td>100</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        {% if top_10_most_viewed_products %}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Most Viewed Products</h3>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Product Name</th>
+                                <th>Views</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in top_10_most_viewed_products %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="/dashboard/product/details/{{ product.id }}/"
+                                           class="link-details">{{ product.name }}</a></td>
+                                    <td class="value-table">{{ product.view_count }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Rated Products</h3>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Views</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Product 1</td>
-                            <td>100</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        {% endif %}
+        {% if top_10_rated_products %}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3 class="h3 mb-2 text-gray-800 title-table">Top 10 Rated Products</h3>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Product Name</th>
+                                <th>Ratings</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in top_10_rated_products %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="/dashboard/product/details/{{ product.id }}/"
+                                           class="link-details">{{ product.name }}</a></td>
+                                    <td class="value-table">{{ product.review_rate_average }}
+                                        - {{ product.review_count }} reviews
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
-    {{ labels }}
-    {{ profit_values }}
-    {{ sales_values }}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var ctx = document.getElementById('chart_forecast').getContext('2d');
@@ -375,6 +399,23 @@
 
 {% block scripts %}
     <script>
-
+        const monthSelect = document.querySelector('select[name="month"]');
+        const yearSelect = document.querySelector('select[name="year"]');
+        // Check if month is selected then year is required
+        monthSelect.addEventListener('change', function () {
+            if (this.value) {
+                yearSelect.setAttribute('required', 'required');
+            } else {
+                yearSelect.removeAttribute('required');
+            }
+        });
+        // Check if year is selected then month is required
+        yearSelect.addEventListener('change', function () {
+            if (this.value) {
+                monthSelect.setAttribute('required', 'required');
+            } else {
+                monthSelect.removeAttribute('required');
+            }
+        });
     </script>
 {% endblock %}

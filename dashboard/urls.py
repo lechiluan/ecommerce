@@ -125,4 +125,5 @@ urlpatterns = [
 
     # Sales Statistics URL
     path('sales_statistics/', views.sales_statistics, name='sales_statistics'),
+    path('sales_statistics/filter/', views.sales_statistics_filter, name='sales_statistics_filter'),
 ]

@@ -1087,8 +1087,8 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 .button-scroll {
     display: none;
     position: fixed;
-    bottom: 25px;
-    right: 90px;
+    bottom: 30px;
+    right: 45px;
     z-index: 99;
     border: none;
     outline: none;

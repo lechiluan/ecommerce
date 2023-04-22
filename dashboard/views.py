@@ -155,11 +155,11 @@ def paginator(request, objects):
     return page_obj
 
 
-
 @user_passes_test(is_admin, login_url='/auth/login/')
 @login_required(login_url='/auth/login/')
 def chatbot(request):
     return render(request, 'dashboard/chatbot/chatbot.html')
+
 
 # Administration Account
 # Change email address
@@ -2476,16 +2476,17 @@ def sales_statistics(request):
     # Just get one decimal
     total_review_rate = round(total_review_rate, 1)
 
-    # Get all orders in this month
-    orders_this_month = orders.filter(order_date__month=datetime.now().month)
-    # Get all orders in this year
-    orders_this_year = orders.filter(order_date__year=datetime.now().year)
-    # Get all orders in this week
-    orders_this_week = orders.filter(order_date__week=datetime.now().isocalendar()[1])
-    # Get all orders in this day
-    orders_this_day = orders.filter(order_date__day=datetime.now().day)
-    # Get all orders in this hour
-    orders_this_hour = orders.filter(order_date__hour=datetime.now().hour)
+    # Top 10 Best Selling Products
+    top_10_best_selling_products = Product.objects.all().order_by('-sold')[:10]
+
+    # Top 10 Profitable Products
+    top_10_profitable_products = Product.objects.all().order_by('-profit')[:10]
+
+    # Top 10 Most Viewed Products
+    top_10_most_viewed_products = Product.objects.all().order_by('-view_count')[:10]
+
+    # Top 10 Rated Products
+    top_10_rated_products = Product.objects.all().order_by('-review_rate_average')[:10]
 
     # Chart
     data_profit = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
@@ -2532,6 +2533,20 @@ def sales_statistics(request):
     # Add forecasted revenue label to labels list
     labels.append(next_month_label + ' (Forecasted)')
 
+    # list year for filter
+    list_year = []
+    for order in Orders.objects.all():
+        list_year.append(order.order_date.year)
+    list_year = list(set(list_year))
+    list_year.sort(reverse=True)
+
+    # list month for filter
+    list_month = []
+    for order in Orders.objects.all():
+        list_month.append(order.order_date.month)
+    list_month = list(set(list_month))
+    list_month.sort(reverse=True)
+
     context = {
         'users': users,
         'customers': customers,
@@ -2552,13 +2567,220 @@ def sales_statistics(request):
         'total_payment': total_payment,
         'total_review_rate': total_review_rate,
         'orders': orders,
-        'orders_this_month': orders_this_month,
-        'orders_this_year': orders_this_year,
-        'orders_this_week': orders_this_week,
-        'orders_this_day': orders_this_day,
-        'orders_this_hour': orders_this_hour,
         'labels': labels,
         'profit_values': profit_values,
         'sales_values': sales_values,
+        'top_10_best_selling_products': top_10_best_selling_products,
+        'top_10_profitable_products': top_10_profitable_products,
+        'top_10_most_viewed_products': top_10_most_viewed_products,
+        'top_10_rated_products': top_10_rated_products,
+        'list_year': list_year,
+        'list_month': list_month,
     }
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
+
+
+def sales_statistics_filter(request):
+    if request.method == 'POST':
+        # get all recent customers last login
+        users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:10]
+
+        customers = Customer.objects.all()
+
+        # apply filters
+        start_datetime = request.POST.get('start_datetime')
+        end_datetime = request.POST.get('end_datetime')
+
+        month = request.POST.get('month')
+        year = request.POST.get('year')
+
+        if month != 'all' and year != 'all' and month != '' and year != '':
+            orders = Orders.objects.filter(order_date__month=month, order_date__year=year)
+            messages.success(request, 'Data filtered successfully')
+        elif month == 'all' and year != 'all' and year != '':
+            orders = Orders.objects.filter(order_date__year=year)
+            messages.success(request, 'Data filtered successfully')
+        elif month != 'all' and year == 'all' and month != '':
+            orders = Orders.objects.filter(order_date__month=month)
+            messages.success(request, 'Data filtered successfully')
+        elif start_datetime != '' and end_datetime != '':
+            orders = Orders.objects.filter(order_date__range=(start_datetime, end_datetime))
+            messages.success(request, 'Data filtered successfully')
+        elif start_datetime != '' and end_datetime == '':
+            orders = Orders.objects.filter(order_date__gte=start_datetime)
+            messages.success(request, 'Data filtered successfully')
+        elif start_datetime == '' and end_datetime != '':
+            orders = Orders.objects.filter(order_date__lte=end_datetime)
+            messages.success(request, 'Data filtered successfully')
+        else:
+            messages.warning(request, 'Please select a filter')
+            orders = Orders.objects.all()
+
+        if orders.count() == 0:
+            messages.warning(request, 'No data for this filter')
+            orders = Orders.objects.all()
+
+        payments = Payment.objects.all()
+        # get all recent sales
+
+        sales = 0
+        for order in orders:
+            sales += order.total_amount
+        # get revenue = sold * (price original - price sale - discount)
+        profit = 0
+        for order in orders:
+            profit += order.profit_order
+
+        # quality product sale
+        quality_product_sale = 0
+        for order in orders:
+            for order_detail in order.orderdetails_set.all():
+                quality_product_sale += order_detail.quantity
+        # get all product sold count
+        product_sold_count = 0
+        for product in Product.objects.all():
+            product_sold_count += product.sold
+
+        number_customer = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+
+        # get all view_count of product
+        view_count = 0
+        for product in Product.objects.all():
+            view_count += product.view_count
+
+        # total customers
+        total_customers = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).count()
+        # total orders
+        total_orders = Orders.objects.all().count()
+        # total products
+        total_products = Product.objects.all().count()
+        # total discounts used by customers
+        total_discounts = 0
+        for order in Orders.objects.all():
+            total_discounts += order.total_discount
+
+        # Profit Ratio
+        total_profit_ratio = profit / sales * 100
+        # Just get one decimal
+        total_profit_ratio = round(total_profit_ratio, 1)
+        # total feedback
+        total_feedback = Feedback.objects.all().count()
+        # total review
+        total_review = Review.objects.all().count()
+        # total payment
+        total_payment = Payment.objects.all().count()
+        # total review rate
+        total_review_rate = Review.objects.all().aggregate(Avg('rate'))
+        total_review_rate = total_review_rate['rate__avg']
+        # Just get one decimal
+        total_review_rate = round(total_review_rate, 1)
+
+        # Top 10 Best Selling Products
+        top_10_best_selling_products = Product.objects.all().order_by('-sold')[:10]
+
+        # Top 10 Profitable Products
+        top_10_profitable_products = Product.objects.all().order_by('-profit')[:10]
+
+        # Top 10 Most Viewed Products
+        top_10_most_viewed_products = Product.objects.all().order_by('-view_count')[:10]
+
+        # Top 10 Rated Products
+        top_10_rated_products = Product.objects.all().order_by('-review_rate_average')[:10]
+
+        # Chart
+        data_profit = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
+            total_profit=Sum('profit_order')).order_by('month')
+        labels = [d['month'].strftime('%B %Y') for d in data_profit]
+        profit_values = [d['total_profit'] for d in data_profit]
+        profit_values = [float(i) for i in profit_values]
+
+        # Sales values
+        data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
+            total_sales=Sum('total_amount')).order_by('month')
+        sales_values = [d['total_sales'] for d in data_sales]
+        sales_values = [float(i) for i in sales_values]
+
+        # Forecasted sales for next month
+        last_month = data_sales[len(data_sales) - 1]['month']
+        next_month = last_month + pd.DateOffset(months=1)
+        next_month_label = next_month.strftime('%B %Y')
+        data_df = pd.DataFrame({'sales': sales_values}, index=pd.to_datetime(labels, format='%B %Y'))
+        data_df = data_df.asfreq('MS')
+        fit = ExponentialSmoothing(data_df).fit()
+        forecast = fit.forecast(1)
+        next_month_sales = forecast[0]
+        next_month_sales = float(next_month_sales)
+        # round it to 1 decimal
+        next_month_sales = round(next_month_sales, 1)
+        sales_values.append(next_month_sales)
+
+        # Forecasted profit for next month
+        last_month = data_profit[len(data_profit) - 1]['month']
+        next_month = last_month + pd.DateOffset(months=1)
+        next_month_label = next_month.strftime('%B %Y')
+        data_df = pd.DataFrame({'profit': profit_values}, index=pd.to_datetime(labels, format='%B %Y'))
+        data_df = data_df.asfreq('MS')
+        fit = ExponentialSmoothing(data_df).fit()
+        forecast = fit.forecast(1)
+        next_month_revenue = forecast[0]
+        # convert to float
+        next_month_revenue = float(next_month_revenue)
+        # round it to 1 decimal
+        next_month_revenue = round(next_month_revenue, 1)
+        profit_values.append(next_month_revenue)
+
+        # Add forecasted revenue label to labels list
+        labels.append(next_month_label + ' (Forecasted)')
+
+        # list year for filter
+        list_year = []
+        for order in Orders.objects.all():
+            list_year.append(order.order_date.year)
+        list_year = list(set(list_year))
+        list_year.sort(reverse=True)
+
+        # list month for filter
+        list_month = []
+        for order in Orders.objects.all():
+            list_month.append(order.order_date.month)
+        list_month = list(set(list_month))
+        list_month.sort(reverse=True)
+        if year != '':
+            int(year)
+        if month != '':
+            int(month)
+        context = {
+            'users': users,
+            'customers': customers,
+            'sales': sales,
+            'profit': profit,
+            'view_count': view_count,
+            'quality_product_sale': quality_product_sale,
+            'product_sold_count': product_sold_count,
+            'number_customer': number_customer,
+            'payments': payments,
+            'total_customers': total_customers,
+            'total_orders': total_orders,
+            'total_products': total_products,
+            'total_discounts': total_discounts,
+            'total_profit_ratio': total_profit_ratio,
+            'total_feedback': total_feedback,
+            'total_review': total_review,
+            'total_payment': total_payment,
+            'total_review_rate': total_review_rate,
+            'orders': orders,
+            'labels': labels,
+            'profit_values': profit_values,
+            'sales_values': sales_values,
+            'top_10_best_selling_products': top_10_best_selling_products,
+            'top_10_profitable_products': top_10_profitable_products,
+            'top_10_most_viewed_products': top_10_most_viewed_products,
+            'top_10_rated_products': top_10_rated_products,
+            'list_year': list_year,
+            'list_month': list_month,
+            'year_selected': year,
+            'month_selected': month,
+            'start_datetime': start_datetime,
+            'end_datetime': end_datetime,
+        }
+        return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
