@@ -166,7 +166,7 @@ CLOUDINARY = {
   'upload_prefix': 'media',
   'secure': True
 }
-MEDIA_URL = 'https://res.cloudinary.com/{cloud_name}/image/upload/'.format(cloud_name=CLOUDINARY['cloud_name'])
+MEDIA_URL = 'https://res.cloudinary.com/{cloud_name}/image/upload/media/'.format(cloud_name=CLOUDINARY['cloud_name'])
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
