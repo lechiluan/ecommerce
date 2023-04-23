@@ -232,7 +232,7 @@ def change_email(request):
                     user.is_active = False
                     user.save()
                     send_verify_new_email(request, user)
-                    return render(request, 'registration/profile/verify_new_email_sent.html')
+                    return render(request, 'registration/profile/verify_new_email_sent.html', {'email': user.email})
             else:
                 form.add_error('current_password', 'Password is incorrect')
                 return render(request, "registration/profile/change_email.html", {"form": form})

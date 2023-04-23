@@ -10,10 +10,15 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
+    <div class="breadcrumb">
+        <a href="/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/change_email">Change Email</a>
+    </div>
     <div class="form-main">
         <h2 class="font-weight-bold mt-3 form-title">Activation link sent</h2>
         <div class="text-form"><p>We have sent an email to your new email address- <strong
-                >{{user.email}}</strong>.
+                >{{ email }}</strong>.
             Please click on the link in that email to update your account.
             Your account cannot be logged in until you verify your email.</p>
         </div>
