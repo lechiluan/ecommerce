@@ -314,13 +314,13 @@ def add_to_cart(request, slug):
         quantity = int(request.POST.get('quantity'))
         if quantity > product.stock:
             messages.warning(request, 'Product stock is not available')
-            return redirect('/customer/product/details/' + slug)
+            return redirect('/customer/product/details/{}/'.format(slug))
     else:
         product = Product.objects.get(slug=slug)
         quantity = 1
         if quantity > product.stock:
             messages.warning(request, 'Product stock is not available')
-            return redirect('/customer/product/details/' + slug)
+            return redirect('/customer/product/details/{}/'.format(slug))
 
     customer = request.user.customer if request.user.is_authenticated else None
 
