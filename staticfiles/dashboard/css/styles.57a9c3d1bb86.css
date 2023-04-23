@@ -869,7 +869,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
 }
 
 /* Make Responsive */
-@media only screen and (min-width: 1048px) {
+@media (max-width: 1024px) {
     .navigation {
         left: -300px;
     }
@@ -900,7 +900,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     }
 }
 
-@media only screen and (max-width: 1047px) and (min-width: 768px) {
+@media (max-width: 768px) {
     .main-content {
         margin: 10px 10px;
         padding: 5px 10px;
@@ -990,97 +990,7 @@ a#navbarDropdown.nav-link.dropdown-toggle {
     }
 }
 
-@media only screen and (max-width: 767px) and (min-width: 480px) {
-    .main-content {
-        margin: 10px 10px;
-        padding: 5px 10px;
-    }
-
-    .details {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    .cardHeader h2 {
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .card-header {
-        flex-direction: column;
-        padding: 10px;
-    }
-
-    .btn-block {
-        display: block;
-        width: 100%;
-        margin: 0.3rem auto;
-        float: none;
-    }
-
-    .float-right {
-        float: none;
-    }
-
-    /* Pagination */
-    .pagination {
-        flex-direction: column;
-    }
-
-    .pagination .left {
-        order: 2;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .pagination .right {
-        order: 3;
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .pagination a,
-    .pagination span {
-        margin: 5px;
-    }
-
-
-    .btn-form {
-        display: block;
-        width: 100%;
-        margin: 0.3rem auto;
-        float: none;
-    }
-
-    .btn-form-left {
-        display: block;
-        width: 100%;
-        margin: 0.3rem auto;
-        float: none;
-    }
-
-    .btn-form-right {
-        display: block;
-        width: 100%;
-        margin: 0.3rem auto;
-        float: none;
-    }
-
-    .filter-form li {
-        display: inline-block;
-        margin-right: 0;
-        width: 100%;
-    }
-
-    .filter-form .form-row .col-auto .btn {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-@media only screen and (max-width: 479px) {
+@media (max-width: 480px) {
     .main-content {
         margin: 10px 5px;
         padding: 10px 5px;
