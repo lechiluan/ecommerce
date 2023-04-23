@@ -11,11 +11,6 @@ from main.models import DeliveryAddress
 phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
 
 
-def validate_image_size(value):
-    filesize = value.size
-    max_size = 10 * 1024 * 1024
-    if filesize > max_size:
-        raise ValidationError(_('Image size too large. Maximum size allowed is 10MB.'))
 
 
 class RegisterForm(UserCreationForm):
@@ -43,8 +38,6 @@ class RegisterForm(UserCreationForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exists():
             self.add_error('email', 'Email already exists')
-        if customer_image:
-            validate_image_size(customer_image)
 
 
 class LoginForm(forms.Form):
@@ -82,8 +75,6 @@ class UpdateProfileForm(forms.ModelForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
-        if customer_image:
-            validate_image_size(customer_image)
 
 
 class ChangePasswordForm(PasswordChangeForm):

@@ -10,11 +10,6 @@ from tinymce.widgets import TinyMCE
 phone_regex = RegexValidator(regex=r'^(0|\+)\d{9,19}$', message="Phone number is invalid")
 
 
-def validate_image_size(value):
-    filesize = value.size
-    max_size = 10 * 1024 * 1024
-    if filesize > max_size:
-        raise ValidationError(_('Image size too large. Maximum size allowed is 5MB.'))
 
 
 # Administrator Forms
@@ -42,8 +37,6 @@ class UpdateProfileForm(forms.ModelForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
-        if customer_image:
-            validate_image_size(customer_image)
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -90,8 +83,7 @@ class AddCustomerForm(UserCreationForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exists():
             self.add_error('email', 'Email already exists')
-        if customer_image:
-            validate_image_size(customer_image)
+
 
 
 class UpdateCustomerForm(forms.ModelForm):
@@ -134,8 +126,6 @@ class UpdateCustomerForm(forms.ModelForm):
             self.add_error('username', 'Username already exists')
         if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
             self.add_error('email', 'Email already exists')
-        if customer_image:
-            validate_image_size(customer_image)
 
 
 class UpdateCustomerPasswordForm(forms.Form):
@@ -248,8 +238,6 @@ class AddBrandForm(forms.Form):
             self.add_error('name', 'Brand already exists')
         if Brand.objects.filter(slug=slug).exists():
             self.add_error('slug', 'Slug already exists')
-        if logo:
-            validate_image_size(logo)
 
     def save(self):
         slug = self.cleaned_data.get('slug')
@@ -292,8 +280,7 @@ class UpdateBrandForm(forms.Form):
             self.add_error('name', 'Brand already exists')
         if Brand.objects.filter(slug=slug).exclude(id=self.brand.id).exists():
             self.add_error('slug', 'Slug already exists')
-        if logo:
-            validate_image_size(logo)
+
 
     def save(self):
         slug = self.cleaned_data.get('slug')
@@ -343,8 +330,6 @@ class AddProductForm(forms.Form):
             self.add_error('name', 'Product already exists')
         if Product.objects.filter(slug=slug).exists():
             self.add_error('slug', 'Slug already exists')
-        if product_image:
-            validate_image_size(product_image)
 
     def save(self):
         slug = self.cleaned_data.get('slug')
@@ -429,8 +414,6 @@ class UpdateProductForm(forms.Form):
             self.add_error('name', 'Product already exists')
         if Product.objects.filter(slug=slug).exclude(id=self.product.id).exists():
             self.add_error('slug', 'Slug already exists')
-        if product_image:
-            validate_image_size(product_image)
 
     def save(self):
         slug = self.cleaned_data.get('slug')
