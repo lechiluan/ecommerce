@@ -256,8 +256,8 @@ def update_profile(request):
             form.save()
             customer.mobile = form.cleaned_data['mobile']
             customer.address = form.cleaned_data['address']
-            customer.customer_image = form.cleaned_data['customer_image']
-
+            if form.cleaned_data['customer_image']:
+                customer.customer_image = form.cleaned_data['customer_image']
             customer.save()
             messages.success(request, 'Your profile has been updated.')
             return redirect('/auth/profile/')
