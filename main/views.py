@@ -206,7 +206,7 @@ def activate_new_email(request, uidb64, token):
         user.save()
         auth_login(request, user)
         messages.success(request, 'Your email has been updated. Now you can login your account.')
-        return redirect('/auth/profile/')
+        return redirect('/auth/change_email/')
     else:
         return render(request, 'registration/profile/verify_new_email_invalid.html')
 

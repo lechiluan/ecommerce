@@ -225,7 +225,7 @@ def activate_new_email_admin(request, uidb64, token):
         user.save()
         auth_login(request, user)
         messages.success(request, 'Your email has been updated. Now you can login your account.')
-        return redirect('/dashboard/profile/')
+        return redirect('/dashboard/change_email/')
     else:
         return render(request, 'dashboard/account/verify_new_email_invalid.html')
 
