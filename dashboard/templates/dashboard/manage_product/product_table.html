@@ -10,6 +10,66 @@
             font-size: 18px;
             font-weight: 500;
         }
+
+        @media only screen and (min-width: 1048px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 1047px) and (min-width: 768px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 767px) and (min-width: 480px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 0px;
+                width: 100%;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 479px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 0px;
+                width: 100%;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
     </style>
 {% endblock %}
 
