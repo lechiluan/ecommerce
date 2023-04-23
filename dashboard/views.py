@@ -323,7 +323,7 @@ def add_customer(request):
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/customer/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/customer/update/' + str(customer.user.id) + '/')
+                return redirect('/dashboard/customer/update/{}/'.format(customer.user.id))
             else:
                 return redirect('/dashboard/customer/')
     else:
@@ -356,7 +356,7 @@ def update_customer(request, user_id):
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/customer/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/customer/update/' + str(customer.user.id) + '/')
+                return redirect('/dashboard/customer/update/{}/'.format(customer.user.id))
             else:
                 return redirect('/dashboard/customer/')
     else:
@@ -513,12 +513,12 @@ def add_category(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST)
         if form.is_valid():
-            form.save()
+            category = form.save()
             messages.success(request, 'Category {} added successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/category/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/category/update/' + str(form.cleaned_data['id']) + '/')
+                return redirect('/dashboard/category/update/{}/'.format(category.id))
             else:
                 return redirect('/dashboard/category/')
     else:
@@ -639,12 +639,12 @@ def add_brand(request):
     if request.method == 'POST':
         form = AddBrandForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            brand = form.save()
             messages.success(request, 'Brand {} added successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/brand/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/brand/update/' + str(form.cleaned_data['id']) + '/')
+                return redirect('/dashboard/brand/update/{}/'.format(brand.id))
             else:
                 return redirect('/dashboard/brand/')
     else:
@@ -763,12 +763,12 @@ def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            product = form.save()
             messages.success(request, 'Product {} added successfully!'.format(form.cleaned_data['name']))
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/product/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/product/update/' + str(form.cleaned_data['id']) + '/')
+                return redirect('/dashboard/product/update/{}/'.format(product.id))
             else:
                 return redirect('/dashboard/product/')
     else:
@@ -941,12 +941,12 @@ def add_coupon(request):
     if request.method == 'POST':
         form = AddCouponForm(request.POST)
         if form.is_valid():
-            form.save()
+            coupon = form.save()
             messages.success(request, 'Coupon {} added successfully!'.format(form.cleaned_data['code']))
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/coupon/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/coupon/update/' + str(form.cleaned_data['id']) + '/')
+                return redirect('/dashboard/coupon/update/{}/'.format(coupon.id))
             else:
                 return redirect('/dashboard/coupon/')
     else:
