@@ -233,7 +233,7 @@ def product_list_brand(request, slug):
         return render(request, 'customer_help/customer_product_list.html', context)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def add_review(request, slug):
     if request.method == 'POST':
         product = Product.objects.get(slug=slug)
@@ -272,7 +272,7 @@ def add_review(request, slug):
         return redirect('/customer/product/details/' + slug)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def edit_review(request, review_id):
     review = Review.objects.get(id=review_id)
     product = review.product
@@ -293,7 +293,7 @@ def edit_review(request, review_id):
         return redirect('/customer/product/details/' + review.product.slug)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def delete_review(request, review_id):
     review = Review.objects.get(id=review_id)
     review.delete()
@@ -307,7 +307,7 @@ def delete_review(request, review_id):
     return redirect('/customer/product/details/' + review.product.slug)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def add_to_cart(request, slug):
     if request.method == 'POST':
         product = Product.objects.get(slug=slug)
@@ -361,7 +361,7 @@ def add_to_cart(request, slug):
     return redirect('/customer/cart/')
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 # view cart function for customer
 def view_cart(request):
     customer = request.user.customer
@@ -391,7 +391,7 @@ def view_cart(request):
     return render(request, 'customer_cart/view_cart.html', context)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def remove_from_cart(request, slug):
     # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
@@ -412,7 +412,7 @@ def remove_from_cart(request, slug):
     return redirect(next_url)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def add_quantity(request, slug):
     # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
@@ -442,7 +442,7 @@ def add_quantity(request, slug):
     return redirect(next_url)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def remove_quantity(request, slug):
     # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
@@ -473,7 +473,7 @@ def remove_quantity(request, slug):
     return redirect(next_url)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def update_quantity(request, slug):
     # Get the product and customer from the database
     product = Product.objects.get(slug=slug)
@@ -520,7 +520,7 @@ def update_quantity(request, slug):
     return redirect(next_url)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def apply_coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('coupon_code')
@@ -569,7 +569,7 @@ def apply_coupon(request):
         return redirect(next_url)
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def remove_coupon(request):
     customer = request.user.customer
     cart_items = CartItem.objects.filter(customer=customer)
@@ -590,6 +590,7 @@ def remove_coupon(request):
 
 
 # add to wishlist function for customer
+@login_required(login_url='/auth/login/')
 def add_to_wishlist(request, slug):
     # get the product from the database
     product = Product.objects.get(slug=slug)
@@ -606,7 +607,7 @@ def add_to_wishlist(request, slug):
 
 
 # view wishlist function for customer
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def view_wishlist(request):
     customer = request.user.customer
     wishlists = Wishlist.objects.filter(customer=customer).order_by('-date_added')
@@ -619,7 +620,7 @@ def view_wishlist(request):
 
 
 # remove from wishlist function for customer
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def remove_from_wishlist(request, slug):
     # get the product from the database
     product = Product.objects.get(slug=slug)
@@ -634,7 +635,7 @@ def remove_from_wishlist(request, slug):
 
 
 # add all products to cart form wishlist function for customer
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth/login/')
 def add_all_to_cart_form_wishlist(request):
     customer = request.user.customer
     wishlists = customer.wishlist_set.all()
