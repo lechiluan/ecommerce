@@ -518,7 +518,7 @@ def add_category(request):
             if 'save_and_add' in request.POST:
                 return redirect('/dashboard/category/add/')
             elif 'save_and_update' in request.POST:
-                return redirect('/dashboard/category/update' + str(form.cleaned_data['id']) + '/')
+                return redirect('/dashboard/category/update/' + str(form.cleaned_data['id']) + '/')
             else:
                 return redirect('/dashboard/category/')
     else:
