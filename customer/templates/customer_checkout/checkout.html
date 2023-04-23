@@ -505,16 +505,15 @@
                                 {% endfor %}
                             </select>
                         </div>
-
                         <div class="inputBox">
                             <span class="label">Card Accepted:</span>
                             {% load static %}<img src="{% static 'main/images/payments/payment-method.png' %}"
                                                   alt="payment method">
                         </div>
-                        <div class="payment-container">
+                        <div class="payment-container" style="display: none;">
                             <div class="inputBox">
                                 <span class="label">Card Type*</span>
-                                <select name="card" required>
+                                <select name="card">
                                     <option value="" disabled selected>Select Card Type</option>
                                     <option value="visa">Visa</option>
                                     <option value="mastercard">Mastercard</option>
@@ -524,22 +523,22 @@
                             </div>
                             <div class="inputBox">
                                 <span class="label">Name on Card*</span>
-                                <input type="text" name="nameofcard" required placeholder="Brain Lee">
+                                <input type="text" name="nameofcard" placeholder="Brain Lee">
                             </div>
 
                             <div class="inputBox">
                                 <span class="label">Card Number*</span>
-                                <input type="text" id="card-number" name="cardnumber" class="card-number" required
+                                <input type="text" id="card-number" name="cardnumber" class="card-number"
                                        placeholder="1234 5678 9012 3456">
                             </div>
                             <div class="flex">
                                 <div class="inputBox">
                                     <span class="label">Expiry Date*</span>
-                                    <input type="text" name="expiryDate" required placeholder="MM/YY">
+                                    <input type="text" name="expiryDate" placeholder="MM/YY">
                                 </div>
                                 <div class="inputBox">
                                     <span class="label">CVV*</span>
-                                    <input type="number" name="CVV" required placeholder="123">
+                                    <input type="number" name="CVV" placeholder="123">
                                 </div>
                             </div>
                             <div class="inputBox">
@@ -552,7 +551,9 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary submit-btn">Place Your Order</button>
+                <button type="submit" class="btn btn-primary submit-btn" id="place-order-btn" disabled>Place Your
+                    Order
+                </button>
             </form>
         </div>
     </div>
@@ -703,8 +704,9 @@
         const countryInput = document.querySelector('input[name="country"]');
         const stateInput = document.querySelector('input[name="state"]');
         const zipcodeInput = document.querySelector('input[name="zipcode"]');
-
         const editDeliveryAddress = document.getElementById('edit-delivery-address-container');
+        const buttonPlaceOrder = document.getElementById('place-order-btn');
+
         // Get the default address from the database
         fetch('/customer/get_default_address/')
             .then(response => response.json())
@@ -726,9 +728,11 @@
                     countryInput.value = defaultAddress.country;
                     stateInput.value = defaultAddress.state;
                     zipcodeInput.value = defaultAddress.zip_code;
+                    buttonPlaceOrder.disabled = false;
                 } else {
                     // Hide the edit delivery address container
                     editDeliveryAddress.style.display = 'none';
+                    buttonPlaceOrder.disabled = true;
                 }
             });
         addressSelect.addEventListener('change', (event) => {
@@ -822,5 +826,22 @@
             }
             return true;
         }
+
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const cardInputContainer = document.querySelector('.payment-container');
+
+        paymentMethodSelect.addEventListener('change', () => {
+            const selectedValue = paymentMethodSelect.value;
+            if (['Visa', 'Master Card', 'Pardoner', 'Maestro', 'Credit Card', 'Debit Card'].includes(selectedValue)) {
+                cardInputContainer.style.display = 'block';
+                // add 'required' attribute to all input and select elements inside payment-container
+                cardInputContainer.querySelectorAll('input, select').forEach(el => el.setAttribute('required', 'required'));
+            } else {
+                cardInputContainer.style.display = 'none';
+                // remove 'required' attribute from all input and select elements inside payment-container
+                cardInputContainer.querySelectorAll('input, select').forEach(el => el.removeAttribute('required'));
+            }
+        });
+
     </script>
 {% endblock %}
