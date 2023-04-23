@@ -250,7 +250,7 @@ def update_profile(request):
                 customer.customer_image = form.cleaned_data['customer_image']
             customer.save()
             messages.success(request, 'Your profile has been updated.')
-            return redirect('/auth/profile/')
+            return redirect('/dashboard/profile/')
     else:
         form = UpdateProfileForm(instance=user, initial={'address': customer.address,
                                                          'mobile': customer.mobile,
