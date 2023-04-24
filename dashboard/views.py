@@ -1371,7 +1371,7 @@ def export_customer_csv(request):
                          customer.user.email if customer.user.email else '',
                          customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
                          customer.address if customer.address else '',
-                         customer.customer_image if customer.customer_image else '',
+                         customer.customer_image.url if customer.customer_image else '',
                          customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
                                                                                         '') if customer.user.last_login else '',
                          customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
@@ -1416,7 +1416,7 @@ def export_customer_excel(request):
             customer.user.email if customer.user.email else '',
             customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
             customer.address if customer.address else '',
-            customer.customer_image.name if customer.customer_image else '',
+            customer.customer_image.url if customer.customer_image else '',
             customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
                                                                            '') if customer.user.last_login else '',
             customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
@@ -1449,7 +1449,7 @@ def export_customer_json(request):
             'email': customer.user.email if customer.user.email else '',
             'mobile': customer.mobile.strip('+').lstrip('0') if customer.mobile else '',
             'address': customer.address if customer.address else '',
-            'customer_image': customer.customer_image.name if customer.customer_image else '',
+            'customer_image': customer.customer_image.url if customer.customer_image else '',
             'last_login': customer.user.last_login.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
                                                                                          '') if customer.user.last_login else '',
             'date_joined': customer.user.date_joined.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
@@ -1560,7 +1560,7 @@ def export_brand_csv(request):
                          brand.slug if brand.slug else '',
                          brand.name if brand.name else '',
                          brand.description if brand.description else '',
-                         brand.logo.name if brand.logo else ''])
+                         brand.logo.url if brand.logo else ''])
 
     return response
 
@@ -1595,7 +1595,7 @@ def export_brand_excel(request):
             brand.slug if brand.slug else '',
             brand.name if brand.name else '',
             brand.description if brand.description else '',
-            brand.logo.name if brand.logo else '',
+            brand.logo.url if brand.logo else '',
         ]
         for col_num, cell_value in enumerate(row):
             ws.write(row_num, col_num, cell_value, font_style)
@@ -1619,7 +1619,7 @@ def export_brand_json(request):
             'slug': brand.slug if brand.slug else '',
             'name': brand.name if brand.name else '',
             'description': brand.description if brand.description else '',
-            'brand_logo': brand.logo.name if brand.logo else '',
+            'brand_logo': brand.logo.url if brand.logo else '',
         }
         data.append(brand_data)
 
@@ -1744,7 +1744,7 @@ def export_product_csv(request):
                          float(product.price) if product.price else '',
                          float(product.old_price) if product.old_price else '',
                          product.stock if product.stock else '',
-                         product.product_image.name if product.product_image else '',
+                         product.product_image.url if product.product_image else '',
                          product.sold if product.sold else '',
                          product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
                                                                                     '') if product.created_date else '',
@@ -1790,7 +1790,7 @@ def export_product_excel(request):
             float(product.price) if product.price else '',
             float(product.old_price) if product.old_price else '',
             product.stock if product.stock else '',
-            product.product_image.name if product.product_image else '',
+            product.product_image.url if product.product_image else '',
             product.sold if product.sold else '',
             product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.created_date else '',
             product.updated_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00', '') if product.updated_date else '',
@@ -1822,7 +1822,7 @@ def export_product_json(request):
             'price': float(product.price) if product.price else '',
             'old_price': float(product.old_price) if product.old_price else '',
             'stock': product.stock if product.stock else '',
-            'product_image': product.product_image.name if product.product_image else '',
+            'product_image': product.product_image.url if product.product_image else '',
             'sold': product.sold if product.sold else '',
             'created_date': product.created_date.strftime('%Y-%m-%d %H:%M:%S').replace('+00:00',
                                                                                        '') if product.created_date else '',
