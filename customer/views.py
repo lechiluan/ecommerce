@@ -304,7 +304,7 @@ def delete_review(request, review_id):
     review.product.review_count = Review.objects.filter(product=review.product).count()
     review.product.save()
     messages.success(request, 'Review deleted successfully')
-    return redirect('/customer/product/details/{}/'.format(review.product.slug))
+    return redirect('/customer/product/details/' + review.product.slug)
 
 
 @login_required(login_url='/auth/login/')
@@ -736,16 +736,15 @@ def checkout(request):
             # Delete cart items
             cart_items.delete()
             # Send email to admin
-            # Get email is admin
-            # customer = request.user.customer
-            # order = Orders.objects.filter(customer=customer, status='Pending').last()
-            # order_details = OrderDetails.objects.filter(order=order)
-            # admin = User.objects.get(is_superuser=True)
-            # send_email_order_admin(request, admin.email, order, order_details, customer)
-            # # Send email to customer
-            # send_email_order_customer(request, delivery_address.email, order, order_details, customer)
-            # send_email_order_customer(request, user.email, order, order_details, customer)
-            # messages.success(request, 'Order placed successfully')
+            customer = request.user.customer
+            order = Orders.objects.filter(customer=customer, status='Pending').last()
+            order_details = OrderDetails.objects.filter(order=order)
+            admin = User.objects.get(is_superuser=True)
+            send_email_order_admin(request, admin.email, order, order_details, customer)
+            # Send email to customer
+            send_email_order_customer(request, delivery_address.email, order, order_details, customer)
+            send_email_order_customer(request, user.email, order, order_details, customer)
+            messages.success(request, 'Order placed successfully')
             context = {
                 'order': order,
             }
