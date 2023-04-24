@@ -255,7 +255,7 @@ def add_review(request, slug):
             product.review_count = Review.objects.filter(product=product).count()
             product.save()
             messages.success(request, 'Review updated successfully. Thanks for your review to improve our service.')
-            return redirect('/customer/product/details/' + slug)
+            return redirect('/customer/product/details/{}/'.format(slug))
         except Review.DoesNotExist:
             review = Review.objects.create(product=product, customer=customer, name=name, rate=rate,
                                            message_review=message_review)
@@ -267,9 +267,9 @@ def add_review(request, slug):
             product.review_count = Review.objects.filter(product=product).count()
             product.save()
             messages.success(request, 'Review updated successfully. Thanks for your review to improve our service.')
-            return redirect('/customer/product/details/' + slug)
+            return redirect('/customer/product/details/{}/'.format(slug))
     else:
-        return redirect('/customer/product/details/' + slug)
+        return redirect('/customer/product/details/{}/'.format(slug))
 
 
 @login_required(login_url='/auth/login/')
@@ -288,9 +288,9 @@ def edit_review(request, review_id):
         product.review_count = Review.objects.filter(product=product).count()
         product.save()
         messages.success(request, 'Review updated successfully')
-        return redirect('/customer/product/details/' + review.product.slug)
+        return redirect('/customer/product/details/{}/'.format(review.product.slug))
     else:
-        return redirect('/customer/product/details/' + review.product.slug)
+        return redirect('/customer/product/details/{}/'.format(review.product.slug))
 
 
 @login_required(login_url='/auth/login/')
@@ -304,7 +304,7 @@ def delete_review(request, review_id):
     review.product.review_count = Review.objects.filter(product=review.product).count()
     review.product.save()
     messages.success(request, 'Review deleted successfully')
-    return redirect('/customer/product/details/' + review.product.slug)
+    return redirect('/customer/product/details/{}/'.format(review.product.slug))
 
 
 @login_required(login_url='/auth/login/')
