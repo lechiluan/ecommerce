@@ -204,7 +204,7 @@
                                                  src="{{ MEDIA_URL }}{{ item.product.product_image.url }}"
                                                  alt="{{ item.product.name }}"></td>
                                         <td>
-                                            <a href="{{ item.product.slug }}/">{{ item.product.name }}</a>
+                                            <a href="/customer/product/details/{{ item.product.slug }}/">{{ item.product.name }}</a>
                                         </td>
                                         <td class="price">${{ item.product.price }}</td>
                                         <td>
