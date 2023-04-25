@@ -2278,7 +2278,7 @@ def update_payment_status(request, payment_id):
             form.save()
             messages.success(request, 'Payment status has been updated successfully.')
             if 'save_and_update' in request.POST:
-                return redirect('/dashboard/payment/' + str(payment.id) + '/update/')
+                return redirect('/dashboard/payment/update_status/{}/'.format(payment_id))
             else:
                 next_url = request.GET.get('next', '/dashboard/payment/')
                 return redirect(next_url)
