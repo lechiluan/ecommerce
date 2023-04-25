@@ -872,6 +872,7 @@ input[type="checkbox"]:focus {
     }
 }
 
+
 /* Tablet (768px) */
 @media only screen and (max-width: 1047px) and (min-width: 768px) {
     .form-main {
@@ -943,21 +944,9 @@ input[type="checkbox"]:focus {
     }
 
     .button-scroll {
-        display: none;
-        position: fixed;
-        bottom: 25px;
-        right: 90px;
-        z-index: 99;
-        border: none;
-        outline: none;
-        height: 45px;
-        width: 45px;
-        background-color: #1253cc;
-        color: #fff;
-        cursor: pointer;
-        padding: 0;
-        font-size: 20px;
-        border-radius: 10px;
+        display: none !important;
+        top: 0;
+        right: 0;
     }
 }
 
@@ -997,20 +986,8 @@ input[type="checkbox"]:focus {
     }
 
     .button-scroll {
-        display: none;
-        position: fixed;
-        bottom: 25px;
-        right: 90px;
-        z-index: 99;
-        border: none;
-        outline: none;
-        height: 45px;
-        width: 45px;
-        background-color: #1253cc;
-        color: #fff;
-        cursor: pointer;
-        padding: 0;
-        font-size: 20px;
-        border-radius: 10px;
+        display: none !important;
+        top: 0;
+        right: 0;
     }
 }
