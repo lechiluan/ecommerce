@@ -13,9 +13,9 @@ Link backup: https://lclshop.up.railway.app/
 2. Chatbot support users
 3. Data Analysis → Data analysis is a procedure of investigating, cleaning, transforming, and training the data with the aim of finding some useful information, recommending conclusions, and helping in decision-making.
 
-# The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
-# The functions that customers can perform are:
-View list of products: Display a list of available products with their names, images, and prices.
+### The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
+#### The functions that customers can perform are:
+- View list of products: Display a list of available products with their names, images, and prices.
 - View about us: Show information about the store, its history, and mission.
 - View terms and conditions and privacy policy: Provide the legal terms and policies that govern the use of the website.
 - Send feedback to administrator: Allow customers to share their opinions, suggestions, and complaints with the website's administrator.
@@ -47,7 +47,7 @@ View list of products: Display a list of available products with their names, im
 -	Export invoice in PDF format: Allow customers to download a PDF version of their invoice.
 -	Send email to customer and owner when customer order product: Notify the customer and the website owner via email when a customer places an order.
 -	Chatbot: Provide an AI-powered chatbot that can answer common customer questions, provide product recommendations, and help customers navigate the website.
-# The function of customer includes:
+#### The function of customer includes:
 - Login: The administrator can log in to access the backend system.
 - Forgot password (verified via email): The administrator can reset their password via email verification.
 -	Edit Profile: The administrator can edit their profile information such as name and contact details.
