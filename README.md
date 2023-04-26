@@ -1,8 +1,9 @@
 # E-Commerce-System
 ### Develop an e-commerce system for selling technology devices integrated a chatbot and data analysis.
-Link website on Heroku cloud: https://lclshop.herokuapp.com/
-Link backup: https://lclshop.up.railway.app/
+- Link website on Heroku cloud: https://lclshop.herokuapp.com/
+- Link backup: https://lclshop.up.railway.app/
 
+#### Technology used in project 
 - Frontend: HTML,CSS, JavaScript, Boostrap 4.
 - Backend: Django framework
 - Database: PostgresSQL
