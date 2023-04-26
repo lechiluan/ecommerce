@@ -9,10 +9,6 @@
 - Database: PostgresSQL
 - Cloud: Heroku, AWS.
 - Tools: Docker, GitHub, Postman.
-# Main Functions
-1. E-Commerce system 
-2. Chatbot support users
-3. Data Analysis → Data analysis is a procedure of investigating, cleaning, transforming, and training the data with the aim of finding some useful information, recommending conclusions, and helping in decision-making.
 
 ### The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
 #### The functions that customers can perform are:
