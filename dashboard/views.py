@@ -142,7 +142,7 @@ def dashboard(request):
 # Pagination function
 def paginator(request, objects):
     # Set the number of items per page
-    per_page = 5
+    per_page = 10
 
     # Create a Paginator object with the customers queryset and the per_page value
     page = Paginator(objects, per_page)
