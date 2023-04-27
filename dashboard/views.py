@@ -53,7 +53,7 @@ def is_admin(user):
 @login_required(login_url='/auth/login/')
 def dashboard(request):
     # get all recent customers last login
-    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('last_login')[:8]
+    users = User.objects.filter(is_superuser=False, is_staff=False, is_active=True).order_by('-last_login')[:8]
 
     customers = Customer.objects.all()
 
