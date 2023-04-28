@@ -44,7 +44,7 @@
 -	Export invoice in PDF format: Allow customers to download a PDF version of their invoice.
 -	Send email to customer and owner when customer order product: Notify the customer and the website owner via email when a customer places an order.
 -	Chatbot: Provide an AI-powered chatbot that can answer common customer questions, provide product recommendations, and help customers navigate the website.
-#### The function of customer includes:
+#### The function of administrator includes:
 - Login: The administrator can log in to access the backend system.
 - Forgot password (verified via email): The administrator can reset their password via email verification.
 -	Edit Profile: The administrator can edit their profile information such as name and contact details.
