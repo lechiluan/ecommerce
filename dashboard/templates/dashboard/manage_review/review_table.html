@@ -116,29 +116,29 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td>{% if review.rate == 1 %}
+                                <td style="white-space: nowrap;">{% if review.rate == 1 %}
                                     <span
                                         class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>
                                 {% elif review.rate == 2 %}
                                     <span class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
-                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                            class="fa fa-star" aria-hidden="true"></i></span>
                                 {% elif review.rate == 3 %}
                                     <span
                                         class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
-                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                            class="fa fa-star" aria-hidden="true"></i></span>
                                 {% elif review.rate == 4 %}
                                     <span
                                         class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
-                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                            class="fa fa-star" aria-hidden="true"></i></span>
                                 {% elif review.rate == 5 %}
                                     <span class="rating"><i class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
                                             class="fa fa-star" aria-hidden="true"></i><i
-                                            class="fa fa-star" aria-hidden="true"></i></span>({{ review.rate }})
+                                            class="fa fa-star" aria-hidden="true"></i></span>
                                 {% endif %}
 
                                 </td>
