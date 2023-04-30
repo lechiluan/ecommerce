@@ -46,8 +46,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'lclshop.herokuapp.com', 'lclshop.up.railway.app']
