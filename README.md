@@ -5,10 +5,10 @@
 
 #### Technology used in project 
 - Frontend: HTML,CSS, JavaScript, Boostrap 4.
-- Backend: Django framework
+- Backend: Python, Django framework, Pandas.
 - Database: PostgresSQL
-- Cloud: Heroku, AWS.
-- Tools: Docker, GitHub, Postman.
+- Cloud: Heroku.
+- Tools: GitHub, reCaptcha.
 
 ### The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
 #### The functions that customers can perform are:
