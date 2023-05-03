@@ -20,7 +20,7 @@ django-tinymce==3.6.1
 django-utils-six==2.0
 Django==4.2
 filelock==3.10.7
-Flask==2.2.3
+Flask==2.3.2
 fonttools==4.39.3
 greenlet==2.0.2
 gunicorn==20.1.0
