@@ -1,17 +1,27 @@
 # E-Commerce-System
-### Develop an e-commerce system for selling technology devices integrated a chatbot and data analysis.
+## Develop an e-commerce system for selling technology devices integrated a chatbot and data analysis.
 - Link website on Heroku cloud: https://lclshop.herokuapp.com/
 - Link backup: https://lclshop.up.railway.app/
 
-#### Technology used in project 
+## Accounts
+| Role               | Username | Password   |
+|--------------------|----------|------------|
+| Administrator      | lclshop  | admin@123  |
+| Administrator (BA) | admin    | admin@123  |
+| Customer           | chiluan  | admin@123  |
+| Customer (BA)      | sharma   | admin@123  |
+
+
+## Technology used in project 
 - Frontend: HTML,CSS, JavaScript, Boostrap 4.
 - Backend: Python, Django framework, Pandas.
-- Database: PostgresSQL
-- Cloud: Heroku.
-- Tools: GitHub, reCaptcha.
+- Database: PostgresSQL (Heroku).
+- Cloud: Heroku (Deploy), Railway (Backup), Cloudinary (Image storage).
+- Tools: GitHub, reCaptcha, Pycharm.
 
-### The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
-#### The functions that customers can perform are:
+## The LCL Shop system has two distinct roles: customers and administrators, each with its own set of functions.
+### The functions that customers can perform are:
+![Alt Text](screenshots/Homepage.png)
 - View list of products: Display a list of available products with their names, images, and prices.
 - View about us: Show information about the store, its history, and mission.
 - View terms and conditions and privacy policy: Provide the legal terms and policies that govern the use of the website.
@@ -44,7 +54,9 @@
 -	Export invoice in PDF format: Allow customers to download a PDF version of their invoice.
 -	Send email to customer and owner when customer order product: Notify the customer and the website owner via email when a customer places an order.
 -	Chatbot: Provide an AI-powered chatbot that can answer common customer questions, provide product recommendations, and help customers navigate the website.
-#### The function of administrator includes:
+
+### The function of administrator includes:
+![Alt Text](screenshots/Dashboard.png)
 - Login: The administrator can log in to access the backend system.
 - Forgot password (verified via email): The administrator can reset their password via email verification.
 -	Edit Profile: The administrator can edit their profile information such as name and contact details.
