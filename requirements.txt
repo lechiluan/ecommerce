@@ -45,7 +45,6 @@ Pint==0.20.1
 pip==23.0.1
 platformdirs==3.2.0
 psycopg2==2.9.5
-psycopg2-binary==2.9.5
 pycparser==2.21
 pydyf==0.6.0
 pyhanko-certvalidator==0.20.1
