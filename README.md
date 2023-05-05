@@ -4,12 +4,12 @@
 - Link backup: https://lclshop.up.railway.app/
 
 ## Accounts
-| Role               | Username | Password   |
-|--------------------|----------|------------|
-| Administrator      | lclshop  | admin@123  |
-| Administrator (BA) | admin    | admin@123  |
-| Customer           | chiluan  | admin@123  |
-| Customer (BA)      | sharma   | admin@123  |
+| Role                   | Username | Password   |
+|------------------------|----------|------------|
+| Administrator          | lclshop  | admin@123  |
+| Administrator (Backup) | admin    | admin@123  |
+| Customer               | chiluan  | admin@123  |
+| Customer (Backup)      | sharma   | admin@123  |
 
 
 ## Technology used in project 
