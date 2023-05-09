@@ -21,9 +21,18 @@
             align-items: center;
             justify-content: center;
         }
+
+        .fixed-top{
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+            margin: 0;
+        }
     </style>
 {% endblock %}
-<div class="background">
+<div class="background fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand logo-text" href="/">{% load static %}<img
                 src="{% static 'main/images/main/logolclshop.png' %}"
