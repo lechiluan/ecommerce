@@ -829,6 +829,7 @@
 
         const paymentMethodSelect = document.getElementById('payment_method');
         const cardInputContainer = document.querySelector('.payment-container');
+        const checkbox = document.querySelector('input[name="remembercard"]');
 
         paymentMethodSelect.addEventListener('change', () => {
             const selectedValue = paymentMethodSelect.value;
@@ -836,12 +837,12 @@
                 cardInputContainer.style.display = 'block';
                 // add 'required' attribute to all input and select elements inside payment-container
                 cardInputContainer.querySelectorAll('input, select').forEach(el => el.setAttribute('required', 'required'));
+                checkbox.removeAttribute('required');
             } else {
                 cardInputContainer.style.display = 'none';
                 // remove 'required' attribute from all input and select elements inside payment-container
                 cardInputContainer.querySelectorAll('input, select').forEach(el => el.removeAttribute('required'));
             }
         });
-
     </script>
 {% endblock %}

@@ -739,7 +739,8 @@ def checkout(request):
             customer = request.user.customer
             order = Orders.objects.filter(customer=customer, status='Pending').last()
             order_details = OrderDetails.objects.filter(order=order)
-            admin = User.objects.get(is_superuser=True)
+            # get admin email first
+            admin = User.objects.get(is_superuser=True, email='lclshop.dev@gmail.com')
             send_email_order_admin(request, admin.email, order, order_details, customer)
             # Send email to customer
             send_email_order_customer(request, delivery_address.email, order, order_details, customer)
