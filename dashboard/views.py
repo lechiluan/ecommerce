@@ -2494,12 +2494,18 @@ def sales_statistics(request):
     labels = [d['month'].strftime('%B %Y') for d in data_profit]
     profit_values = [d['total_profit'] for d in data_profit]
     profit_values = [float(i) for i in profit_values]
+    background_profit = []
+    for i in range(len(profit_values)):
+        background_profit.append('rgb(1,152,64)')
 
     # Sales values
     data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
         total_sales=Sum('total_amount')).order_by('month')
     sales_values = [d['total_sales'] for d in data_sales]
     sales_values = [float(i) for i in sales_values]
+    background_sales = []
+    for i in range(len(sales_values)):
+        background_sales.append('#1253cc')
 
     # Forecasted sales for next month
     last_month = data_sales[len(data_sales) - 1]['month']
@@ -2514,6 +2520,7 @@ def sales_statistics(request):
     # round it to 1 decimal
     next_month_sales = round(next_month_sales, 1)
     sales_values.append(next_month_sales)
+    background_sales.append('#729ff3')
 
     # Forecasted profit for next month
     last_month = data_profit[len(data_profit) - 1]['month']
@@ -2529,6 +2536,7 @@ def sales_statistics(request):
     # round it to 1 decimal
     next_month_revenue = round(next_month_revenue, 1)
     profit_values.append(next_month_revenue)
+    background_profit.append('#4dff4d')
 
     # Add forecasted revenue label to labels list
     labels.append(next_month_label + ' (Forecasted)')
@@ -2576,6 +2584,8 @@ def sales_statistics(request):
         'top_10_rated_products': top_10_rated_products,
         'list_year': list_year,
         'list_month': list_month,
+        'background_profit': background_profit,
+        'background_sales': background_sales,
     }
     return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)
 
@@ -2731,12 +2741,18 @@ def sales_statistics_filter(request):
         labels = [d['month'].strftime('%B %Y') for d in data_profit]
         profit_values = [d['total_profit'] for d in data_profit]
         profit_values = [float(i) for i in profit_values]
+        background_profit = []
+        for i in range(len(profit_values)):
+            background_profit.append('rgb(1,152,64)')
 
         # Sales values
         data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
             total_sales=Sum('total_amount')).order_by('month')
         sales_values = [d['total_sales'] for d in data_sales]
         sales_values = [float(i) for i in sales_values]
+        background_sales = []
+        for i in range(len(sales_values)):
+            background_sales.append('#1253cc')
 
         # Forecasted sales for next month
         last_month = data_sales[len(data_sales) - 1]['month']
@@ -2751,6 +2767,7 @@ def sales_statistics_filter(request):
         # round it to 1 decimal
         next_month_sales = round(next_month_sales, 1)
         sales_values.append(next_month_sales)
+        background_sales.append('#729ff3')
 
         # Forecasted profit for next month
         last_month = data_profit[len(data_profit) - 1]['month']
@@ -2766,6 +2783,7 @@ def sales_statistics_filter(request):
         # round it to 1 decimal
         next_month_revenue = round(next_month_revenue, 1)
         profit_values.append(next_month_revenue)
+        background_profit.append('#4dff4d')
 
         # Add forecasted revenue label to labels list
         labels.append(next_month_label + ' (Forecasted)')
@@ -2820,5 +2838,7 @@ def sales_statistics_filter(request):
             'month_selected': month,
             'start_datetime': start_datetime,
             'end_datetime': end_datetime,
+            'background_profit': background_profit,
+            'background_sales': background_sales,
         }
         return render(request, 'dashboard/sales_statistics/sales_statistics.html', context)

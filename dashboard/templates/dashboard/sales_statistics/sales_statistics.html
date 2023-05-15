@@ -421,14 +421,14 @@
                         {
                             label: 'Sales per month',
                             data: {{ sales_values|safe }},
-                            backgroundColor: '#1253cc',
+                            backgroundColor: {{ background_sales|safe }},
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         },
                         {
                             label: 'Profit per month',
                             data: {{ profit_values|safe }},
-                            backgroundColor: 'rgb(1,152,64)',
+                            backgroundColor: {{ background_profit|safe }},
                             borderColor: 'rgba(0,255,106,0.76)',
                             borderWidth: 1
                         }
