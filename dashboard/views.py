@@ -2496,7 +2496,7 @@ def sales_statistics(request):
     profit_values = [float(i) for i in profit_values]
     background_profit = []
     for i in range(len(profit_values)):
-        background_profit.append('rgb(1,152,64)')
+        background_profit.append('#019840')
 
     # Sales values
     data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
@@ -2743,7 +2743,7 @@ def sales_statistics_filter(request):
         profit_values = [float(i) for i in profit_values]
         background_profit = []
         for i in range(len(profit_values)):
-            background_profit.append('rgb(1,152,64)')
+            background_profit.append('#019840')
 
         # Sales values
         data_sales = Orders.objects.annotate(month=TruncMonth('order_date')).values('month').annotate(
