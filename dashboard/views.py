@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, update_session_auth_hash, logout as auth_logout
@@ -930,6 +931,16 @@ def coupon_table(request):
     # Get all coupons
     coupons = Coupon.objects.all().order_by('id')
     page_object = paginator(request, coupons)
+    # Get current datetime
+    now = timezone.now()
+    # Check if any coupon is expired set is_active to False
+    for coupon in coupons:
+        if coupon.valid_to < now:
+            coupon.is_active = False
+            coupon.save()
+        else:
+            coupon.is_active = True
+            coupon.save()
     context = {'coupons': page_object}
     return render(request, 'dashboard/manage_coupon/coupon_table.html', context)
 
