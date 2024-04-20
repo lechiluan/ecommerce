@@ -4,7 +4,7 @@ asn1crypto==1.5.1
 automium-web==0.1.1
 automium==0.2.6
 Brotli==1.0.9
-certifi==2022.12.7
+certifi==2024.2.2
 cffi==1.15.1
 charset-normalizer==3.1.0
 click==8.1.3
