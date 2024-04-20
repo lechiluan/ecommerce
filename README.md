@@ -84,6 +84,8 @@
 - Sales Statistic: The administrator can view sales statistics (total products, total views, total customers, total sold, total sales, total profit, total profit ratio, total discounts, total orders, totals feedbacks, total reviews, total payments) , chart sales and profit per monthly, statistics of the top 10 best-selling products, statistics of the top 10 profitable products, statistics of the top 10 most viewed products, statistics of the top 10 rated products, sales statistics by month or specific time period.
 - Forecast sales and profit next month: The administrator can predict sales and profit for the next month based on sales statistics.
 
+## Python Version is 3.10.5 and Django Version is 3.2.7
+
 ## Installation
 
 **1. Clone Repository & Install Packages**
