@@ -87,7 +87,7 @@
 ## Flow
 ![diagram](https://github.com/user-attachments/assets/f8b50dfe-3a76-4d7c-a5f2-e1b49fb325d0)
 
-## Python Version is 3.10.5 and Django Version is 3.2.7
+## Python Version is 3.10.5 and Django Version is 3.2.7 (Use Python Install Manager)
 
 ## Installation
 
@@ -95,19 +95,23 @@
 
 ```sh
 git clone https://github.com/lechiluan/ecommerce.git
-pip install virtualenv
+py install 3.10.5 # install python 3.10.5
+py list # check python version
+py -m venv venv  
 ```
 
 **2. Setup Virtualenv**
 
 ```sh
 virtualenv venv
-.\venv\Scripts\Activate.ps1 # for Windows
+venv\Scripts\activate
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 
 # For macOS & Linux
 python3 -m venv venv
 source venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 ```
 

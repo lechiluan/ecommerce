@@ -42,7 +42,6 @@ pandas==2.0.0
 patsy==0.5.3
 Pillow==9.4.0
 Pint==0.20.1
-pip==23.0.1
 platformdirs==3.2.0
 psycopg2==2.9.5
 pycparser==2.21
