@@ -45,18 +45,23 @@ if os.path.isfile(dotenv_file):
 # UPDATE secret key
 SECRET_KEY = os.environ['SECRET_KEY']
 
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).lower() == 'true'
+
+def env_list(name, default=''):
+    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
 # SECURITY TO USE HTTPS
-# SESSION_COOKIE_SECURE = True  # for https only, it uses to secure session
-# CSRF_COOKIE_SECURE = True  # for https only, it uses to secure csrf token
-# SECURE_SSL_REDIRECT = True  # for https only, it uses to redirect http to https
+SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE')
+CSRF_COOKIE_SECURE = env_bool('CSRF_COOKIE_SECURE')
+SECURE_SSL_REDIRECT = env_bool('SECURE_SSL_REDIRECT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+DEBUG = env_bool('DEBUG', True)
 
 # ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can server
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'lclshop.herokuapp.com', 'lclshop.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://lclshop.up.railway.app', 'https://lclshop.herokuapp.com']
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 
 # Application definition
 
