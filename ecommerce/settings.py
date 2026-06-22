@@ -12,11 +12,16 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from urllib.parse import parse_qsl, unquote, urlparse
 import cloudinary
+import certifi
 import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Use certifi's CA bundle for urllib-based HTTPS calls such as Google reCAPTCHA.
+os.environ.setdefault('SSL_CERT_FILE', certifi.where())
 
 # SECURITY WARNING: keep the secret key used in production secret!
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -109,15 +114,25 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'  # for wsgi application
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+database_url = os.environ.get('DATABASE_URL')
+if not database_url:
+    raise RuntimeError('DATABASE_URL environment variable is required')
+
+database = urlparse(database_url)
+database_options = dict(parse_qsl(database.query))
+default_database = {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': database.path.lstrip('/'),
+    'USER': unquote(database.username or ''),
+    'PASSWORD': unquote(database.password or ''),
+    'HOST': database.hostname,
+    'PORT': database.port or '',
+}
+if database_options:
+    default_database['OPTIONS'] = database_options
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': default_database,
 }
 
 # Password validation
