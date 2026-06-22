@@ -1,3 +1,6 @@
+import logging
+from smtplib import SMTPException
+
 from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -23,6 +26,8 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token, password_reset_token, update_email_token
 from django.contrib.auth.models import User
 from .models import Customer, Product, Category, Brand, DeliveryAddress, Review
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -326,6 +331,14 @@ def password_reset_request(request):
                         send_mail(subject, email, form_email, [user.email], fail_silently=False, html_message=email)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found.')
+                    except (SMTPException, OSError, TimeoutError):
+                        logger.exception("Could not send password reset email to %s", user.email)
+                        password_reset_form.add_error(
+                            None,
+                            'We could not send the reset email right now. Please try again later.'
+                        )
+                        return render(request=request, template_name="registration/password/password_reset.html",
+                                      context={"password_reset_form": password_reset_form})
 
                 return redirect("/auth/password_reset/done/")
             else:
