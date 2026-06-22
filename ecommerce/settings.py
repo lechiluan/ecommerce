@@ -23,20 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Use certifi's CA bundle for urllib-based HTTPS calls such as Google reCAPTCHA.
 os.environ.setdefault('SSL_CERT_FILE', certifi.where())
 
-# SECURITY WARNING: keep the secret key used in production secret!
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIl_FROM = os.environ.get('EMAIL_FROM')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 259200
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 # Add .env variables anywhere before SECRET_KEY
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
@@ -45,11 +31,29 @@ if os.path.isfile(dotenv_file):
 # UPDATE secret key
 SECRET_KEY = os.environ['SECRET_KEY']
 
+def env_int(name, default=0):
+    return int(os.environ.get(name, default))
+
 def env_bool(name, default=False):
     return os.environ.get(name, str(default)).lower() == 'true'
 
 def env_list(name, default=''):
     return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
+# SECURITY WARNING: keep the secret key used in production secret!
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = env_int('EMAIL_PORT', 587)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
+EMAIL_TIMEOUT = env_int('EMAIL_TIMEOUT', 10)
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_FROM', f'LCL Shop <{EMAIL_HOST_USER}>')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+PASSWORD_RESET_TIMEOUT = 259200
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY TO USE HTTPS
 SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE')

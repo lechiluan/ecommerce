@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login as auth_login, update_session_auth_hash, logout as auth_logout
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
@@ -117,7 +118,7 @@ def send_email_activate_account(request, user):
         'protocol': protocol,
     })
     to_email = [user.email]
-    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    form_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, form_email, to_email)
     email.content_subtype = "html"
     email.send()
@@ -188,7 +189,7 @@ def send_verify_new_email(request, user):
         'protocol': protocol,
     })
     to_email = [user.email]
-    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    form_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, form_email, to_email)
     email.content_subtype = "html"
     email.send()
@@ -319,7 +320,7 @@ def password_reset_request(request):
                         'protocol': protocol,
                     }
                     email = render_to_string(email_template_name, c)
-                    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+                    form_email = settings.DEFAULT_FROM_EMAIL
                     # sender_email = settings.EMAIL_HOST_USER
                     try:
                         send_mail(subject, email, form_email, [user.email], fail_silently=False, html_message=email)

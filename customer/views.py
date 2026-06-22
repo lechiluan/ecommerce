@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
@@ -47,7 +48,7 @@ def send_email(request, email):
         'protocol': protocol,
     })
     to_email = [email]
-    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    form_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, form_email, to_email)
     email.content_subtype = "html"
     email.send()
@@ -789,7 +790,7 @@ def send_email_order_admin(request, email, order, order_details, customer):
         'protocol': protocol,
     })
     to_email = [email]
-    from_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    from_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, from_email, to_email)
     email.content_subtype = "html"
     email.send()
@@ -807,7 +808,7 @@ def send_email_order_customer(request, email, order, order_details, customer):
         'protocol': protocol,
     })
     to_email = [email]
-    from_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    from_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, from_email, to_email)
     email.content_subtype = "html"
     email.send()

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, update_session_auth_hash, logout as auth_logout
+from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Avg
 
@@ -207,7 +208,7 @@ def send_verify_new_email(request, user):
         'protocol': protocol,
     })
     to_email = [user.email]
-    form_email = 'LCL Shop <lclshop.dev@gmail.com>'
+    form_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(mail_subject, message, form_email, to_email)
     email.content_subtype = "html"
     email.send()
