@@ -219,7 +219,7 @@
     cursor: pointer;
     border-radius: 10px;
     text-decoration: none;
-    color:black;
+    color: black;
 }
 
 .cardBox .mycard .numbers {
@@ -974,6 +974,12 @@ a#navbarDropdown.nav-link.dropdown-toggle {
         margin: 0.3rem auto;
         float: none;
     }
+
+    .button-scroll {
+        display: none !important;
+        top: 0;
+        right: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1080,6 +1086,12 @@ a#navbarDropdown.nav-link.dropdown-toggle {
         width: 100%;
         margin: 0.3rem auto;
         float: none;
+    }
+
+    .button-scroll {
+        display: none !important;
+        top: 0;
+        right: 0;
     }
 }
 
